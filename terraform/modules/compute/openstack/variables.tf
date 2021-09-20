@@ -11,7 +11,7 @@ variable "cluster_type" {
     #condition     = var.cluster_type == "rke" || var.cluster_type == "rke2"
     #error_message = "Image needs to be one of [rke, rke2]."
     condition     = var.cluster_type == "rke2"
-    error_message = "Currently only support rke2"
+    error_message = "Currently only support rke2."
   }
 }
 
