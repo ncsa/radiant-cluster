@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: healthmonitor
+spec:
+  serviceName: healthmonitor
+  selector:
+    matchLabels:
+      name: healthmonitor
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: healthmonitor
+    spec:
+      # In this container, we'll mount the NFS volume
+      # and write the date to a file inside it.
+      containers:
+        - name: healthmonitor
+          image: clowder/healthmonitor:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          # Mount the NFS volume in the container
+          volumeMounts:
+            {{- if .Values.nfs.enabled }}
+            - name: nfs
+              mountPath: /var/nfs
+            {{- end }}
+            - name: config
+              mountPath: /src/config.yml
+              subPath: config.yml
+
+      volumes:
+        - name: config
+          secret:
+            secretName: healthmonitor
+
+  volumeClaimTemplates:
+  {{- if .Values.nfs.enabled }}
+    - metadata:
+        name: nfs
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+        {{- with .Values.nfs.storageClass}}
+        storageClassName: {{ . }}
+        {{- end }}
+  {{- end }}

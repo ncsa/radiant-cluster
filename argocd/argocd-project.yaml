@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  description: argocd server project
+  destinations:
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  roles:
+    - name: admin
+      description: Admin privileges to argocd
+      policies:
+        - p, proj:argocd:admin, applications, *, in-cluster/*, allow
+      groups:
+        - isda_admin
+    - name: user
+      description: Read-only privileges to argocd
+      policies:
+        - p, proj:argocd:read-only, applications, get, in-cluster/*, allow
+      groups: []

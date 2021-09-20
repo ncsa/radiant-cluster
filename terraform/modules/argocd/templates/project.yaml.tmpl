@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: "${cluster_name}"
+  namespace: argocd
+spec:
+  description: "${cluster_name} cluster"
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: ${cluster_url}
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  roles:
+    - name: admin
+      description: Admin privileges to ${cluster_name}
+      policies:
+        - p, proj:${cluster_name}:admin, applications, *, ${cluster_name}/*, allow
+      groups:
+      %{~ for s in admin_users ~}
+        - ${s}
+      %{~ endfor ~}
+      %{~ for s in admin_groups ~}
+        - ${s}
+      %{~ endfor ~}
+    - name: user
+      description: Read-only privileges to ${cluster_name}
+      policies:
+        - p, proj:${cluster_name}:read-only, applications, get, ${cluster_name}/*, allow
+      groups:
+      %{~ for s in member_users ~}
+        - ${s}
+      %{~ endfor ~}
+      %{~ for s in member_groups ~}
+        - ${s}
+      %{~ endfor ~}

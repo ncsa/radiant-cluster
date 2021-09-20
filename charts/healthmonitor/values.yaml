@@ -1,0 +1,21 @@
+notifiers:
+  console:
+    report: change
+    threshold: 0
+  # slack:
+  # email:
+
+nfs:
+  enabled: false
+  storageClass: nfs-condo
+
+checks:
+  ping:
+    google:
+      host: 8.8.8.8
+      sleep: 10
+  # hostport:
+  # filewrite:
+
+image:
+  pullPolicy: IfNotPresent

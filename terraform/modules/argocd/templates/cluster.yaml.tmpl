@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-${cluster_name}-secret
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+  namespace: argocd
+type: Opaque
+stringData:
+  name: ${cluster_name}
+  server: ${cluster_url}
+  config: |
+    {
+      "bearerToken": "${rancher_token}",
+      "tlsClientConfig": {
+        "insecure": false
+      }
+    }

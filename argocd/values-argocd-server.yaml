@@ -1,0 +1,74 @@
+# helm upgrade --namespace argocd --install --create-namespace argocd argo/argo-cd --values values-argocd.yaml
+
+server:
+  extraArgs:
+    - --insecure
+
+  ingress:
+    enabled: false
+    hosts:
+      - @ARGOCD_URL@
+
+  rbacConfig:
+    scopes: '[groups, email]'
+    policy.csv: |
+      g, isda_admin, role:admin
+
+  config:
+    # Argo CD's externally facing base URL (optional). Required when configuring SSO
+    url: https://@ARGOCD_URL@
+
+    # Enables application status badge feature
+    statusbadge.enabled: "true"
+
+    # Enables anonymous user access. The anonymous users get default role permissions specified argocd-rbac-cm.yaml.
+    #users.anonymous.enabled: "true"
+    # Specifies token expiration duration
+    users.session.duration: "24h"
+
+    repositories: |
+      - url: https://git.ncsa.illinois.edu/kooper/radiant-cluster.git
+        type: git
+        name: radiant-cluster
+        usernameSecret:
+          name: radiant-cluster
+          key: username
+        passwordSecret:
+          name: radiant-cluster
+          key: password
+
+    # A dex connector configuration (optional). See SSO configuration documentation:
+    # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/sso
+    # https://dexidp.io/docs/connectors/
+    dex.config: |
+      connectors:
+      - type: ldap
+        name: ncsa
+        id: ncsa
+        config:
+          # Ldap server address
+          host: ldap1.ncsa.illinois.edu:636
+          insecureNoSSL: false
+          insecureSkipVerify: false
+          # Variable name stores ldap bindDN in argocd-secret
+          #bindDN: "$dex.ldap.bindDN"
+          # Variable name stores ldap bind password in argocd-secret
+          #bindPW: "$dex.ldap.bindPW"
+          usernamePrompt: Username
+          # Ldap user serch attributes
+          userSearch:
+            baseDN: "ou=People,dc=ncsa,dc=illinois,dc=edu"
+            filter: "(&(objectclass=inetOrgPerson)(memberOf=cn=all_users,ou=groups,dc=ncsa,dc=illinois,dc=edu))"
+            username: uid
+            idAttr: DN
+            emailAttr: mail
+            nameAttr: uid
+          # Ldap group serch attributes
+          groupSearch:
+            baseDN: "ou=Groups,dc=ncsa,dc=illinois,dc=edu"
+            filter: "(&(objectclass=groupOfUniqueNames)(|(cn=isda_*)(cn=sd_*)(cn=org_software)(cn=all_disabled_usr)))"
+            userMatchers:
+            - userAttr: DN
+              groupAttr: uniqueMember
+            nameAttr: cn
+

@@ -1,0 +1,44 @@
+{{- if and .Values.nfs .Values.nfs.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-nfs
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: nfs
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: nfs-condo
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    chart: nfs-subdir-external-provisioner
+    targetRevision: {{ .Values.nfs.version | quote }}
+    helm:
+      version: v3
+      releaseName: nfs-condo
+      values: |
+        storageClass:
+          name: nfs-condo
+          archiveOnDelete: false
+          reclaimPolicy: Retain
+          defaultClass: true
+          pathPattern: {{ .Values.nfs.pathPattern | quote }}
+
+        nfs:
+          server: {{ .Values.nfs.server | quote }}
+          path: {{ .Values.nfs.path | default (printf "/radiant/projects/%s/%s" .Values.openstack.project .Values.cluster.name) | quote }}
+{{- end }}

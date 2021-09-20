@@ -1,0 +1,64 @@
+#cloud-config
+
+# SSH config
+no_ssh_fingerprints: false
+ssh:
+  emit_keys_to_console: false
+
+# update system
+#package_update: true
+#package_upgrade: true
+
+# files to be created on the system
+write_files:
+- path: /etc/rancher/rke2/config.yaml
+  permissions: "0600"
+  owner: root:root
+  content: |
+    %{~ if count_index != 0 ~}
+    server: https://${rke2_server_0_private_ip}:9345
+    %{~ endif ~}
+    token: ${rke2_secret}
+    write-kubeconfig-mode: "0644"
+    tls-san:
+      %{~ if rke2_private_ip != "" ~}
+      - ${rke2_private_ip}
+      %{~ endif ~}
+    disable:
+      - rke2-ingress-nginx
+    kube-apiserver-arg: "kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname"
+    node-taint:
+      - "CriticalAddonsOnly=true:NoSchedule"
+- path: /etc/profile.d/kubectl.sh
+  permissions: "0644"
+  owner: root:root
+  content: |
+    export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+    export PATH=$${PATH}:/var/lib/rancher/rke2/bin
+- path: /opt/rke2/run_rke2.sh
+  permissions: "0755"
+  owner: root:root
+  content: |
+    #!/bin/bash
+    %{~ if rke2_private_ip != "" ~}
+    echo "${rke2_private_ip} ${name} $$(hostname) $$(hostname -f)"  >> /etc/hosts
+    %{ endif }
+    %{ if count_index != 0 }
+    while true; do
+      timeout 1 bash -c 'cat < /dev/null > /dev/tcp/${rke2_server_0_private_ip}/9345' && break
+      echo "master is not ready yet"
+      sleep 10
+    done
+    %{ else }
+    %{ if rancher_import != "" }
+    mkdir -p /var/lib/rancher/rke2/server/manifests
+    curl -o "/var/lib/rancher/rke2/server/manifests/rancher.yaml" $(echo "${rancher_import}" | sed 's/^.* http/http/')
+    %{ endif }
+    %{ endif }
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="${rke2_version}" INSTALL_RKE2_TYPE="server" sh -
+    systemctl enable rke2-server
+    systemctl start rke2-server
+
+# run this command once the system is booted
+runcmd:
+- /opt/rke2/run_rke2.sh

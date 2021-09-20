@@ -1,0 +1,80 @@
+{{- if and .Values.ingresscontroller.enabled (eq .Values.ingresscontroller.class "traefik2") }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-traefik
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: traefik
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: traefik
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://helm.traefik.io/traefik
+    chart: traefik
+    targetRevision: {{ .Values.ingresscontroller.traefik2.version | quote }}
+    helm:
+      version: v3
+      releaseName: traefik
+      values: |
+        service:
+          externalIP:
+            - {{ .Values.ingresscontroller.publicIP }}
+          spec:
+            externalTrafficPolicy: Local
+            loadBalancerIP: {{ .Values.ingresscontroller.privateIP | default .Values.ingresscontroller.publicIP }}
+        ports:
+          web:
+            redirectTo: websecure
+          websecure:
+            tls:
+              enabled: true
+              certResolver: letsencrypt
+        additionalArguments:
+          - --providers.kubernetesingress.ingressendpoint.ip={{ .Values.ingresscontroller.publicIP }}
+          {{- if .Values.ingresscontroller.acme }}
+          - --certificatesresolvers.letsencrypt.acme.caserver={{ .Values.ingresscontroller.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
+          - --certificatesresolvers.letsencrypt.acme.email={{ .Values.ingresscontroller.acme.email }}
+          - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
+          - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+          {{- end }}
+        persistence:
+          enabled: true
+        deployment:
+          initContainers:
+          # The "volume-permissions" init container is required if you run into permission issues.
+          # Related issue: https://github.com/traefik/traefik/issues/6972
+            - name: volume-permissions
+              image: busybox:1.31.1
+              command: ["sh", "-c", "if [ -e /data/acme.json ]; then chmod -Rv 600 /data/*; fi"]
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+        ingressRoute:
+          dashboard:
+            enabled: false
+        tlsOptions:
+          default:
+            minVersion: VersionTLS12
+            cipherSuites:
+              - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+              - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+              - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+              - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+              - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+              - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+{{- end }}

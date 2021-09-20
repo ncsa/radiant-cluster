@@ -1,0 +1,39 @@
+{{- if and .Values.healthmonitor .Values.healthmonitor.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-healthmonitor
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: healthmonitor
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: healthmonitor
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://git.ncsa.illinois.edu/kooper/radiant-cluster.git
+    path: charts/healthmonitor
+    targetRevision: {{ .Values.healthmonitor.targetRevision | quote }}
+    helm:
+      version: v3
+      releaseName: healthmonitor
+      values: |
+        nfs:
+          enabled: {{ .Values.healthmonitor.nfs }}
+          storageClass: nfs-condo
+        notifiers:
+          {{- toYaml .Values.healthmonitor.notifiers | nindent 10 }}  
+{{- end }}

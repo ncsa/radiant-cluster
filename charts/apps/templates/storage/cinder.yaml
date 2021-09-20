@@ -1,0 +1,45 @@
+{{- if and .Values.cinder .Values.cinder.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-cinder
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: cinder
+  namespace: argocd
+  annotations:
+  {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: cinder-csi
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://kubernetes.github.io/cloud-provider-openstack
+    chart: openstack-cinder-csi
+    targetRevision: {{ .Values.cinder.version | quote }}
+    helm:
+      version: v3
+      releaseName: cinder-csi
+      values: |
+        secret:
+          enabled: true
+          create: true
+          name: cinder-csi-cloud-config
+          data:
+            cloud-config: |-
+              [Global]
+              auth-url={{ .Values.openstack.auth_url }}
+              region=RegionOne
+              application-credential-id={{ .Values.openstack.credential_id }}
+              application-credential-secret={{ .Values.openstack.credential_secret }}
+{{- end }}

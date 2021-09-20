@@ -1,0 +1,95 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ${cluster_name}
+  labels:
+    cluster: ${cluster_name}
+    app: infrastructure
+  namespace: argocd
+  annotations:
+    %{~ for a in argocd_annotations ~}
+    ${a}
+    %{~ endfor ~}
+spec:
+  project: ${cluster_name}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    %{~ if argocd_sync ~}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    %{~ endif ~}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: ${argocd_repo_url}
+    path: charts/apps
+    targetRevision: HEAD
+    helm:
+      version: v3
+      releaseName: ${cluster_name}
+      values: |
+        cluster:
+          name: ${cluster_name}
+          url: ${argocd_url}
+          rancher:
+            id: ${cluster_kube_id}
+
+        openstack:
+          project: ${openstack_project}
+          auth_url: ${openstack_url}
+          credential_id: ${openstack_credential_id}
+          credential_secret: ${openstack_credential_secret}
+
+        sync: ${argocd_sync}
+
+        notifications:
+          %{~ for a in argocd_annotations ~}
+          ${a}
+          %{~ endfor ~}
+
+        metallb:
+          enabled: ${metallb_enabled}
+          addresses:
+          %{~ for ip in floating_ip ~}
+            %{~ if ip.private_ip != "" ~}
+            - ${ip.private_ip}/32
+            %{~ endif ~}
+          %{~ endfor ~}
+
+        ingresscontroller:
+          enabled: ${ingress_controller != "none"}
+          dashboard: true
+          class: ${ingress_controller}
+          publicIP: ${floating_ip[0].public_ip}
+          privateIP: ${floating_ip[0].private_ip}
+          acme:
+            staging: ${acme_staging} 
+            %{~ if (acme_staging) ~}
+            server: https://acme-staging-v02.api.letsencrypt.org/directory
+            %{~ else ~}
+            server: https://acme-v02.api.letsencrypt.org/directory
+            %{~ endif ~}
+            email: ${acme_email}
+
+        healthmonitor:
+          enabled: ${healthmonitor_enabled}
+          nfs: ${healthmonitor_nfs}
+          #notifiers:
+          #  %%{ indent(12, healthmonitor) }%
+
+        longhorn:
+          enabled: ${longhorn_enabled}
+          replicas: ${longhorn_replicas}
+
+        nfs:
+          enabled: ${nfs_enabled}
+          server: ${nfs_server}
+          path: ${nfs_path}
+          pathPattern: "${cluster_name}/$${.PVC.namespace}/$${.PVC.name}"
+
+        cinder:
+          enabled: ${cinder_enabled}
