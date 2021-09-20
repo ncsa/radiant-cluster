@@ -1,6 +1,5 @@
 locals {
   cluster_argocd_url = var.argocd_master ? "https://kubernetes.default.svc" : "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
-  #nfs_path           = var.nfs_path == "" ? "/radiant/projects/${var.os_project_name}/${var.cluster_name}" : var.nfs_path
   nfs_path           = var.nfs_path == "" ? "/radiant/projects/${var.openstack_project}" : var.nfs_path
 
   argocd_cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {

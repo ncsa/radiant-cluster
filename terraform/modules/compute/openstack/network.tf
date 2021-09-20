@@ -66,14 +66,14 @@ resource "openstack_networking_port_v2" "worker_ip" {
 resource "openstack_networking_port_v2" "floating_ip" {
   count       = var.floating_ip
   depends_on  = [ openstack_networking_subnet_v2.cluster_subnet ]
-  name        = format("%s-floating-ip-%03d", var.cluster_name, count.index + 1)
+  name        = format("%s-floating-ip-%02d", var.cluster_name, count.index + 1)
   network_id  = openstack_networking_network_v2.cluster_net.id
 }
 
 # create floating ip that is associated with a fixed ip
 resource "openstack_networking_floatingip_v2" "floating_ip" {
   count   = var.floating_ip
-  description = format("%s-floating-ip-%03d", var.cluster_name, count.index + 1)
+  description = format("%s-floating-ip-%02d", var.cluster_name, count.index + 1)
   pool    = data.openstack_networking_network_v2.ext_net.name
   port_id = element(openstack_networking_port_v2.floating_ip.*.id, count.index)
 }

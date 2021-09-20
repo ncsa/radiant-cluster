@@ -8,15 +8,17 @@ variable "cluster_type" {
   description = "Cluster type, can be either rke or rke2"
   default     = "rke2"
   validation {
-    condition     = var.cluster_type == "rke" || var.cluster_type == "rke2"
-    error_message = "Image needs to be one of [rke, rke2]."
+    #condition     = var.cluster_type == "rke" || var.cluster_type == "rke2"
+    #error_message = "Image needs to be one of [rke, rke2]."
+    condition     = var.cluster_type == "rke2"
+    error_message = "Currently only support rke2"
   }
 }
 
 variable "public_key" {
   type        = string
   description = "path to public key to be injected into vm"
-  #
+  # leave as create_a_new_key to force a new key
   default     = "create_a_new_key"
 }
 
