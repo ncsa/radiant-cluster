@@ -10,7 +10,7 @@ server:
       - @ARGOCD_URL@
 
   rbacConfig:
-    scopes: '[groups, email]'
+    scopes: '[name, email, groups]'
     policy.csv: |
       g, isda_admin, role:admin
 
@@ -66,7 +66,7 @@ server:
           # Ldap group serch attributes
           groupSearch:
             baseDN: "ou=Groups,dc=ncsa,dc=illinois,dc=edu"
-            filter: "(&(objectclass=groupOfUniqueNames)(|(cn=isda_*)(cn=sd_*)(cn=org_software)(cn=all_disabled_usr)))"
+            filter: "(objectclass=groupOfUniqueNames)"
             userMatchers:
             - userAttr: DN
               groupAttr: uniqueMember
