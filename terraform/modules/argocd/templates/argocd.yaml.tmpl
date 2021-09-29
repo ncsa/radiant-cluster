@@ -89,7 +89,7 @@ spec:
           enabled: ${nfs_enabled}
           server: ${nfs_server}
           path: ${nfs_path}
-          pathPattern: "${cluster_name}/$${.PVC.namespace}-$${.PVC.name}-$${.PV.name}"
+          pathPattern: "${cluster_name}/$${.PVC.namespace}-$${.PVC.name}-$${.PVC.volume}"
 
         cinder:
           enabled: ${cinder_enabled}

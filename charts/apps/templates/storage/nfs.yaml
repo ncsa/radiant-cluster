@@ -31,6 +31,10 @@ spec:
       version: v3
       releaseName: nfs-condo
       values: |
+        image:
+          repository: kooper/nfs-subdir-external-provisioner
+          tag: v4.0.3
+
         storageClass:
           name: nfs-condo
           archiveOnDelete: false
