@@ -24,7 +24,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
   source:
-    repoURL: https://git.ncsa.illinois.edu/kooper/radiant-cluster.git
+    repoURL: https://github.com/ncsa/radiant-cluster.git
     path: charts/healthmonitor
     targetRevision: {{ .Values.healthmonitor.targetRevision | quote }}
     helm:

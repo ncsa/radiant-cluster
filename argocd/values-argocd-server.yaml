@@ -26,17 +26,6 @@ server:
     # Specifies token expiration duration
     users.session.duration: "24h"
 
-    repositories: |
-      - url: https://git.ncsa.illinois.edu/kooper/radiant-cluster.git
-        type: git
-        name: radiant-cluster
-        usernameSecret:
-          name: radiant-cluster
-          key: username
-        passwordSecret:
-          name: radiant-cluster
-          key: password
-
     # A dex connector configuration (optional). See SSO configuration documentation:
     # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/sso
     # https://dexidp.io/docs/connectors/
