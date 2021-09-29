@@ -55,7 +55,7 @@ write_files:
     curl -o "/var/lib/rancher/rke2/server/manifests/rancher.yaml" $(echo "${rancher_import}" | sed 's/^.* http/http/')
     %{ endif }
     %{ endif }
-    curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION="${rke2_version}" INSTALL_RKE2_TYPE="server" sh -
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_METHOD="tar" INSTALL_RKE2_VERSION="${rke2_version}" INSTALL_RKE2_TYPE="server" sh -
     systemctl enable rke2-server
     systemctl start rke2-server
 
