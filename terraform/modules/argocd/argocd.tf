@@ -43,6 +43,7 @@ locals {
     traefik_dashboard           = var.traefik_dashboard
     acme_staging                = var.acme_staging
     acme_email                  = var.acme_email
+    sealedsecrets_enabled       = var.sealedsecrets_enabled
     healthmonitor_enabled       = var.healthmonitor_enabled
     healthmonitor_nfs           = var.healthmonitor_nfs
     healthmonitor_notifications = var.healthmonitor_notifications

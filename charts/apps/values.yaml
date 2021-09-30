@@ -35,6 +35,10 @@ ingresscontroller:
   traefik2:
     version: "10.*"
 
+sealedsecrets:
+  enabled: false
+  version: "0.*"
+
 metallb:
   enabled: false
   version: "0.10.*"

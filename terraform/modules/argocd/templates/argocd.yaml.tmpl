@@ -81,6 +81,9 @@ spec:
           #notifiers:
           #  %%{ indent(12, healthmonitor) }%
 
+        sealedsecrets:
+          enabled: ${sealedsecrets_enabled}
+
         longhorn:
           enabled: ${longhorn_enabled}
           replicas: ${longhorn_replicas}
