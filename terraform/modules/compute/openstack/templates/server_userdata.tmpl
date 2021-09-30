@@ -21,6 +21,9 @@ write_files:
     token: ${rke2_secret}
     write-kubeconfig-mode: "0644"
     tls-san:
+      ${name}
+      ${name}.novalocal
+      ${name}.ncsa.illinois.edu
       %{~ if rke2_private_ip != "" ~}
       - ${rke2_private_ip}
       %{~ endif ~}
