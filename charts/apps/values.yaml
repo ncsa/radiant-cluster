@@ -30,6 +30,7 @@ ingresscontroller:
   #privateIP: 1.1.1.2
   #acme:
   #  email: devops.isda@lists.illinois.edu
+  storageClass: ""
   traefik1:
     version: "1.*"
   traefik2:

@@ -66,6 +66,7 @@ spec:
           class: ${ingress_controller}
           publicIP: ${floating_ip[0].public_ip}
           privateIP: ${floating_ip[0].private_ip}
+          storageClass: ${ingress_storageclass}
           acme:
             staging: ${acme_staging} 
             %{~ if (acme_staging) ~}

@@ -40,6 +40,7 @@ locals {
     floating_ip                 = var.floating_ip
     ingress_controller_enabled  = var.ingress_controller_enabled
     ingress_controller          = var.ingress_controller
+    ingress_storageclass        = var.ingress_storageclass
     traefik_dashboard           = var.traefik_dashboard
     acme_staging                = var.acme_staging
     acme_email                  = var.acme_email

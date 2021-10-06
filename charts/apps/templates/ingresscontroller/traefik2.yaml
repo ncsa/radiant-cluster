@@ -54,6 +54,7 @@ spec:
           {{- end }}
         persistence:
           enabled: true
+          storageClass: {{ .Values.ingresscontroller.storageClass | quote}}
         deployment:
           initContainers:
           # The "volume-permissions" init container is required if you run into permission issues.
