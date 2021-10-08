@@ -29,6 +29,7 @@ write_files:
       %{~ endif ~}
     disable:
       - rke2-ingress-nginx
+      - rke2-metrics-server
     kube-apiserver-arg: "kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname"
     node-taint:
       - "CriticalAddonsOnly=true:NoSchedule"
