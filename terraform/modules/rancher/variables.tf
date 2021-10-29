@@ -19,6 +19,12 @@ variable "cluster_type" {
   }
 }
 
+variable "cluster_direct_access" {
+  type        = bool
+  description = "Allow for direct access"
+  default     = true
+}
+
 # ----------------------------------------------------------------------
 # RANCHER
 # ----------------------------------------------------------------------

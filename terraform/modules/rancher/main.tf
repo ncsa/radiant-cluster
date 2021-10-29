@@ -13,7 +13,7 @@ resource "rancher2_cluster" "rke_kube" {
   description = var.cluster_description
 
   cluster_auth_endpoint {
-    enabled = false
+    enabled = var.cluster_direct_access
   }
 
   rke_config {
@@ -44,7 +44,7 @@ resource "rancher2_cluster" "rke2_kube" {
   #driver      = "rke2"
 
   cluster_auth_endpoint {
-    enabled = false
+    enabled = var.cluster_direct_access
   }
 }
 
