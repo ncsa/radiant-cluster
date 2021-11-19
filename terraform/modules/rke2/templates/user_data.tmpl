@@ -1,0 +1,37 @@
+#cloud-config
+
+# SSH config
+no_ssh_fingerprints: false
+ssh:
+  emit_keys_to_console: false
+
+# update and upgrade instance
+#package_update: true
+#package_upgrade: true
+
+# files to be created on the system
+write_files:
+- path: /etc/fstab
+  permissions: "0644"
+  owner: root:root
+  content: |
+    radiant-nfs.ncsa.illinois.edu:/radiant/projects/${project_name}/${cluster_name} /condo nfs defaults 0 0
+  append: true
+- path: /etc/profile.d/kubectl.sh
+  permissions: "0644"
+  owner: root:root
+  content: |
+    export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+    export PATH=$${PATH}:/var/lib/rancher/rke2/bin
+- path: /etc/NetworkManager/conf.d/50-rke2.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    [keyfile]
+    unmanaged-devices=interface-name:cali*;interface-name:flannel*
+
+# run this command once the system is booted
+runcmd:
+- echo "${node_command} ${node_options} --node-name ${node_name}" > /kube.sh
+- ${node_command} ${node_options} --node-name ${node_name}
+- mount -av
