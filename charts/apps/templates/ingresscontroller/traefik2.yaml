@@ -44,6 +44,9 @@ spec:
             tls:
               enabled: true
               certResolver: letsencrypt
+          {{- if .Values.ingresscontroller.traefik2.ports }}
+          {{- .Values.ingresscontroller.traefik2.ports | toYaml | nindent 10 }}
+          {{- end }}
         additionalArguments:
           - --providers.kubernetesingress.ingressendpoint.ip={{ .Values.ingresscontroller.publicIP }}
           {{- if .Values.ingresscontroller.acme }}

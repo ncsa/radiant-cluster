@@ -34,6 +34,36 @@ variable "rancher_token" {
   description = "Access token for rancher, clusters are created as this user"
 }
 
+# get latest version from rancher using:
+# curl https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq '.rke2.releases | .[].version' | sort
+variable "rke2_version" {
+  type        = string
+  description = "Version of rke2 to install."
+  default     = ""
+}
+
+# ----------------------------------------------------------------------
+# APPLICATIONS
+# ----------------------------------------------------------------------
+
+variable "monitoring_enabled" {
+  type        = bool
+  description = "Enable monitoring in rancher"
+  default     = true
+}
+
+variable "longhorn_enabled" {
+  type        = bool
+  description = "Enable longhorn storage"
+  default     = true
+}
+
+variable "longhorn_replicas" {
+  type        = string
+  description = "Number of replicas"
+  default     = 3
+}
+
 # ----------------------------------------------------------------------
 # USERS
 # ----------------------------------------------------------------------
@@ -41,44 +71,25 @@ variable "rancher_token" {
 variable "admin_users" {
   type        = set(string)
   description = "List of LDAP users with admin access to cluster."
-  default     = [ ]
+  default     = []
 }
 
 variable "admin_groups" {
   type        = set(string)
   description = "List of LDAP groups with admin access to cluster."
-  default     = [ ]
+  default     = []
 }
 
 variable "member_users" {
   type        = set(string)
   description = "List of LDAP users with access to cluster."
-  default     = [ ]
+  default     = []
 }
 
 variable "member_groups" {
   type        = set(string)
   description = "List of LDAP groups with access to cluster."
-  default     = [ ]
-}
-
-# ----------------------------------------------------------------------
-# RKE2
-# ----------------------------------------------------------------------
-
-variable "rke2_secret" {
-  type        = string
-  sensitive   = true
-  description = "default token to be used, if empty random one is used"
-  default     = ""
-}
-
-# get latest version from rancher using:
-# curl https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq '.rke2.releases | .[].version' | sort
-variable "rke2_version" {
-  type        = string
-  description = "Version of rke2 to install."
-  default     = "v1.21.6+rke2r1"
+  default     = []
 }
 
 # ----------------------------------------------------------------------

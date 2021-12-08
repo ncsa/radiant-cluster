@@ -2,20 +2,20 @@
 # control-plane nodes
 # ----------------------------------------------------------------------
 resource "openstack_compute_instance_v2" "controlplane" {
-  count           = var.controlplane_count
-  depends_on      = [
+  count = var.controlplane_count
+  depends_on = [
     openstack_networking_secgroup_rule_v2.same_security_group_ingress_tcp,
   ]
-  name            = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
-  image_name      = var.os
-  flavor_name     = var.controlplane_flavor
-  key_pair        = local.key
+  name        = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
+  image_name  = var.os
+  flavor_name = var.controlplane_flavor
+  key_pair    = local.key
   security_groups = [
     openstack_networking_secgroup_v2.cluster_security_group.name
   ]
-  config_drive    = false
+  config_drive = false
 
-  user_data  = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
+  user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
     private_key  = openstack_compute_keypair_v2.key.private_key
     project_name = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name = var.cluster_name
@@ -54,8 +54,8 @@ resource "openstack_compute_instance_v2" "controlplane" {
 # ----------------------------------------------------------------------
 
 resource "openstack_compute_instance_v2" "worker" {
-  count           = var.worker_count
-  depends_on      = [
+  count = var.worker_count
+  depends_on = [
     openstack_networking_secgroup_rule_v2.same_security_group_ingress_tcp,
     openstack_networking_port_v2.controlplane_ip
   ]
@@ -63,9 +63,11 @@ resource "openstack_compute_instance_v2" "worker" {
   flavor_name     = var.worker_flavor
   key_pair        = local.key
   config_drive    = false
-  security_groups = [ openstack_networking_secgroup_v2.cluster_security_group.name ]
+  security_groups = [
+    openstack_networking_secgroup_v2.cluster_security_group.name
+  ]
 
-  user_data  = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
+  user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
     private_key  = openstack_compute_keypair_v2.key.private_key
     project_name = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name = var.cluster_name

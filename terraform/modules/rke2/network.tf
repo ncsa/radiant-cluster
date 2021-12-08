@@ -70,18 +70,18 @@ resource "openstack_networking_port_v2" "controlplane_ip_public" {
 # create a port that will be used with the floating ip, this will be associated
 # with all of the VMs.
 resource "openstack_networking_port_v2" "floating_ip" {
-  count       = var.floating_ip
-  depends_on  = [ openstack_networking_subnet_v2.cluster_subnet ]
-  name        = format("%s-floating-ip-%02d", var.cluster_name, count.index + 1)
-  network_id  = openstack_networking_network_v2.cluster_net.id
+  count      = var.floating_ip
+  depends_on = [openstack_networking_subnet_v2.cluster_subnet]
+  name       = format("%s-floating-ip-%02d", var.cluster_name, count.index + 1)
+  network_id = openstack_networking_network_v2.cluster_net.id
 }
 
 # create floating ip that is associated with a fixed ip
 resource "openstack_networking_floatingip_v2" "floating_ip" {
-  count   = var.floating_ip
+  count       = var.floating_ip
   description = format("%s-floating-ip-%02d", var.cluster_name, count.index + 1)
-  pool    = data.openstack_networking_network_v2.ext_net.name
-  port_id = element(openstack_networking_port_v2.floating_ip.*.id, count.index)
+  pool        = data.openstack_networking_network_v2.ext_net.name
+  port_id     = element(openstack_networking_port_v2.floating_ip.*.id, count.index)
 }
 
 # create worker ip, this can route the ports for the floating ip as

@@ -26,6 +26,7 @@ healthmonitor:
 
 ingresscontroller:
   enabled: false
+  class: traefik2
   publicIP: 1.1.1.1
   #privateIP: 1.1.1.2
   #acme:
@@ -35,6 +36,12 @@ ingresscontroller:
     version: "1.*"
   traefik2:
     version: "10.*"
+    ports: {}
+      # postgres:
+      #   port: 5432
+      #   expose: true
+      #   exposedPort: 5432
+      #   protocol: TCP
 
 sealedsecrets:
   enabled: false

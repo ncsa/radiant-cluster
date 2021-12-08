@@ -19,7 +19,7 @@ output "ssh_config" {
   value       = <<-EOT
 # Automatically created by terraform
 
-%{~ for i, x in openstack_compute_instance_v2.controlplane.* }
+%{~for i, x in openstack_compute_instance_v2.controlplane.*}
 Host ${x.name}
   HostName ${openstack_networking_floatingip_v2.controlplane_ip[i].address}
   StrictHostKeyChecking no
@@ -27,8 +27,8 @@ Host ${x.name}
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
   User centos
 
-%{~ endfor }
-%{~ for x in openstack_compute_instance_v2.worker.* }
+%{~endfor}
+%{~for x in openstack_compute_instance_v2.worker.*}
 Host ${x.name}
   HostName ${x.network[0].fixed_ip_v4}
   StrictHostKeyChecking no
@@ -37,7 +37,7 @@ Host ${x.name}
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
   User centos
 
-%{~ endfor }
+%{~endfor}
 EOT
 }
 
@@ -54,7 +54,7 @@ output "kube_id" {
 
 output "floating_ip" {
   description = "Map for floating ips and associated private ips"
-  value       = [
+  value = [
     for i, ip in openstack_networking_floatingip_v2.floating_ip.*.address : {
       private_ip = element(flatten(openstack_networking_port_v2.floating_ip.*.all_fixed_ips), i)
       public_ip  = ip
