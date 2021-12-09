@@ -66,7 +66,12 @@ spec:
           class: ${ingress_controller}
           publicIP: ${floating_ip[0].public_ip}
           privateIP: ${floating_ip[0].private_ip}
-          storageClass: ${ingress_storageclass}
+          storageClass: "${ingress_storageclass}"
+          %{~ if ingress_controller == "traefik2" ~}
+          traefik2:
+            ports:
+              ${traefik2_ports}
+          %{~ endif ~}
           acme:
             staging: ${acme_staging} 
             %{~ if (acme_staging) ~}

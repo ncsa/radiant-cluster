@@ -260,6 +260,12 @@ variable "traefik_use_certmanager" {
   default     = false
 }
 
+variable "traefik2_ports" {
+  type        = map
+  description = "Additional ports to add to traefik"
+  default     = {}
+}
+
 # ----------------------------------------------------------------------
 # LETS ENCRYPT
 # ----------------------------------------------------------------------
