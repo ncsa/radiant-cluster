@@ -1,0 +1,55 @@
+#cloud-config
+
+# SSH config
+no_ssh_fingerprints: false
+ssh:
+  emit_keys_to_console: false
+
+# update and upgrade instance
+package_update: true
+package_upgrade: true
+
+# files to be created on the system
+write_files:
+- path: /etc/fstab
+  permissions: "0644"
+  owner: root:root
+  content: |
+    radiant-nfs.ncsa.illinois.edu:/radiant/projects/${project_name}/${cluster_name} /condo nfs defaults 0 0
+  append: true
+- path: /etc/docker/daemon.json
+  permissions: "0644"
+  owner: root:root
+  content: |
+    {
+      "exec-opts": ["native.cgroupdriver=systemd"],
+      "log-driver": "json-file",
+      "log-opts": {
+        "max-size": "100m"
+      },
+      "storage-driver": "overlay2"
+    }
+- path: /usr/local/bin/rke1
+  permissions: "0700"
+  owner: root:root
+  content: |
+    #!/usr/bin/bash
+    echo "sleeping to wait for network"
+    while ! ping -c 1 -w 0  mirrorlist.centos.org > /dev/null ; do echo "Sleep 10s"; sleep 10; done
+    echo "install iscsi/nfs"
+    yum -y install iscsi-initiator-utils nfs-utils
+    echo "mounting condo"
+    mkdir /condo
+    mount -av
+    echo "install docker"
+    curl https://releases.rancher.com/install-docker/20.10.sh | sh
+    systemctl enable docker
+    systemctl start docker
+    usermod -aG docker centos
+    echo "connect to rancher"
+    ${node_command} ${node_options}
+    echo "all done"
+
+# run this command once the system is booted
+runcmd:
+- /usr/local/bin/rke1
