@@ -32,7 +32,7 @@ Host ${x.name}
 Host ${x.name}
   HostName ${x.network[0].fixed_ip_v4}
   StrictHostKeyChecking no
-  ProxyJump ${openstack_networking_port_v2.controlplane_ip_public[0].all_fixed_ips[0]}
+  ProxyJump ${openstack_compute_instance_v2.controlplane[0].name}
   UserKnownHostsFile=/dev/null
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
   User centos
