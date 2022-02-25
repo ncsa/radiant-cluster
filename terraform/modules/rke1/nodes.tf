@@ -1,9 +1,14 @@
+locals {
+  controlplane = [for l in range(var.controlplane_count): var.old_hostnames ? format("%s-controlplane-%d", var.cluster_name, l) : format("%s-controlplane-%d", var.cluster_name, l + 1)]
+  worker       = [for l in range(var.worker_count): var.old_hostnames ? format("%s-worker-%d", var.cluster_name, l) : format("%s-worker-%02d", var.cluster_name, l + 1)]
+}
+
 # ----------------------------------------------------------------------
 # control-plane nodes
 # ----------------------------------------------------------------------
 resource "openstack_compute_instance_v2" "controlplane" {
   count        = var.controlplane_count
-  name         = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
+  name         = local.controlplane[count.index]
   image_name   = var.os
   flavor_name  = var.controlplane_flavor
   key_pair     = openstack_compute_keypair_v2.key.name
@@ -26,7 +31,7 @@ resource "openstack_compute_instance_v2" "controlplane" {
     private_key  = openstack_compute_keypair_v2.key.private_key
     project_name = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name = var.cluster_name
-    node_name    = "${var.cluster_name}-controlplane-${count.index}"
+    node_name    = local.controlplane[count.index]
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options = "--address eth1 --internal-address eth0 --controlplane --etcd"
   }))
@@ -61,7 +66,7 @@ resource "openstack_compute_instance_v2" "controlplane" {
 # ----------------------------------------------------------------------
 resource "openstack_compute_instance_v2" "worker" {
   count        = var.worker_count
-  name         = format("%s-worker-%02d", var.cluster_name, count.index + 1)
+  name         = local.worker[count.index]
   flavor_name  = var.worker_flavor
   key_pair     = local.key
   config_drive = false
@@ -78,7 +83,7 @@ resource "openstack_compute_instance_v2" "worker" {
     private_key  = openstack_compute_keypair_v2.key.private_key
     project_name = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name = var.cluster_name
-    node_name    = format("%s-worker-%02d", var.cluster_name, count.index + 1)
+    node_name    = local.worker[count.index]
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options = "--worker"
   }))

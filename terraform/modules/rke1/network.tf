@@ -40,7 +40,7 @@ resource "openstack_networking_router_interface_v2" "kube_gateway" {
 
 resource "openstack_networking_port_v2" "controlplane_ip" {
   count              = var.controlplane_count
-  name               = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
+  name               = local.controlplane[count.index]
   network_id         = openstack_networking_network_v2.cluster_net.id
   security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
   depends_on         = [openstack_networking_router_interface_v2.kube_gateway]
@@ -55,7 +55,7 @@ resource "openstack_networking_port_v2" "controlplane_ip" {
 
 resource "openstack_networking_port_v2" "controlplane_ip_public" {
   count              = var.controlplane_count
-  name               = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
+  name               = local.controlplane[count.index]
   network_id         = data.openstack_networking_network_v2.ext_net.id
   security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
 }
@@ -85,7 +85,7 @@ resource "openstack_networking_floatingip_v2" "floating_ip" {
 # well.
 resource "openstack_networking_port_v2" "worker_ip" {
   count              = var.worker_count
-  name               = format("%s-worker-%02d", var.cluster_name, count.index + 1)
+  name               = local.worker[count.index]
   network_id         = openstack_networking_network_v2.cluster_net.id
   security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
   depends_on         = [openstack_networking_router_interface_v2.kube_gateway]

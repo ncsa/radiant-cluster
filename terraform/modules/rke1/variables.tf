@@ -130,6 +130,12 @@ variable "openstack_ssh_key" {
 # OPENSTACK NODES
 # ----------------------------------------------------------------------
 
+variable "old_hostnames" {
+  type        = bool
+  description = "should old hostname be used (base 0)"
+  default     = false
+}
+
 variable "os" {
   type        = string
   description = "Base image to use for the OS"
