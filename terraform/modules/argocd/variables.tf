@@ -221,7 +221,7 @@ variable "ingress_controller" {
   description = "Desired ingress controller (traefik1, traefik2, nginxinc, nginx, none)"
   default     = "traefik2"
   validation {
-    condition = var.ingress_controller == "trefik1" || var.ingress_controller == "traefik2"
+    condition = var.ingress_controller == "traefik1" || var.ingress_controller == "traefik2"
     error_message = "Invalid ingress controller."
   }
 }
