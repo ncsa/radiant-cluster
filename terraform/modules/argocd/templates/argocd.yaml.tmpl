@@ -61,7 +61,7 @@ spec:
           %{~ endfor ~}
 
         ingresscontroller:
-          enabled: ${ingress_controller != "none"}
+          enabled: ${ingress_controller_enabled}
           dashboard: true
           class: ${ingress_controller}
           publicIP: ${floating_ip[0].public_ip}
