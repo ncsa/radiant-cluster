@@ -45,7 +45,7 @@ ingresscontroller:
 
 sealedsecrets:
   enabled: false
-  version: "1.*"
+  version: "2.*"
 
 metallb:
   enabled: false
