@@ -21,6 +21,28 @@ spec:
           image: clowder/healthmonitor:{{ .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
+          {{- if .Values.existingSecret }}
+          env:
+            - name: NOTIFIERS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: notifiers
+                  optional: true
+            - name: CHECKS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: checks
+                  optional: true
+            - name: CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret }}
+                  key: config
+                  optional: true
+          {{- end }}
+
           # Mount the NFS volume in the container
           volumeMounts:
             {{- if .Values.nfs.enabled }}

@@ -17,5 +17,12 @@ checks:
   # hostport:
   # filewrite:
 
+
+# name of existing secret, can contain the following keys:
+# - notifiers: list of notifiers
+# - checks: list of checks
+# - config: dict with notifiers and checks
+# existingSecret: 
+
 image:
   pullPolicy: IfNotPresent
