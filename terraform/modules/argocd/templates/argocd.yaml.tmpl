@@ -84,8 +84,7 @@ spec:
         healthmonitor:
           enabled: ${healthmonitor_enabled}
           nfs: ${healthmonitor_nfs}
-          #notifiers:
-          #  %%{ indent(12, healthmonitor) }%
+          existingSecret: ${healthmonitor_secrets}
 
         sealedsecrets:
           enabled: ${sealedsecrets_enabled}

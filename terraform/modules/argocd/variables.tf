@@ -154,10 +154,10 @@ variable "healthmonitor_nfs" {
   default     = true
 }
 
-variable "healthmonitor_notifications" {
+variable "healthmonitor_secrets" {
   type        = string
-  description = "Notifications for healthmonitor"
-  default     = ""
+  description = "Secrets (config/checks/notifications) for healthmonitor"
+  default     = "config"
 }
 
 variable "sealedsecrets_enabled" {

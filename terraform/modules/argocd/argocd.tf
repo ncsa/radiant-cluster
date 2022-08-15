@@ -48,7 +48,7 @@ locals {
     sealedsecrets_enabled       = var.sealedsecrets_enabled
     healthmonitor_enabled       = var.healthmonitor_enabled
     healthmonitor_nfs           = var.healthmonitor_nfs
-    healthmonitor_notifications = var.healthmonitor_notifications
+    healthmonitor_secrets       = var.healthmonitor_secrets
   })
 }
 
