@@ -36,4 +36,7 @@ spec:
           storageClass: nfs-condo
         notifiers:
           {{- toYaml .Values.healthmonitor.notifiers | nindent 10 }}  
+        {{- if .Values.healthmonitor.existingSecret }}
+        existingSecret: {{ .Values.healthmonitor.existingSecret }}
+        {{- end }}
 {{- end }}
