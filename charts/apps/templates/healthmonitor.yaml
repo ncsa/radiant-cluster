@@ -33,7 +33,7 @@ spec:
       values: |
         nfs:
           enabled: {{ .Values.healthmonitor.nfs }}
-          storageClass: nfs-condo
+          storageClass: nfs-taiga
         notifiers:
           {{- toYaml .Values.healthmonitor.notifiers | nindent 10 }}  
         {{- if .Values.healthmonitor.existingSecret }}
