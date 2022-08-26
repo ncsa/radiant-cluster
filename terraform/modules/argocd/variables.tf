@@ -130,18 +130,6 @@ variable "nfs_enabled" {
   default     = true
 }
 
-variable "nfs_server" {
-  type        = string
-  description = "NFS server"
-  default     = "radiant-nfs.ncsa.illinois.edu"
-}
-
-variable "nfs_path" {
-  type        = string
-  description = "path on nfs server to create folder for mounts"
-  default     = ""
-}
-
 variable "healthmonitor_enabled" {
   type        = bool
   description = "Enable healthmonitor"

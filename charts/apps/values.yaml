@@ -59,8 +59,6 @@ metallb:
 nfs:
   enabled: false
   version: "4.*"
-  server: radiant-nfs.ncsa.illinois.edu
-  path: /export
   pathPattern:
 
 longhorn:

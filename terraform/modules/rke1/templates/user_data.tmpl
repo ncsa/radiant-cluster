@@ -15,7 +15,7 @@ write_files:
   permissions: "0644"
   owner: root:root
   content: |
-    radiant-nfs.ncsa.illinois.edu:/radiant/projects/${project_name}/${cluster_name} /condo nfs defaults 0 0
+    taiga-nfs.ncsa.illinois.edu:/taiga/ncsa/radiant/${project_name}/${cluster_name} /taiga nfs defaults 0 0
   append: true
 - path: /etc/docker/daemon.json
   permissions: "0644"

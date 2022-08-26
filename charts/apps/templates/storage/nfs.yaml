@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: nfs-condo
+    namespace: nfs-taiga
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -29,20 +29,20 @@ spec:
     targetRevision: {{ .Values.nfs.version | quote }}
     helm:
       version: v3
-      releaseName: nfs-condo
+      releaseName: nfs-taiga
       values: |
         image:
           repository: kooper/nfs-subdir-external-provisioner
           tag: v4.0.3
 
         storageClass:
-          name: nfs-condo
+          name: nfs-taiga
           archiveOnDelete: false
           reclaimPolicy: Retain
           defaultClass: true
           pathPattern: {{ .Values.nfs.pathPattern | quote }}
 
         nfs:
-          server: {{ .Values.nfs.server | quote }}
-          path: {{ .Values.nfs.path | default (printf "/radiant/projects/%s/%s" .Values.openstack.project .Values.cluster.name) | quote }}
+          server: taiga-nfs.ncsa.illinois.edu
+          path: {{ (printf "/taiga/ncsa/radiant/%s" .Values.openstack.project) | quote }}
 {{- end }}

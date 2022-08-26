@@ -1,6 +1,5 @@
 locals {
   cluster_argocd_url = var.argocd_master ? "https://kubernetes.default.svc" : "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
-  nfs_path           = var.nfs_path == "" ? "/radiant/projects/${var.openstack_project}" : var.nfs_path
 
   argocd_cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {
     cluster_name   = var.cluster_name
@@ -33,8 +32,6 @@ locals {
     longhorn_enabled            = var.longhorn_enabled
     longhorn_replicas           = var.longhorn_replicas
     nfs_enabled                 = var.nfs_enabled
-    nfs_server                  = var.nfs_server
-    nfs_path                    = local.nfs_path
     cinder_enabled              = var.cinder_enabled
     metallb_enabled             = var.metallb_enabled
     floating_ip                 = var.floating_ip
