@@ -7,7 +7,7 @@ notifiers:
 
 nfs:
   enabled: false
-  storageClass: nfs-condo
+  storageClass: nfs-taiga
 
 checks:
   ping:
