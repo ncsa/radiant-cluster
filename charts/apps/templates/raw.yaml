@@ -30,7 +30,7 @@ spec:
     helm:
       version: v3
       releaseName: raw
-      values:
+      values: |
         values:
           {{- range .Values.raw.values }}
           {{ . | nindent 10 }}
