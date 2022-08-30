@@ -32,8 +32,10 @@ spec:
       releaseName: raw
       values:
         values:
-          {{ .Values.raw.values | nindent 10 }}
-          {{ if .Values.metallb.enabled }}
+          {{- range .Values.raw.values }}
+          {{ . | nindent 10 }}
+          {{- end }}
+          {{- if .Values.metallb.enabled }}
           - |
               apiVersion: metallb.io/v1beta1
               kind: IPAddressPool
@@ -54,5 +56,7 @@ spec:
                   - terraform
           {{- end }}
         templates:
-          {{ .Values.raw.templates | nindent 10 }}
+          {{- range .Values.raw.templates }}
+          {{ . | nindent 10 }}
+          {{- end }}
 {{- end }}
