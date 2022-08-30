@@ -31,32 +31,30 @@ spec:
       version: v3
       releaseName: raw
       values: |
-        values:
-          {{- range .Values.raw.values }}
-          {{ . | nindent 10 }}
+        resources:
+          {{- range .Values.raw.resources }}
+          - {{ toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.metallb.enabled }}
-          - |
-              apiVersion: metallb.io/v1beta1
-              kind: IPAddressPool
-              metadata:
+          - apiVersion: metallb.io/v1beta1
+            kind: IPAddressPool
+            metadata:
               name: terraform
               namespace: metallb-system
-              spec:
+            spec:
               addresses:
-                  {{- toYaml .Values.metallb.addresses | nindent 16 }}
-          - |
-              apiVersion: metallb.io/v1beta1
-              kind: L2Advertisement
-              metadata:
+              {{- toYaml .Values.metallb.addresses | nindent 14 }}
+          - apiVersion: metallb.io/v1beta1
+            kind: L2Advertisement
+            metadata:
               name: l2advertisement1
               namespace: metallb-system
-              spec:
+            spec:
               ipAddressPools:
-                  - terraform
+              - terraform
           {{- end }}
         templates:
           {{- range .Values.raw.templates }}
-          {{ . | nindent 10 }}
+          - {{ toYaml . | nindent 12 }}
           {{- end }}
 {{- end }}
