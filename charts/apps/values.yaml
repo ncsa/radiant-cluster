@@ -77,3 +77,5 @@ cinder:
 raw:
   enabled: false
   version: "1.*"
+  values: []
+  templates: []
