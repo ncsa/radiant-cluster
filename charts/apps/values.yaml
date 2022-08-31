@@ -49,7 +49,7 @@ sealedsecrets:
 
 metallb:
   enabled: false
-  version: "0.10.*"
+  version: "0.13.*"
   addresses: []
 
 # ----------------------------------------------------------------------
@@ -75,7 +75,7 @@ cinder:
 # ----------------------------------------------------------------------
 
 raw:
-  enabled: false
+  enabled: true
   version: "1.*"
   resources: []
   templates: []
