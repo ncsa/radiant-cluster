@@ -46,13 +46,14 @@ resource "openstack_networking_port_v2" "controlplane_ip" {
   depends_on         = [openstack_networking_router_interface_v2.kube_gateway]
 }
 
-# resource "openstack_networking_floatingip_v2" "controlplane_ip" {
-#   count       = var.controlplane_count
-#   description = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
-#   pool        = data.openstack_networking_network_v2.ext_net.name
-#   port_id     = element(openstack_networking_port_v2.controlplane_ip.*.id, count.index)
-# }
+resource "openstack_networking_floatingip_v2" "controlplane_ip" {
+  count       = var.controlplane_count
+  description = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
+  pool        = data.openstack_networking_network_v2.ext_net.name
+  port_id     = element(openstack_networking_port_v2.controlplane_ip.*.id, count.index)
+}
 
+# TODO once all clusters are switch to floating IP, remove this code block
 resource "openstack_networking_port_v2" "controlplane_ip_public" {
   count              = var.controlplane_count
   name               = local.controlplane[count.index]
@@ -61,7 +62,7 @@ resource "openstack_networking_port_v2" "controlplane_ip_public" {
 }
 
 # ----------------------------------------------------------------------
-# worker nodes
+# floating IP
 # ----------------------------------------------------------------------
 
 # create a port that will be used with the floating ip, this will be associated
@@ -80,6 +81,10 @@ resource "openstack_networking_floatingip_v2" "floating_ip" {
   pool        = data.openstack_networking_network_v2.ext_net.name
   port_id     = element(openstack_networking_port_v2.floating_ip.*.id, count.index)
 }
+
+# ----------------------------------------------------------------------
+# worker nodes
+# ----------------------------------------------------------------------
 
 # create worker ip, this can route the ports for the floating ip as
 # well.

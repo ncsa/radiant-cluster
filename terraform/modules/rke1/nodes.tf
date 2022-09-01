@@ -48,15 +48,12 @@ resource "openstack_compute_instance_v2" "controlplane" {
     port = element(openstack_networking_port_v2.controlplane_ip.*.id, count.index)
   }
 
-  network {
-    port = element(openstack_networking_port_v2.controlplane_ip_public.*.id, count.index)
-  }
-
   lifecycle {
     ignore_changes = [
       key_pair,
       block_device,
-      user_data
+      user_data,
+      network
     ]
   }
 }
