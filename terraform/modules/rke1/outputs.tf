@@ -21,7 +21,7 @@ output "ssh_config" {
 
 %{~for i, x in openstack_compute_instance_v2.controlplane.*}
 Host ${x.name}
-  HostName ${openstack_networking_port_v2.controlplane_ip_public[i].all_fixed_ips[0]}
+  HostName ${openstack_networking_floatingip_v2.controlplane_ip[i].address}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
