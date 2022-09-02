@@ -40,7 +40,7 @@ write_files:
     yum -y install iscsi-initiator-utils nfs-utils
     echo "mounting taiga"
     mkdir /taiga
-    mount -av
+    #mount -av
     echo "install docker"
     curl https://releases.rancher.com/install-docker/20.10.sh | sh
     systemctl enable docker
