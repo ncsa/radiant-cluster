@@ -33,7 +33,7 @@ resource "openstack_compute_instance_v2" "controlplane" {
     cluster_name = var.cluster_name
     node_name    = local.controlplane[count.index]
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
-    node_options = "--address eth1 --internal-address eth0 --controlplane --etcd"
+    node_options = "--address awspublic --internal-address awslocal --controlplane --etcd"
   }))
 
   block_device {

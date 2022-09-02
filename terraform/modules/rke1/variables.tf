@@ -56,12 +56,11 @@ variable "rancher_token" {
   description = "Access token for rancher, clusters are created as this user"
 }
 
-# get latest version from rancher using:
-# curl https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq '.RKEDefaultK8sVersions.default'
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq -r '.K8sVersionRKESystemImages | keys'
 variable "rke1_version" {
   type        = string
   description = "Version of rke1 to install."
-  default     = ""
+  default     = "v1.21.14-rancher1-1"
 }
 
 # ----------------------------------------------------------------------
