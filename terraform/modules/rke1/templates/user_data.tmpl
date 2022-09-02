@@ -38,8 +38,8 @@ write_files:
     while ! ping -c 1 -w 0  mirrorlist.centos.org > /dev/null ; do echo "Sleep 10s"; sleep 10; done
     echo "install iscsi/nfs"
     yum -y install iscsi-initiator-utils nfs-utils
-    echo "mounting condo"
-    mkdir /condo
+    echo "mounting taiga"
+    mkdir /taiga
     mount -av
     echo "install docker"
     curl https://releases.rancher.com/install-docker/20.10.sh | sh
