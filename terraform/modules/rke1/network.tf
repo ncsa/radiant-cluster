@@ -53,14 +53,6 @@ resource "openstack_networking_floatingip_v2" "controlplane_ip" {
   port_id     = element(openstack_networking_port_v2.controlplane_ip.*.id, count.index)
 }
 
-# TODO once all clusters are switch to floating IP, remove this code block
-resource "openstack_networking_port_v2" "controlplane_ip_public" {
-  count              = var.controlplane_count
-  name               = local.controlplane[count.index]
-  network_id         = data.openstack_networking_network_v2.ext_net.id
-  security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
-}
-
 # ----------------------------------------------------------------------
 # floating IP
 # ----------------------------------------------------------------------
