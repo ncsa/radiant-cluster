@@ -1,6 +1,0 @@
-provider "openstack" {
-  auth_url                      = var.openstack_url
-  region                        = "RegionOne"
-  application_credential_id     = var.openstack_credential_id
-  application_credential_secret = var.openstack_credential_secret
-}
