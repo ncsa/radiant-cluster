@@ -53,19 +53,24 @@ spec:
 
         metallb:
           enabled: ${metallb_enabled}
+          %{~ if metallb_enabled ~}
           addresses:
           %{~ for ip in floating_ip ~}
             %{~ if ip.private_ip != "" ~}
             - ${ip.private_ip}/32
             %{~ endif ~}
           %{~ endfor ~}
+          %{~ endif ~}
 
         ingresscontroller:
           enabled: ${ingress_controller_enabled}
+          %{~ if ingress_controller_enabled ~}
           dashboard: true
           class: ${ingress_controller}
+          %{~ if length(floating_ip) > 0 ~}
           publicIP: ${floating_ip[0].public_ip}
           privateIP: ${floating_ip[0].private_ip}
+          %{~ endif ~}
           storageClass: "${ingress_storageclass}"
           %{~ if ingress_controller == "traefik2" ~}
           traefik2:
@@ -80,22 +85,29 @@ spec:
             server: https://acme-v02.api.letsencrypt.org/directory
             %{~ endif ~}
             email: ${acme_email}
+          %{~ endif ~}
 
         healthmonitor:
           enabled: ${healthmonitor_enabled}
+          %{~ if healthmonitor_enabled ~}
           nfs: ${healthmonitor_nfs}
           existingSecret: ${healthmonitor_secrets}
+          %{~ endif ~}
 
         sealedsecrets:
           enabled: ${sealedsecrets_enabled}
 
         longhorn:
           enabled: ${longhorn_enabled}
+          %{~ if longhorn_enabled ~}
           replicas: ${longhorn_replicas}
+          %{~ endif ~}
 
         nfs:
           enabled: ${nfs_enabled}
+          %{~ if nfs_enabled ~}
           pathPattern: "${cluster_name}/$${.PVC.namespace}-$${.PVC.name}-$${.PVC.volume}"
+          %{~ endif ~}
 
         cinder:
           enabled: ${cinder_enabled}
