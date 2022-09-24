@@ -59,7 +59,14 @@ metallb:
 nfs:
   enabled: false
   version: "4.*"
-  pathPattern:
+  servers:
+    taiga: {}
+      #  pathPattern:
+      #  defaultClass: true
+    # custom:
+    #   server: server1
+    #   path: /export/
+    #   pathPattern:
 
 longhorn:
   enabled: false

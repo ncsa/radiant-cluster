@@ -1,21 +1,23 @@
-{{- if and .Values.nfs .Values.nfs.enabled }}
+{{- if and .Values.nfs .Values.nfs.enabled .Values.nfs.servers }}
+{{- range $k, $v := .Values.nfs.servers }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-nfs
+  name: "{{ $.Values.cluster.name }}-nfs-{{ $k }}"
   labels:
-    cluster: {{ .Values.cluster.name | quote }}
+    cluster: {{ $.Values.cluster.name | quote }}
     app: nfs
   namespace: argocd
   annotations:
-    {{- toYaml .Values.notifications | nindent 4 }}
+    {{- toYaml $.Values.notifications | nindent 4 }}
 spec:
-  project: {{ .Values.cluster.name }}
+  project: {{ $.Values.cluster.name }}
   destination:
-    server: {{ .Values.cluster.url }}
-    namespace: nfs-taiga
+    server: {{ $.Values.cluster.url }}
+    namespace: "nfs-{{ $k }}"
   syncPolicy:
-    {{- if .Values.sync }}
+    {{- if $.Values.sync }}
     automated:
       prune: true
       selfHeal: true
@@ -26,23 +28,35 @@ spec:
   source:
     repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
     chart: nfs-subdir-external-provisioner
-    targetRevision: {{ .Values.nfs.version | quote }}
+    targetRevision: {{ $.Values.nfs.version | quote }}
     helm:
       version: v3
-      releaseName: nfs-taiga
+      releaseName: "nfs-{{ $k }}"
       values: |
         image:
           repository: kooper/nfs-subdir-external-provisioner
           tag: v4.0.3
 
         storageClass:
-          name: nfs-taiga
+          name: nfs-{{ $k }}
           archiveOnDelete: false
           reclaimPolicy: Retain
-          defaultClass: true
-          pathPattern: {{ .Values.nfs.pathPattern | quote }}
+          {{- if $v.defaultClass }}
+          defaultClass: {{ $v.defaultClass }}
+          {{- end }}
+          {{- if and $v $v.pathPattern }}
+          pathPattern: {{ $v.pathPattern | quote }}
+          {{- else if $.Values.nfs.pathPattern }}
+          pathPattern: {{ $.Values.nfs.pathPattern | quote }}
+          {{- end }}
 
         nfs:
+          {{- if eq $k "taiga" }}
           server: taiga-nfs.ncsa.illinois.edu
-          path: {{ (printf "/taiga/ncsa/radiant/%s" .Values.openstack.project) | quote }}
+          path: {{ (printf "/taiga/ncsa/radiant/%s" $.Values.openstack.project) | quote }}
+          {{- else }}
+          server: {{ $v.server | quote }}
+          path: {{ $v.path | quote }}
+          {{- end }}
+{{- end }}
 {{- end }}
