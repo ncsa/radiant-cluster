@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 1.2.1 - 2022-10-13
+
+### Changed
+- traefik has many major versions released, right now it is set to *
+
 ## 1.2.0 - 2022-09-29
 
 ### Changed
