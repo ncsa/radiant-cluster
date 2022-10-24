@@ -1,18 +1,19 @@
 locals {
-  controlplane = [for l in range(var.controlplane_count): var.old_hostnames ? format("%s-controlplane-%d", var.cluster_name, l) : format("%s-controlplane-%d", var.cluster_name, l + 1)]
-  worker       = [for l in range(var.worker_count): var.old_hostnames ? format("%s-worker-%d", var.cluster_name, l) : format("%s-worker-%02d", var.cluster_name, l + 1)]
+  controlplane = [for l in range(var.controlplane_count) : var.old_hostnames ? format("%s-controlplane-%d", var.cluster_name, l) : format("%s-controlplane-%d", var.cluster_name, l + 1)]
+  worker       = [for l in range(var.worker_count) : var.old_hostnames ? format("%s-worker-%d", var.cluster_name, l) : format("%s-worker-%02d", var.cluster_name, l + 1)]
 }
 
 # ----------------------------------------------------------------------
 # control-plane nodes
 # ----------------------------------------------------------------------
 resource "openstack_compute_instance_v2" "controlplane" {
-  count        = var.controlplane_count
-  name         = local.controlplane[count.index]
-  image_name   = var.os
-  flavor_name  = var.controlplane_flavor
-  key_pair     = openstack_compute_keypair_v2.key.name
-  config_drive = false
+  count             = var.controlplane_count
+  name              = local.controlplane[count.index]
+  image_name        = var.os
+  availability_zone = var.openstack_zone
+  flavor_name       = var.controlplane_flavor
+  key_pair          = openstack_compute_keypair_v2.key.name
+  config_drive      = false
 
   depends_on = [
     openstack_networking_secgroup_rule_v2.same_security_group_ingress_tcp,
@@ -52,7 +53,8 @@ resource "openstack_compute_instance_v2" "controlplane" {
     ignore_changes = [
       key_pair,
       block_device,
-      user_data
+      user_data,
+      availability_zone
     ]
   }
 }
@@ -61,11 +63,13 @@ resource "openstack_compute_instance_v2" "controlplane" {
 # worker nodes
 # ----------------------------------------------------------------------
 resource "openstack_compute_instance_v2" "worker" {
-  count        = var.worker_count
-  name         = local.worker[count.index]
-  flavor_name  = var.worker_flavor
-  key_pair     = local.key
-  config_drive = false
+  count             = var.worker_count
+  name              = local.worker[count.index]
+  image_name        = var.os
+  availability_zone = var.openstack_zone
+  flavor_name       = var.worker_flavor
+  key_pair          = local.key
+  config_drive      = false
 
   depends_on = [
     openstack_networking_secgroup_rule_v2.same_security_group_ingress_tcp
@@ -101,7 +105,8 @@ resource "openstack_compute_instance_v2" "worker" {
     ignore_changes = [
       key_pair,
       block_device,
-      user_data
+      user_data,
+      availability_zone
     ]
   }
 }
