@@ -125,6 +125,12 @@ variable "openstack_ssh_key" {
   default     = ""
 }
 
+variable "openstack_zone" {
+  type        = string
+  description = "default zone to use for openstack nodes"
+  default     = "nova"
+}
+
 # ----------------------------------------------------------------------
 # OPENSTACK NODES
 # ----------------------------------------------------------------------
