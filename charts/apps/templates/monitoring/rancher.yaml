@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: rancher-monitoring
+    namespace: cattle-monitoring-system
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -52,7 +52,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: rancher-monitoring
+    namespace: cattle-monitoring-system
   syncPolicy:
     {{- if .Values.sync }}
     automated:
