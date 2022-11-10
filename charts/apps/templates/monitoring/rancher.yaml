@@ -61,6 +61,7 @@ spec:
       allowEmpty: false
     {{- end }}
     syncOptions:
+      - Replace=true
       - CreateNamespace=true
   source:
     repoURL: https://charts.rancher.io
