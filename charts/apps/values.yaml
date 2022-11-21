@@ -47,7 +47,7 @@ sealedsecrets:
 # MONITORING
 # ----------------------------------------------------------------------
 
-ranchermonitoring:
+rancherMonitoring:
   enabled: false
   version: "100.*"
 
