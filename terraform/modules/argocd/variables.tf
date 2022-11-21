@@ -67,12 +67,6 @@ variable "openstack_project" {
 # ----------------------------------------------------------------------
 # ARGOCD
 # ----------------------------------------------------------------------
-variable "argocd_master" {
-  type        = bool
-  description = "Is this the master argocd cluster, you most likely don't need to modify this value"
-  default     = false
-}
-
 variable "argocd_kube_id" {
   type        = string
   description = "Rancher argocd cluster, set to blank to not install argocd"

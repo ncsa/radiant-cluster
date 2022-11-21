@@ -1,5 +1,5 @@
 locals {
-  cluster_argocd_url = var.argocd_master ? "https://kubernetes.default.svc" : "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
+  cluster_argocd_url = "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
 
   argocd_cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {
     cluster_name   = var.cluster_name
@@ -55,7 +55,7 @@ locals {
 # upload to central argocd server
 # ----------------------------------------------------------------------
 resource "kubectl_manifest" "argocd_cluster" {
-  count     = var.argocd_kube_id == "" || var.argocd_master ? 0 : 1
+  count     = var.argocd_kube_id != "" ? 1 : 0
   yaml_body = local.argocd_cluster
 }
 
