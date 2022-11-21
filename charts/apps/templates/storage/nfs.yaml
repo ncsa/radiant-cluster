@@ -48,6 +48,8 @@ spec:
           pathPattern: {{ $v.pathPattern | quote }}
           {{- else if $.Values.nfs.pathPattern }}
           pathPattern: {{ $.Values.nfs.pathPattern | quote }}
+          {{- else }}
+          pathPattern: "{{ $.Values.cluster.name }}/${.PVC.namespace}-${.PVC.name}-${.PVC.pvname}"
           {{- end }}
 
         nfs:
