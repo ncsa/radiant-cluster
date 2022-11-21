@@ -35,7 +35,7 @@ spec:
       values: |
         image:
           repository: kooper/nfs-subdir-external-provisioner
-          tag: v4.0.3
+          tag: v4.0.17
 
         storageClass:
           name: nfs-{{ $k }}

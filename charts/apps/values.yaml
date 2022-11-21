@@ -15,6 +15,11 @@ notifications: {}
 
 sync: false
 
+metallb:
+  enabled: false
+  version: "0.13.*"
+  addresses: []
+
 ingresscontroller:
   enabled: false
   class: traefik2
@@ -38,14 +43,14 @@ sealedsecrets:
   enabled: false
   version: "2.*"
 
-metallb:
-  enabled: false
-  version: "0.13.*"
-  addresses: []
-
 # ----------------------------------------------------------------------
 # MONITORING
 # ----------------------------------------------------------------------
+
+ranchermonitoring:
+  enabled: false
+  version: "100.*"
+
 healthmonitor:
   enabled: false
   targetRevision: HEAD
@@ -55,10 +60,6 @@ healthmonitor:
       report: change
       threshold: 0
 
-rancherMonitoring:
-  enabled: false
-  version: "100.*"
-
 # ----------------------------------------------------------------------
 # STORAGE
 # ----------------------------------------------------------------------
@@ -67,10 +68,7 @@ nfs:
   enabled: false
   version: "4.*"
   servers:
-    taiga: {}
-      #  pathPattern:
-      #  defaultClass: true
-    # custom:
+    # special:
     #   server: server1
     #   path: /export/
     #   pathPattern:

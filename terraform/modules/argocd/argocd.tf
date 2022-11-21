@@ -25,6 +25,7 @@ locals {
     argocd_annotations          = var.argocd_annotations
     argocd_sync                 = var.argocd_sync
     argocd_repo_url             = var.argocd_repo_url
+    argocd_repo_version         = var.argocd_repo_version
     openstack_url               = var.openstack_url
     openstack_credential_id     = var.openstack_credential_id
     openstack_credential_secret = var.openstack_credential_secret
@@ -43,6 +44,7 @@ locals {
     acme_staging                = var.acme_staging
     acme_email                  = var.acme_email
     sealedsecrets_enabled       = var.sealedsecrets_enabled
+    rancher_monitoring_enabled  = var.rancher_monitoring_enabled
     healthmonitor_enabled       = var.healthmonitor_enabled
     healthmonitor_nfs           = var.healthmonitor_nfs
     healthmonitor_secrets       = var.healthmonitor_secrets

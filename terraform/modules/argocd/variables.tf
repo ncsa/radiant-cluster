@@ -90,6 +90,12 @@ variable "argocd_repo_url" {
   default     = "https://github.com/ncsa/radiant-cluster.git"
 }
 
+variable "argocd_repo_version" {
+  type        = string
+  description = "What version of the application to deploy"
+  default     = "HEAD"
+}
+
 variable "argocd_annotations" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
@@ -100,7 +106,7 @@ variable "argocd_annotations" {
 # ARGOCD APPLICATIONS
 # ----------------------------------------------------------------------
 
-variable "monitoring_enabled" {
+variable "rancher_monitoring_enabled" {
   type        = bool
   description = "Enable monitoring in rancher"
   default     = true
