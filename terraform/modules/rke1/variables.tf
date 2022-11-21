@@ -22,12 +22,6 @@ variable "cluster_direct_access" {
 # APPLICATIONS
 # ----------------------------------------------------------------------
 
-variable "monitoring_enabled" {
-  type        = bool
-  description = "Enable monitoring in rancher"
-  default     = true
-}
-
 variable "longhorn_enabled" {
   type        = bool
   description = "Enable longhorn storage"

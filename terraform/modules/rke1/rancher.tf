@@ -126,29 +126,3 @@ EOF
     ]
   }
 }
-
-# ----------------------------------------------------------------------
-# monitoring
-# ----------------------------------------------------------------------
-resource "rancher2_app_v2" "monitor" {
-  count      = var.monitoring_enabled ? 1 : 0
-  cluster_id = rancher2_cluster_sync.kube.cluster_id
-  name       = "rancher-monitoring"
-  namespace  = "cattle-monitoring-system"
-  repo_name  = "rancher-charts"
-  chart_name = "rancher-monitoring"
-  project_id = rancher2_cluster_sync.kube.system_project_id
-  //  values        = <<EOF
-  //prometheus:
-  //  resources:
-  //    core:
-  //      limits:
-  //        cpu: "4000m"
-  //        memory: "6144Mi"
-  //EOF
-  lifecycle {
-    ignore_changes = [
-      values
-    ]
-  }
-}
