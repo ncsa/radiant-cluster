@@ -1,0 +1,45 @@
+{{- if and .Values.ingresscontroller.enabled (eq .Values.ingresscontroller.class "nginx") }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-nginx
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: nginx
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: nginx
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    chart: ingress-nginx
+    targetRevision: {{ .Values.ingresscontroller.nginx.version | quote }}
+    helm:
+      version: v3
+      releaseName: nginx
+      values: |
+        controller:
+          extraArgs:
+            publish-status-address: {{ .Values.ingresscontroller.publicIP }}
+          publishService:
+            enabled: false
+          service:
+            externalTrafficPolicy: Local
+            loadBalancerIP: {{ .Values.ingresscontroller.privateIP | default .Values.ingresscontroller.publicIP }}
+          watchIngressWithoutClass: true
+          ingressClassResource:
+            default: true
+{{- end }}

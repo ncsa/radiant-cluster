@@ -1,4 +1,4 @@
-{{- if and .Values.ingresscontroller.enabled (eq .Values.ingresscontroller.class "traefik2") }}
+{{- if and .Values.ingresscontroller.enabled (eq .Values.ingresscontroller.class "traefik") }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -26,7 +26,7 @@ spec:
   source:
     repoURL: https://helm.traefik.io/traefik
     chart: traefik
-    targetRevision: {{ .Values.ingresscontroller.traefik2.version | quote }}
+    targetRevision: {{ .Values.ingresscontroller.traefik.version | quote }}
     helm:
       version: v3
       releaseName: traefik
@@ -44,20 +44,20 @@ spec:
             tls:
               enabled: true
               certResolver: letsencrypt
-          {{- if .Values.ingresscontroller.traefik2.ports }}
-          {{- .Values.ingresscontroller.traefik2.ports | toYaml | nindent 10 }}
+          {{- if .Values.ingresscontroller.traefik.ports }}
+          {{- .Values.ingresscontroller.traefik.ports | toYaml | nindent 10 }}
           {{- end }}
         additionalArguments:
           - --providers.kubernetesingress.ingressendpoint.ip={{ .Values.ingresscontroller.publicIP }}
-          {{- if .Values.ingresscontroller.acme }}
-          - --certificatesresolvers.letsencrypt.acme.caserver={{ .Values.ingresscontroller.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
-          - --certificatesresolvers.letsencrypt.acme.email={{ .Values.ingresscontroller.acme.email }}
+          {{- if .Values.ingresscontroller.traefik.acme }}
+          - --certificatesresolvers.letsencrypt.acme.caserver={{ .Values.ingresscontroller.traefik.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
+          - --certificatesresolvers.letsencrypt.acme.email={{ .Values.ingresscontroller.traefik.acme.email }}
           - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
           - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
           {{- end }}
         persistence:
           enabled: true
-          storageClass: {{ .Values.ingresscontroller.storageClass | quote}}
+          storageClass: {{ .Values.ingresscontroller.traefik.storageClass | quote}}
         deployment:
           initContainers:
           # The "volume-permissions" init container is required if you run into permission issues.
