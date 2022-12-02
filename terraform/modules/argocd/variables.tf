@@ -190,12 +190,6 @@ variable "member_groups" {
 
 # ----------------------------------------------------------------------
 # INGRESS
-# working:
-# - traefik1
-# - traefik2
-# work in progress
-# - nginx
-# - nginxinc
 # ----------------------------------------------------------------------
 
 variable "ingress_controller_enabled" {
@@ -206,35 +200,17 @@ variable "ingress_controller_enabled" {
 
 variable "ingress_controller" {
   type        = string
-  description = "Desired ingress controller (traefik1, traefik2, nginxinc, nginx, none)"
-  default     = "traefik2"
+  description = "Desired ingress controller (traefik, traefik2 (same as traefik), nginx, none)"
+  default     = "traefik"
   validation {
-    condition = var.ingress_controller == "traefik1" || var.ingress_controller == "traefik2"
+    condition = var.ingress_controller == "nginx" || var.ingress_controller == "traefik" || var.ingress_controller == "traefik2" || var.ingress_controller == "none"
     error_message = "Invalid ingress controller."
   }
-}
-
-variable "ingress_storageclass" {
-  type        = string
-  description = "storageclass used by ingress controller"
-  default     = ""
 }
 
 # ----------------------------------------------------------------------
 # TRAEFIK
 # ----------------------------------------------------------------------
-
-variable "traefik_dashboard" {
-  type        = bool
-  description = "Should dashboard ingress rule be added as /traefik"
-  default     = true
-}
-
-variable "traefik_server" {
-  type        = string
-  description = "Desired hostname to be used for cluster, nip.io will use ip address"
-  default     = ""
-}
 
 variable "traefik_access_log" {
   type        = bool
@@ -242,13 +218,13 @@ variable "traefik_access_log" {
   default     = false
 }
 
-variable "traefik_use_certmanager" {
-  type        = bool
-  description = "Should traefik v2 use cert manager"
-  default     = false
+variable "traefik_storageclass" {
+  type        = string
+  description = "storageclass used by ingress controller"
+  default     = ""
 }
 
-variable "traefik2_ports" {
+variable "traefik_ports" {
   type        = map
   description = "Additional ports to add to traefik"
   default     = {}

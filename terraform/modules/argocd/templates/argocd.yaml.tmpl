@@ -65,26 +65,25 @@ spec:
         ingresscontroller:
           enabled: ${ingress_controller_enabled}
           %{~ if ingress_controller_enabled ~}
-          dashboard: true
           class: ${ingress_controller}
           %{~ if length(floating_ip) > 0 ~}
           publicIP: ${floating_ip[0].public_ip}
           privateIP: ${floating_ip[0].private_ip}
           %{~ endif ~}
-          storageClass: "${ingress_storageclass}"
-          %{~ if ingress_controller == "traefik2" ~}
-          traefik2:
+          %{~ if ingress_controller == "traefik" ||  ingress_controller == "traefik2" ~}
+          traefik:
+            storageClass: "${traefik_storageclass}"
+            acme:
+              staging: ${acme_staging} 
+              %{~ if (acme_staging) ~}
+              server: https://acme-staging-v02.api.letsencrypt.org/directory
+              %{~ else ~}
+              server: https://acme-v02.api.letsencrypt.org/directory
+              %{~ endif ~}
+              email: ${acme_email}
             ports:
-              ${traefik2_ports}
+              ${traefik_ports}
           %{~ endif ~}
-          acme:
-            staging: ${acme_staging} 
-            %{~ if (acme_staging) ~}
-            server: https://acme-staging-v02.api.letsencrypt.org/directory
-            %{~ else ~}
-            server: https://acme-v02.api.letsencrypt.org/directory
-            %{~ endif ~}
-            email: ${acme_email}
           %{~ endif ~}
 
         healthmonitor:

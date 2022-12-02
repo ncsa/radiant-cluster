@@ -26,16 +26,16 @@ healthmonitor:
 
 ingresscontroller:
   enabled: false
-  class: traefik2
+  class: traefik
   publicIP: 1.1.1.1
   #privateIP: 1.1.1.2
-  #acme:
-  #  email: devops.isda@lists.illinois.edu
-  storageClass: ""
-  traefik1:
-    version: "1.*"
-  traefik2:
+  nginx:
+    version: "4.*"
+  traefik:
     version: "*"
+    storageClass: ""
+    #acme:
+    #  email: devops.isda@lists.illinois.edu
     ports: {}
       # postgres:
       #   port: 5432
