@@ -12,6 +12,7 @@ resource "rancher2_cluster" "kube" {
 
   rke_config {
     kubernetes_version = var.rke1_version
+    enable_cri_dockerd = true
     network {
       plugin = "weave"
     }
