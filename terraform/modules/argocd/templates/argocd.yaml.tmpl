@@ -65,7 +65,11 @@ spec:
         ingresscontroller:
           enabled: ${ingress_controller_enabled}
           %{~ if ingress_controller_enabled ~}
+          %{~ if ingress_controller == "traefik2" ~}
+          class: traefik
+          %{~ else ~}
           class: ${ingress_controller}
+          %{~ endif ~}
           %{~ if length(floating_ip) > 0 ~}
           publicIP: ${floating_ip[0].public_ip}
           privateIP: ${floating_ip[0].private_ip}
