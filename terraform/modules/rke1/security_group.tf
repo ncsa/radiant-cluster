@@ -80,7 +80,7 @@ resource "openstack_networking_secgroup_rule_v2" "ingress_kubeapi" {
   protocol          = "tcp"
   port_range_min    = 6443
   port_range_max    = 6443
-  remote_ip_prefix  = "141.142.0.0/16"
+  remote_ip_prefix  = var.openstack_security_kubernetes
   security_group_id = openstack_networking_secgroup_v2.cluster_security_group.id
   depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
 }

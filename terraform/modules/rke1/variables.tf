@@ -131,6 +131,12 @@ variable "openstack_zone" {
   default     = "nova"
 }
 
+variable "openstack_security_kubernetes" {
+  type        = string
+  description = "IP address to allow connections to kube api port"
+  default     = "141.142.0.0/16"
+}
+
 # ----------------------------------------------------------------------
 # OPENSTACK NODES
 # ----------------------------------------------------------------------
