@@ -106,14 +106,15 @@ resource "rancher2_cluster_role_template_binding" "member_groups" {
 # longhorn storage
 # ----------------------------------------------------------------------
 resource "rancher2_app_v2" "longhorn-system" {
-  count      = var.longhorn_enabled ? 1 : 0
-  cluster_id = rancher2_cluster_sync.kube.cluster_id
-  name       = "longhorn"
-  namespace  = "longhorn-system"
-  repo_name  = "rancher-charts"
-  chart_name = "longhorn"
-  project_id = rancher2_cluster_sync.kube.system_project_id
-  values     = <<EOF
+  count         = var.longhorn_enabled ? 1 : 0
+  cluster_id    = rancher2_cluster_sync.kube.cluster_id
+  name          = "longhorn"
+  namespace     = "longhorn-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "longhorn"
+  chart_version = "101.1.0+up1.3.2"
+  project_id    = rancher2_cluster_sync.kube.system_project_id
+  values        = <<EOF
 defaultSettings:
   backupTarget: nfs://radiant-nfs.ncsa.illinois.edu:/radiant/projects/${data.openstack_identity_auth_scope_v3.scope.project_name}/${var.cluster_name}/backup
   defaultReplicaCount: ${var.longhorn_replicas}
@@ -132,13 +133,14 @@ EOF
 # monitoring
 # ----------------------------------------------------------------------
 resource "rancher2_app_v2" "monitor" {
-  count      = var.monitoring_enabled ? 1 : 0
-  cluster_id = rancher2_cluster_sync.kube.cluster_id
-  name       = "rancher-monitoring"
-  namespace  = "cattle-monitoring-system"
-  repo_name  = "rancher-charts"
-  chart_name = "rancher-monitoring"
-  project_id = rancher2_cluster_sync.kube.system_project_id
+  count         = var.monitoring_enabled ? 1 : 0
+  cluster_id    = rancher2_cluster_sync.kube.cluster_id
+  name          = "rancher-monitoring"
+  namespace     = "cattle-monitoring-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "rancher-monitoring"
+  chart_version = "101.0.0+up19.0.3"
+  project_id    = rancher2_cluster_sync.kube.system_project_id
   //  values        = <<EOF
   //prometheus:
   //  resources:
