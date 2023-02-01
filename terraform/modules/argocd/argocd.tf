@@ -1,5 +1,5 @@
 locals {
-  cluster_argocd_url = var.argocd_master ? "https://kubernetes.default.svc" : "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
+  cluster_argocd_url = "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
 
   argocd_cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {
     cluster_name   = var.cluster_name
@@ -25,6 +25,7 @@ locals {
     argocd_annotations          = var.argocd_annotations
     argocd_sync                 = var.argocd_sync
     argocd_repo_url             = var.argocd_repo_url
+    argocd_repo_version         = var.argocd_repo_version
     openstack_url               = var.openstack_url
     openstack_credential_id     = var.openstack_credential_id
     openstack_credential_secret = var.openstack_credential_secret
@@ -42,6 +43,7 @@ locals {
     acme_staging                = var.acme_staging
     acme_email                  = var.acme_email
     sealedsecrets_enabled       = var.sealedsecrets_enabled
+    monitoring_enabled          = var.monitoring_enabled
     healthmonitor_enabled       = var.healthmonitor_enabled
     healthmonitor_nfs           = var.healthmonitor_nfs
     healthmonitor_secrets       = var.healthmonitor_secrets
@@ -52,7 +54,7 @@ locals {
 # upload to central argocd server
 # ----------------------------------------------------------------------
 resource "kubectl_manifest" "argocd_cluster" {
-  count     = var.argocd_kube_id == "" || var.argocd_master ? 0 : 1
+  count     = var.argocd_kube_id != "" ? 1 : 0
   yaml_body = local.argocd_cluster
 }
 

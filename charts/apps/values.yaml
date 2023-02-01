@@ -15,14 +15,10 @@ notifications: {}
 
 sync: false
 
-healthmonitor:
+metallb:
   enabled: false
-  targetRevision: HEAD
-  nfs: false
-  notifiers:
-    console:
-      report: change
-      threshold: 0
+  version: "0.13.*"
+  addresses: []
 
 ingresscontroller:
   enabled: false
@@ -47,10 +43,22 @@ sealedsecrets:
   enabled: false
   version: "2.*"
 
-metallb:
+# ----------------------------------------------------------------------
+# MONITORING
+# ----------------------------------------------------------------------
+
+monitoring:
   enabled: false
-  version: "0.13.*"
-  addresses: []
+  version: "101.*"
+
+healthmonitor:
+  enabled: false
+  targetRevision: HEAD
+  nfs: false
+  notifiers:
+    console:
+      report: change
+      threshold: 0
 
 # ----------------------------------------------------------------------
 # STORAGE
@@ -60,10 +68,7 @@ nfs:
   enabled: false
   version: "4.*"
   servers:
-    taiga: {}
-      #  pathPattern:
-      #  defaultClass: true
-    # custom:
+    # special:
     #   server: server1
     #   path: /export/
     #   pathPattern:

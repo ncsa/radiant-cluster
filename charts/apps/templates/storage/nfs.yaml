@@ -35,7 +35,7 @@ spec:
       values: |
         image:
           repository: kooper/nfs-subdir-external-provisioner
-          tag: v4.0.3
+          tag: v4.0.17
 
         storageClass:
           name: nfs-{{ $k }}
@@ -48,6 +48,8 @@ spec:
           pathPattern: {{ $v.pathPattern | quote }}
           {{- else if $.Values.nfs.pathPattern }}
           pathPattern: {{ $.Values.nfs.pathPattern | quote }}
+          {{- else }}
+          pathPattern: "{{ $.Values.cluster.name }}/${.PVC.namespace}-${.PVC.name}-${.PVC.pvname}"
           {{- end }}
 
         nfs:

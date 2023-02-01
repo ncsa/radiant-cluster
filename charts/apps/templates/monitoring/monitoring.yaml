@@ -1,0 +1,80 @@
+{{- if and .Values.monitoring .Values.monitoring.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-rancher-monitoring
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: rancher-monitoring
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: cattle-monitoring-system
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://charts.rancher.io
+    chart: rancher-monitoring
+    targetRevision: {{ .Values.rancherMonitoring.version | quote }}
+    helm:
+      version: v3
+      releaseName: rancher-monitoring
+      values: |
+        global:
+          cattle:
+            clusterId: {{ .Values.cluster.rancher.id }}
+            clusterName: {{ .Values.cluster.name }}
+            systemDefaultRegistry: ""
+          systemDefaultRegistry: ""
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-rancher-monitoring-crd
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: rancher-monitoring-crd
+  namespace: argocd
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: cattle-monitoring-system
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - Replace=true
+      - CreateNamespace=true
+  source:
+    repoURL: https://charts.rancher.io
+    chart: rancher-monitoring-crd
+    targetRevision: {{ .Values.rancherMonitoring.version | quote }}
+    helm:
+      version: v3
+      releaseName: rancher-monitoring-crd
+      values: |
+        global:
+          cattle:
+            clusterId: {{ .Values.cluster.rancher.id }}
+            clusterName: {{ .Values.cluster.name }}
+            systemDefaultRegistry: ""
+          systemDefaultRegistry: ""
+{{- end }}

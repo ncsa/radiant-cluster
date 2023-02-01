@@ -27,7 +27,7 @@ spec:
   source:
     repoURL: ${argocd_repo_url}
     path: charts/apps
-    targetRevision: HEAD
+    targetRevision: ${argocd_repo_version}
     helm:
       version: v3
       releaseName: ${cluster_name}
@@ -90,6 +90,14 @@ spec:
           %{~ endif ~}
           %{~ endif ~}
 
+        sealedsecrets:
+          enabled: ${sealedsecrets_enabled}
+
+        monitoring:
+          # broken, use rancher to deply
+          enabled: false
+          #enabled: ${monitoring_enabled}
+
         healthmonitor:
           enabled: ${healthmonitor_enabled}
           %{~ if healthmonitor_enabled ~}
@@ -97,19 +105,20 @@ spec:
           existingSecret: ${healthmonitor_secrets}
           %{~ endif ~}
 
-        sealedsecrets:
-          enabled: ${sealedsecrets_enabled}
+        nfs:
+          enabled: ${nfs_enabled}
+          %{~ if nfs_enabled ~}
+          servers:
+            taiga:
+              server: taiga-nfs.ncsa.illinois.edu
+              path: "/taiga/ncsa/radiant/${openstack_project}"
+              defaultClass: true
+          %{~ endif ~}
 
         longhorn:
           enabled: ${longhorn_enabled}
           %{~ if longhorn_enabled ~}
           replicas: ${longhorn_replicas}
-          %{~ endif ~}
-
-        nfs:
-          enabled: ${nfs_enabled}
-          %{~ if nfs_enabled ~}
-          pathPattern: "${cluster_name}/$${.PVC.namespace}-$${.PVC.name}-$${.PVC.volume}"
           %{~ endif ~}
 
         cinder:
