@@ -51,10 +51,11 @@ resource "openstack_compute_instance_v2" "controlplane" {
 
   lifecycle {
     ignore_changes = [
-      key_pair,
       block_device,
-      user_data,
-      availability_zone
+      flavor_name,
+      image_name,
+      key_pair,
+      user_data
     ]
   }
 }
@@ -103,10 +104,11 @@ resource "openstack_compute_instance_v2" "worker" {
 
   lifecycle {
     ignore_changes = [
-      key_pair,
       block_device,
-      user_data,
-      availability_zone
+      flavor_name,
+      image_name,
+      key_pair,
+      user_data
     ]
   }
 }

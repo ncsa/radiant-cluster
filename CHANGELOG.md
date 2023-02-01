@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - disabled argocd deployment of monitoring since it never synchronizes in argocd
+- ignore changes to os/flavor of the nodes
 
 ## 1.3.0 - 2022-11-21
 
