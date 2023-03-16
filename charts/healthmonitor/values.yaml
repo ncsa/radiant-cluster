@@ -11,8 +11,8 @@ nfs:
 
 checks:
   ping:
-    google:
-      host: 8.8.8.8
+    ncsa-dns:
+      host: 141.142.2.2
       sleep: 10
   # hostport:
   # filewrite:
