@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.3.2 - 2023-04-21
+
+### Changed
+- freeze openstack-cinder-csi at 2.26.* (upstream issue: https://github.com/kubernetes/cloud-provider-openstack/issues/2209)
+
 ## 1.3.1 - 2023-01-31
 
 ### Added

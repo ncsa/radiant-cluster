@@ -80,7 +80,7 @@ longhorn:
 
 cinder:
   enabled: false
-  version: "2.*"
+  version: "2.60.*"
 
 # ----------------------------------------------------------------------
 # MISC RESOURCES
