@@ -1,10 +1,10 @@
+This is mirrored to GitHub, the code and terraform modules can be found at: https://git.ncsa.illinois.edu/kubernetes/radiant-cluster
+
 # Create Kubernetes On Radiant
 
-These are the modules used by the terraform scripts in radiant-cluster-template. This wil create
-the nodes on radiant (openstack), and create a kubernetes cluster leveraging racnher.
+These are the modules used by the terraform scripts in radiant-cluster-template. This wil create the nodes on radiant (openstack), and create a kubernetes cluster leveraging rancher.
 
-This also has the code to hook into argocd for deployment of most common aspects of a kubernetes
-cluster
+This also has the code to hook into argocd for deployment of most common aspects of a kubernetes cluster
 
 # TerraForm Modules
 
@@ -12,10 +12,7 @@ Currently the only supported (and used) modules are RKE1 and ArgoCD.
 
 ## ArgoCD (terraform/modules/argocd)
 
-Creates a project/cluster/app in the managed argocd setup. The users with access to the
-clustre will also have access to this project in argocd. The app installed will point to
-the charts/apps folder which installs most of the components of the kubernetes cluster.
-Many of thse can be turn and off using the variables.
+Creates a project/cluster/app in the managed argocd setup. The users with access to the cluster will also have access to this project in argocd. The app installed will point to the charts/apps folder which installs most of the components of the kubernetes cluster. Many of thse can be turn and off using the variables.
 
 If all options are enabled this will install:
 - ingress controller (traefik v2)
@@ -62,20 +59,17 @@ No longer supported
 
 # ArgoCD (argocd)
 
-This is the scripts used to bootstrap argocd in one cluster. This installation is used in
-the argocd terraform module to create projects/cluster.
+This is the scripts used to bootstrap argocd in one cluster. This installation is used in the argocd terraform module to create projects/cluster.
 
 # Charts (charts)
 
-This contains helm charts leveraged by ArgoCD to install the modules mentioned earlier as
-well as a helmchart to install the healthmonitor.
+This contains helm charts leveraged by ArgoCD to install the modules mentioned earlier as well as a helmchart to install the healthmonitor.
 
 ## apps (charts/apps)
 
-This is an app that creates new apps to install all the components configured by the
-argocd terraform module
+This is an app that creates new apps to install all the components configured by the argocd terraform module
 
 ## healthmonitor (charts/healthmonitor)
 
-This module can check different aspects, but mainly is used to make sure the network is
-working as expected and the connections to NFS are working correctly.
+This module can check different aspects, but mainly is used to make sure the network is working as expected and the connections to NFS are working correctly.
+
