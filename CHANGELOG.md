@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0 - 2023-06-28
+
+This is a breaking change. You will need to update your terraform code to use this new version. The cluster is now configured using a json file. The following json file will mimic the original cluster definition:
+
+```json
+{
+  "machines": [
+    {
+      "name": "controlplane",
+      "role": "controlplane",
+      "count": 3,
+      "flavor": "gp.medium",
+      "os": "centos"
+    },
+    {
+      "name": "worker",
+      "count": 3,
+      "flavor": "gp.large",
+      "disk": 40,
+      "os": "centos"
+    }
+  ]
+}
+```
+
+### Added
+
+- Can use ubuntu for OS
+- Can have differt types of machines (e.g. gpu and no cpu)
+
+### Changed
+
+- Removed all variables to specify machines used in cluster
+
 ## 1.3.1 - 2023-01-31
 
 ### Added

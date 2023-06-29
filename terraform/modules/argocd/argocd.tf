@@ -1,22 +1,22 @@
 locals {
   cluster_argocd_url = "${var.rancher_url}/k8s/clusters/${var.cluster_kube_id}"
 
-  argocd_cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {
-    cluster_name   = var.cluster_name
-    cluster_url    = local.cluster_argocd_url
-    rancher_token  = var.rancher_token
+  cluster = templatefile("${path.module}/templates/cluster.yaml.tmpl", {
+    cluster_name  = var.cluster_name
+    cluster_url   = local.cluster_argocd_url
+    rancher_token = var.rancher_token
   })
 
-  argocd_cluster_project = templatefile("${path.module}/templates/project.yaml.tmpl", {
-    cluster_name   = var.cluster_name
-    cluster_url    = local.cluster_argocd_url
-    admin_groups   = var.admin_groups
-    admin_users    = var.admin_users
-    member_groups  = var.member_groups
-    member_users   = var.member_users
+  project = templatefile("${path.module}/templates/project.yaml.tmpl", {
+    cluster_name  = var.cluster_name
+    cluster_url   = local.cluster_argocd_url
+    admin_groups  = var.admin_groups
+    admin_users   = var.admin_users
+    member_groups = var.member_groups
+    member_users  = var.member_users
   })
 
-  argocd_cluster_app = templatefile("${path.module}/templates/argocd.yaml.tmpl", {
+  app = templatefile("${path.module}/templates/argocd.yaml.tmpl", {
     cluster_name                = var.cluster_name
     cluster_url                 = local.cluster_argocd_url
     cluster_kube_id             = var.cluster_kube_id
@@ -55,15 +55,15 @@ locals {
 # ----------------------------------------------------------------------
 resource "kubectl_manifest" "argocd_cluster" {
   count     = var.argocd_kube_id != "" ? 1 : 0
-  yaml_body = local.argocd_cluster
+  yaml_body = local.cluster
 }
 
-resource "kubectl_manifest" "argocd_cluster_project" {
-  count     = var.argocd_kube_id != ""  ? 1 : 0
-  yaml_body = local.argocd_cluster_project
+resource "kubectl_manifest" "argocd_project" {
+  count     = var.argocd_kube_id != "" ? 1 : 0
+  yaml_body = local.project
 }
 
-resource "kubectl_manifest" "argocd_cluster_app" {
-  count     = var.argocd_kube_id != ""  ? 1 : 0
-  yaml_body = local.argocd_cluster_app
+resource "kubectl_manifest" "argocd_app" {
+  count     = var.argocd_kube_id != "" ? 1 : 0
+  yaml_body = local.app
 }

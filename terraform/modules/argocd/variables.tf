@@ -15,9 +15,9 @@ variable "cluster_description" {
 }
 
 variable "floating_ip" {
-  type        = list(object({
+  type = list(object({
     private_ip = string,
-    public_ip = string
+    public_ip  = string
   }))
   description = "List of public/private ip addresses, Private ip addres can be blank"
 }
@@ -93,7 +93,7 @@ variable "argocd_repo_version" {
 variable "argocd_annotations" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
-  default     = [ ]
+  default     = []
 }
 
 # ----------------------------------------------------------------------
@@ -167,25 +167,25 @@ variable "metallb_enabled" {
 variable "admin_users" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
-  default     = [ ]
+  default     = []
 }
 
 variable "admin_groups" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
-  default     = [ "isda_admin" ]
+  default     = []
 }
 
 variable "member_users" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
-  default     = [ ]
+  default     = []
 }
 
 variable "member_groups" {
   type        = set(string)
   description = "Should argocd be used for infrastructure"
-  default     = [ ]
+  default     = []
 }
 
 # ----------------------------------------------------------------------
@@ -203,7 +203,7 @@ variable "ingress_controller" {
   description = "Desired ingress controller (traefik, traefik2 (same as traefik), nginx, none)"
   default     = "traefik"
   validation {
-    condition = var.ingress_controller == "nginx" || var.ingress_controller == "traefik" || var.ingress_controller == "traefik2" || var.ingress_controller == "none"
+    condition     = var.ingress_controller == "nginx" || var.ingress_controller == "traefik" || var.ingress_controller == "traefik2" || var.ingress_controller == "none"
     error_message = "Invalid ingress controller."
   }
 }
@@ -225,7 +225,7 @@ variable "traefik_storageclass" {
 }
 
 variable "traefik_ports" {
-  type        = map
+  type        = map(any)
   description = "Additional ports to add to traefik"
   default     = {}
 }

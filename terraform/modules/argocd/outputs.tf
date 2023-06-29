@@ -1,17 +1,17 @@
-output "argocd_cluster" {
+output "cluster" {
   description = "ArgoCD cluster definition"
   sensitive   = true
-  value       = local.argocd_cluster
+  value       = local.cluster
 }
 
-output "argocd_cluster_project" {
+output "project" {
   description = "ArgoCD project and permissions"
   sensitive   = true
-  value       = local.argocd_cluster_project
+  value       = local.project
 }
 
-output "argocd_cluster_app" {
+output "app" {
   description = "ArogCD app of apps"
   sensitive   = true
-  value       = local.argocd_cluster_app
+  value       = local.app
 }
