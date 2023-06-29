@@ -6,27 +6,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 2.0.0 - 2023-06-28
 
-This is a breaking change. You will need to update your terraform code to use this new version. The cluster is now configured using a json file. The following json file will mimic the original cluster definition:
+This is a breaking change. You will need to update your terraform code to use this new version. This is an example of the variable `cluster_machine`.
 
 ```json
-{
-  "machines": [
-    {
-      "name": "controlplane",
-      "role": "controlplane",
-      "count": 3,
-      "flavor": "gp.medium",
-      "os": "centos"
-    },
-    {
-      "name": "worker",
-      "count": 3,
-      "flavor": "gp.large",
-      "disk": 40,
-      "os": "centos"
-    }
-  ]
-}
+[
+  {
+    "name": "controlplane",
+    "role": "controlplane",
+    "count": 3,
+    "flavor": "gp.medium",
+    "os": "centos"
+  },
+  {
+    "name": "worker",
+    "count": 3,
+    "flavor": "gp.large",
+    "disk": 40,
+    "os": "centos"
+  }
+]
 ```
 
 ### Added

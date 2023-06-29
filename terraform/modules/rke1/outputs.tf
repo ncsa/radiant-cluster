@@ -3,6 +3,11 @@ output "project_name" {
   value       = data.openstack_identity_auth_scope_v3.scope.project_name
 }
 
+output "machines" {
+  description = "List of machines created"
+  value       = local.machines
+}
+
 output "node_command" {
   description = "Command to join?"
   value       = rancher2_cluster.kube.cluster_registration_token[0].node_command
@@ -19,24 +24,23 @@ output "ssh_config" {
   value       = <<-EOT
 # Automatically created by terraform
 
-%{~for i, x in openstack_compute_instance_v2.controlplane.*}
-Host ${x.name}
-  HostName ${openstack_networking_floatingip_v2.controlplane_ip[i].address}
+%{~for x in [for m in local.machines : m if m.floating_ip]}
+Host ${x.hostname}
+  HostName ${openstack_networking_floatingip_v2.machine_ip[x.hostname].address}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
-  User centos
-
+  User ${x.username}
 %{~endfor}
-%{~for x in openstack_compute_instance_v2.worker.*}
-Host ${x.name}
-  HostName ${x.network[0].fixed_ip_v4}
+
+%{~for x in [for m in local.machines : m if !m.floating_ip]}
+Host ${x.hostname}
+  ProxyJump ${local.jumphost}
+  HostName ${openstack_networking_port_v2.machine_ip[x.hostname].all_fixed_ips[0]}
   StrictHostKeyChecking no
-  ProxyJump ${openstack_compute_instance_v2.controlplane[0].name}
   UserKnownHostsFile=/dev/null
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
-  User centos
-
+  User ${x.username}
 %{~endfor}
 EOT
 }

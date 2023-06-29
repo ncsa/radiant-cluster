@@ -18,26 +18,10 @@ variable "cluster_direct_access" {
   default     = true
 }
 
-# ----------------------------------------------------------------------
-# APPLICATIONS
-# ----------------------------------------------------------------------
-
-variable "monitoring_enabled" {
-  type        = bool
-  description = "Enable monitoring in rancher"
-  default     = true
-}
-
-variable "longhorn_enabled" {
-  type        = bool
-  description = "Enable longhorn storage"
-  default     = true
-}
-
-variable "longhorn_replicas" {
-  type        = string
-  description = "Number of replicas"
-  default     = 3
+variable "cluster_machines" {
+  type        = set(map(any))
+  description = "machine definition"
+  default     = []
 }
 
 # ----------------------------------------------------------------------
@@ -60,7 +44,6 @@ variable "rancher_token" {
 variable "rke1_version" {
   type        = string
   description = "Version of rke1 to install."
-  default     = "v1.21.14-rancher1-1"
 }
 
 # ----------------------------------------------------------------------
@@ -98,7 +81,7 @@ variable "member_groups" {
 variable "openstack_url" {
   type        = string
   description = "OpenStack URL"
-  default     = "https://radiant.ncsa.illinois.edu"
+  default     = "https://radiant.ncsa.illinois.edu:5000"
 }
 
 variable "openstack_credential_id" {
@@ -119,74 +102,10 @@ variable "openstack_external_net" {
   default     = "ext-net"
 }
 
-variable "openstack_ssh_key" {
-  type        = string
-  description = "existing SSH key to use, leave blank for a new one"
-  default     = ""
-}
-
-variable "openstack_zone" {
-  type        = string
-  description = "default zone to use for openstack nodes"
-  default     = "nova"
-}
-
 variable "openstack_security_kubernetes" {
   type        = string
   description = "IP address to allow connections to kube api port"
   default     = "141.142.0.0/16"
-}
-
-# ----------------------------------------------------------------------
-# OPENSTACK NODES
-# ----------------------------------------------------------------------
-
-variable "old_hostnames" {
-  type        = bool
-  description = "should old hostname be used (base 0)"
-  default     = false
-}
-
-variable "os" {
-  type        = string
-  description = "Base image to use for the OS"
-  default     = "CentOS-7-GenericCloud-Latest"
-}
-
-variable "controlplane_count" {
-  type        = string
-  description = "Desired quantity of control-plane nodes"
-  default     = 1
-}
-
-variable "controlplane_flavor" {
-  type        = string
-  description = "Desired flavor of control-plane nodes"
-  default     = "m1.medium"
-}
-
-variable "controlplane_disksize" {
-  type        = string
-  description = "Desired disksize of control-plane nodes"
-  default     = 40
-}
-
-variable "worker_count" {
-  type        = string
-  description = "Desired quantity of worker nodes"
-  default     = 1
-}
-
-variable "worker_flavor" {
-  type        = string
-  description = "Desired flavor of worker nodes"
-  default     = "m1.large"
-}
-
-variable "worker_disksize" {
-  type        = string
-  description = "Desired disksize of worker nodes"
-  default     = 40
 }
 
 # ----------------------------------------------------------------------

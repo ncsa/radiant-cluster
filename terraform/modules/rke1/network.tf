@@ -2,9 +2,13 @@
 # private ip spaces of 192.168.0.0/21. Each of the machines will
 # have a fixed ip address in this private IP space.
 #
-# For the worker nodes, tere will be a set of floating IP addresses
+# For the worker machines, there will be a set of floating IP addresses
 # that can be given to a load balancer (using for example metallb).
 #
+
+data "openstack_networking_network_v2" "ext_net" {
+  name = var.openstack_external_net
+}
 
 # ----------------------------------------------------------------------
 # setup network, subnet and router
@@ -35,25 +39,6 @@ resource "openstack_networking_router_interface_v2" "kube_gateway" {
 }
 
 # ----------------------------------------------------------------------
-# control plane
-# ----------------------------------------------------------------------
-
-resource "openstack_networking_port_v2" "controlplane_ip" {
-  count              = var.controlplane_count
-  name               = local.controlplane[count.index]
-  network_id         = openstack_networking_network_v2.cluster_net.id
-  security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
-  depends_on         = [openstack_networking_router_interface_v2.kube_gateway]
-}
-
-resource "openstack_networking_floatingip_v2" "controlplane_ip" {
-  count       = var.controlplane_count
-  description = format("%s-controlplane-%d", var.cluster_name, count.index + 1)
-  pool        = data.openstack_networking_network_v2.ext_net.name
-  port_id     = element(openstack_networking_port_v2.controlplane_ip.*.id, count.index)
-}
-
-# ----------------------------------------------------------------------
 # floating IP
 # ----------------------------------------------------------------------
 
@@ -75,17 +60,16 @@ resource "openstack_networking_floatingip_v2" "floating_ip" {
 }
 
 # ----------------------------------------------------------------------
-# worker nodes
+# machines
 # ----------------------------------------------------------------------
 
-# create worker ip, this can route the ports for the floating ip as
-# well.
-resource "openstack_networking_port_v2" "worker_ip" {
-  count              = var.worker_count
-  name               = local.worker[count.index]
+resource "openstack_networking_port_v2" "machine_ip" {
+  for_each           = { for vm in local.machines : vm.hostname => vm }
+  name               = each.value.hostname
   network_id         = openstack_networking_network_v2.cluster_net.id
   security_group_ids = [openstack_networking_secgroup_v2.cluster_security_group.id]
   depends_on         = [openstack_networking_router_interface_v2.kube_gateway]
+
   dynamic "allowed_address_pairs" {
     for_each = openstack_networking_port_v2.floating_ip.*.all_fixed_ips.0
     content {
@@ -93,3 +77,12 @@ resource "openstack_networking_port_v2" "worker_ip" {
     }
   }
 }
+
+resource "openstack_networking_floatingip_v2" "machine_ip" {
+  for_each    = { for vm in local.machines : vm.hostname => vm if vm.floating_ip }
+  description = each.value.hostname
+  pool        = data.openstack_networking_network_v2.ext_net.name
+  port_id     = openstack_networking_port_v2.machine_ip[each.key].id
+}
+
+
