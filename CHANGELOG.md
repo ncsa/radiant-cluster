@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.0 - 2023-08-03
+
+In the next major update all backwards compatible code will be removed. Please migrate to teh cluster_machine setup and set controlplane_count and worker_count to 0
+
+### Changed
+
+- This add backwards compatibility to the stack, you still need ot define the cluster machines
+
 ## 2.0.0 - 2023-06-28
 
 This is a breaking change. You will need to update your terraform code to use this new version. This is an example of the variable `cluster_machine`.
