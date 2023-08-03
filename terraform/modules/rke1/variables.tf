@@ -25,6 +25,28 @@ variable "cluster_machines" {
 }
 
 # ----------------------------------------------------------------------
+# APPLICATIONS
+# ----------------------------------------------------------------------
+
+variable "monitoring_enabled" {
+  type        = bool
+  description = "Enable monitoring in rancher"
+  default     = true
+}
+
+variable "longhorn_enabled" {
+  type        = bool
+  description = "Enable longhorn storage"
+  default     = true
+}
+
+variable "longhorn_replicas" {
+  type        = string
+  description = "Number of replicas"
+  default     = 3
+}
+
+# ----------------------------------------------------------------------
 # RANCHER
 # ----------------------------------------------------------------------
 
@@ -44,6 +66,7 @@ variable "rancher_token" {
 variable "rke1_version" {
   type        = string
   description = "Version of rke1 to install."
+  default     = "v1.21.14-rancher1-1"
 }
 
 # ----------------------------------------------------------------------
@@ -81,7 +104,7 @@ variable "member_groups" {
 variable "openstack_url" {
   type        = string
   description = "OpenStack URL"
-  default     = "https://radiant.ncsa.illinois.edu:5000"
+  default     = "https://radiant.ncsa.illinois.edu"
 }
 
 variable "openstack_credential_id" {
@@ -102,10 +125,97 @@ variable "openstack_external_net" {
   default     = "ext-net"
 }
 
-variable "openstack_security_kubernetes" {
+# DEPRECATED, new key will always be created
+variable "openstack_ssh_key" {
   type        = string
-  description = "IP address to allow connections to kube api port"
-  default     = "141.142.0.0/16"
+  description = "existing SSH key to use, leave blank for a new one"
+  default     = ""
+}
+
+# DEPRECATED
+variable "openstack_zone" {
+  type        = string
+  description = "default zone to use for openstack nodes"
+  default     = "nova"
+}
+
+variable "openstack_security_kubernetes" {
+  type        = map(any)
+  description = "IP address to allow connections to kube api port, default is rancher nodes"
+  default = {
+    "rancher-1" : "141.142.218.167/16"
+    "rancher-2" : "141.142.217.171/16"
+    "rancher-3" : "141.142.217.184/16"
+  }
+}
+
+variable "openstack_os_image" {
+  type        = map(any)
+  description = "Map from short OS name to image"
+  default = {
+    "centos" = "CentOS-7-GenericCloud-Latest"
+    "ubuntu" = "Ubuntu Jammy (22.04) latest"
+  }
+}
+
+# ----------------------------------------------------------------------
+# OPENSTACK NODES
+# ----------------------------------------------------------------------
+
+# DEPRECATED
+variable "old_hostnames" {
+  type        = bool
+  description = "should old hostname be used (base 0)"
+  default     = false
+}
+
+# DEPRECATED
+variable "os" {
+  type        = string
+  description = "Base image to use for the OS"
+  default     = "CentOS-7-GenericCloud-Latest"
+}
+
+# DEPRECATED
+variable "controlplane_count" {
+  type        = string
+  description = "Desired quantity of control-plane nodes"
+  default     = 1
+}
+
+# DEPRECATED
+variable "controlplane_flavor" {
+  type        = string
+  description = "Desired flavor of control-plane nodes"
+  default     = "m1.medium"
+}
+
+# DEPRECATED
+variable "controlplane_disksize" {
+  type        = string
+  description = "Desired disksize of control-plane nodes"
+  default     = 40
+}
+
+# DEPRECATED
+variable "worker_count" {
+  type        = string
+  description = "Desired quantity of worker nodes"
+  default     = 1
+}
+
+# DEPRECATED
+variable "worker_flavor" {
+  type        = string
+  description = "Desired flavor of worker nodes"
+  default     = "m1.large"
+}
+
+# DEPRECATED
+variable "worker_disksize" {
+  type        = string
+  description = "Desired disksize of worker nodes"
+  default     = 40
 }
 
 # ----------------------------------------------------------------------
