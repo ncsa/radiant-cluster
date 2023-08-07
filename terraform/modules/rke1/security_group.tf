@@ -86,19 +86,6 @@ resource "openstack_networking_secgroup_rule_v2" "ingress_kubeapi" {
   depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
 }
 
-# Ingress IPv4  TCP 30000 - 32767 0.0.0.0/0 - nodeport
-# DEPRECATED
-resource "openstack_networking_secgroup_rule_v2" "ingress_nodeport" {
-  description       = "nodeport"
-  direction         = "ingress"
-  ethertype         = "IPv4"
-  protocol          = "tcp"
-  port_range_min    = 30000
-  port_range_max    = 32767
-  security_group_id = openstack_networking_secgroup_v2.cluster_security_group.id
-  depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
-}
-
 resource "openstack_networking_secgroup_rule_v2" "same_security_group_ingress_tcp" {
   direction         = "ingress"
   ethertype         = "IPv4"
