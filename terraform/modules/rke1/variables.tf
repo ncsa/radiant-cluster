@@ -149,6 +149,14 @@ variable "openstack_security_kubernetes" {
   }
 }
 
+variable "openstack_security_ssh" {
+  type        = map(any)
+  description = "IP address to allow connections to ssh, default is open to the world"
+  default = {
+    "world" : "0.0.0.0/0"
+  }
+}
+
 variable "openstack_os_image" {
   type        = map(any)
   description = "Map from short OS name to image"

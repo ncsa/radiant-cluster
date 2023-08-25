@@ -38,12 +38,14 @@ resource "openstack_networking_secgroup_rule_v2" "ingress_icmp" {
 
 # Ingress IPv4  TCP 22 (SSH)  0.0.0.0/0 - - 
 resource "openstack_networking_secgroup_rule_v2" "ingress_ssh" {
-  description       = "ssh"
+  for_each          = var.openstack_security_ssh
+  description       = "ssh from ${each.key}"
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
   port_range_min    = 22
   port_range_max    = 22
+  remote_ip_prefix  = each.value
   security_group_id = openstack_networking_secgroup_v2.cluster_security_group.id
   depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
 }
