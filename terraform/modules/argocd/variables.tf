@@ -81,7 +81,7 @@ variable "argocd_sync" {
 variable "argocd_repo_url" {
   type        = string
   description = "URL to pull argocd applications from"
-  default     = "https://github.com/ncsa/radiant-cluster.git"
+  default     = "https://git.ncsa.illinois.edu/kubernetes/radiant-cluster.git"
 }
 
 variable "argocd_repo_version" {

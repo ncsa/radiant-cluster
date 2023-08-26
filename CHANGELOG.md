@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.1 - 2023-08-26
+
+### Changed
+- fix broken cinder, missing v1.28.0 imaes
+- point argocd to git.ncsa.illinois.edu instead of github
+
 ## 2.3.0 - 2023-08-25
 
 ### Changed
