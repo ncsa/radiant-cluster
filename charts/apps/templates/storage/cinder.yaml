@@ -31,6 +31,10 @@ spec:
       version: v3
       releaseName: cinder-csi
       values: |
+        csi:
+          plugin:
+            image:
+              tag: v1.27.1
         secret:
           enabled: true
           create: true
