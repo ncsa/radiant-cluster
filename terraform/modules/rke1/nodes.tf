@@ -75,6 +75,15 @@ resource "openstack_compute_instance_v2" "machine" {
     node_options = lookup(local.node_options, each.value.role, "--worker")
     node_labels  = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
   }))
+
+  lifecycle {
+    ignore_changes = [
+      key_pair,
+      block_device,
+      user_data,
+      availability_zone
+    ]
+  }
 }
 
 # ----------------------------------------------------------------------
