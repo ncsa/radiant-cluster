@@ -102,8 +102,8 @@ variable "argocd_annotations" {
 
 variable "monitoring_enabled" {
   type        = bool
-  description = "Enable monitoring in rancher"
-  default     = true
+  description = "Enable monitoring using prometheus"
+  default     = false
 }
 
 variable "cinder_enabled" {

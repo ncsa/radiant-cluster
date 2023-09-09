@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.3 - 2023-09-09
+
+### Changed
+- added rancher monitoring chart, this can now be managed through argocd.
+
 ## 2.3.2 - 2023-08-30
 
 CRITICAL the version 2.2.0 - 2.3.1 could result in all nodes in the cluster being deleted in the case of changes to the userdata.

@@ -28,18 +28,21 @@ variable "cluster_machines" {
 # APPLICATIONS
 # ----------------------------------------------------------------------
 
+# DEPRECATED - will move to argocd
 variable "monitoring_enabled" {
   type        = bool
   description = "Enable monitoring in rancher"
   default     = true
 }
 
+# DEPRECATED - will move to argocd
 variable "longhorn_enabled" {
   type        = bool
   description = "Enable longhorn storage"
   default     = true
 }
 
+# DEPRECATED - will move to argocd
 variable "longhorn_replicas" {
   type        = string
   description = "Number of replicas"
@@ -125,14 +128,14 @@ variable "openstack_external_net" {
   default     = "ext-net"
 }
 
-# DEPRECATED, new key will always be created
+# DEPRECATED - new key will always be created
 variable "openstack_ssh_key" {
   type        = string
   description = "existing SSH key to use, leave blank for a new one"
   default     = ""
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "openstack_zone" {
   type        = string
   description = "default zone to use for openstack nodes"
@@ -149,6 +152,7 @@ variable "openstack_security_kubernetes" {
   }
 }
 
+// TODO change this to be ncsa only
 variable "openstack_security_ssh" {
   type        = map(any)
   description = "IP address to allow connections to ssh, default is open to the world"
@@ -170,56 +174,56 @@ variable "openstack_os_image" {
 # OPENSTACK NODES
 # ----------------------------------------------------------------------
 
-# DEPRECATED
+# DEPRECATED - will always start at 1 with cluster.json
 variable "old_hostnames" {
   type        = bool
   description = "should old hostname be used (base 0)"
   default     = false
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "os" {
   type        = string
   description = "Base image to use for the OS"
   default     = "CentOS-7-GenericCloud-Latest"
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "controlplane_count" {
   type        = string
   description = "Desired quantity of control-plane nodes"
   default     = 1
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "controlplane_flavor" {
   type        = string
   description = "Desired flavor of control-plane nodes"
   default     = "m1.medium"
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "controlplane_disksize" {
   type        = string
   description = "Desired disksize of control-plane nodes"
   default     = 40
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "worker_count" {
   type        = string
   description = "Desired quantity of worker nodes"
   default     = 1
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "worker_flavor" {
   type        = string
   description = "Desired flavor of worker nodes"
   default     = "m1.large"
 }
 
-# DEPRECATED
+# DEPRECATED - use cluster.json
 variable "worker_disksize" {
   type        = string
   description = "Desired disksize of worker nodes"

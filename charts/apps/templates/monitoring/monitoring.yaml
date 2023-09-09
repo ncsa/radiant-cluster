@@ -26,7 +26,7 @@ spec:
   source:
     repoURL: https://charts.rancher.io
     chart: rancher-monitoring
-    targetRevision: {{ .Values.rancherMonitoring.version | quote }}
+    targetRevision: {{ .Values.monitoring.version | quote }}
     helm:
       version: v3
       releaseName: rancher-monitoring
@@ -37,6 +37,13 @@ spec:
             clusterName: {{ .Values.cluster.name }}
             systemDefaultRegistry: ""
           systemDefaultRegistry: ""
+  ignoreDifferences:
+    - group: ""
+      kind: ConfigMap
+      name: rancher-default-dashboards-k8s
+      namespace: cattle-dashboards
+      jsonPointers:
+        - /data
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -66,7 +73,7 @@ spec:
   source:
     repoURL: https://charts.rancher.io
     chart: rancher-monitoring-crd
-    targetRevision: {{ .Values.rancherMonitoring.version | quote }}
+    targetRevision: {{ .Values.monitoring.version | quote }}
     helm:
       version: v3
       releaseName: rancher-monitoring-crd

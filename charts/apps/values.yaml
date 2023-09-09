@@ -49,7 +49,7 @@ sealedsecrets:
 
 monitoring:
   enabled: false
-  version: "101.*"
+  version: "102.*"
 
 healthmonitor:
   enabled: false
