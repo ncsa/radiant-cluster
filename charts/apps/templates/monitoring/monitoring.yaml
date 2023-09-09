@@ -30,6 +30,7 @@ spec:
     helm:
       version: v3
       releaseName: rancher-monitoring
+      skipCrds: true
       values: |
         global:
           cattle:
