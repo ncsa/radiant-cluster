@@ -94,9 +94,7 @@ spec:
           enabled: ${sealedsecrets_enabled}
 
         monitoring:
-          # broken, use rancher to deply
-          enabled: false
-          #enabled: ${monitoring_enabled}
+          enabled: ${monitoring_enabled}
 
         healthmonitor:
           enabled: ${healthmonitor_enabled}
