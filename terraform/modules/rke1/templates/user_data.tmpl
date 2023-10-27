@@ -9,6 +9,33 @@ ssh:
 package_update: true
 package_upgrade: true
 
+# install some packages
+packages:
+  - chrony
+%{ if username == "centos" }
+  - iscsi-initiator-utils
+  - nfs-utils
+%{ endif }
+%{ if username == "ubuntu" }
+  - open-iscsi
+  - nfs-common
+%{ if ncsa_security == "yes" }
+  - rsyslog-relp
+%{ endif }
+%{ endif }
+
+users:
+  - default
+%{ if ncsa_security == "yes" }
+  - name: qualys
+    gecos: Qualys Service
+    groups: users
+    system: true
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAGAwkmzfc0NyhjOdi1qfI5SVQ0prU1luu24xUNeEyEvH9CX80hmXt+ZnQt8Dc7HExUXDcSZo25g71WnuvlYbZefBgHkOLY5JpDcTGuQcb7W6CXD9UG7Unu4YbmBErQhs3u2iuNLYCDxAhoVvfK4Op/sNvMKME72KM3hQ6GE+H1QD8xZZA==
+%{ endif }
+
 # set timezone
 timezone: America/Chicago
 
@@ -32,6 +59,33 @@ write_files:
       },
       "storage-driver": "overlay2"
     }
+%{ if ncsa_security == "yes" }
+- path: /etc/rsyslog.d/00-ncsa.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    # Load Output RELP module (at top)
+    $ModLoad omrelp
+    $WorkDirectory /var/spool/rsyslog       # Directory to store buffer files (must exist!)
+    $ActionQueueType LinkedList             # use asynchronous processing
+    $ActionQueueFileName syslog-security-buffer     # set file name, also enables disk mode
+    $ActionQueueMaxDiskSpace 10g             # space limit (use as much as possible)
+    $ActionResumeRetryCount -1              # infinite retries on insert failure
+    $ActionQueueSaveOnShutdown on           # save in-memory data if rsyslog shuts down
+    *.* :omrelp:syslog.security.ncsa.illinois.edu:1514
+%{ endif }
+%{ if ncsa_security == "yes" }
+%{ if username == "ubuntu" }
+- path: /etc/chrony/sources.d/ncsa.sources
+  permissions: "0644"
+  owner: root:root
+  content: |
+    # University of Illinois NTP Servers
+    pool ntp.illinois.edu iburst maxsources 3
+    # NCSA's NTP Server
+    pool ntp.ncsa.illinois.edu iburst maxsources 2
+%{ endif }
+%{ endif }
 - path: /usr/local/bin/rke1
   permissions: "0700"
   owner: root:root
@@ -39,16 +93,14 @@ write_files:
     #!/usr/bin/bash
     echo "sleeping to wait for network"
     while ! ping -c 1 -w 0  1.1.1.1 > /dev/null ; do echo "Sleep 10s"; sleep 10; done
-    echo "install iscsi/nfs"
-    if [ -e /usr/bin/yum ]; then
-      yum -y install iscsi-initiator-utils nfs-utils
-    elif [ -e /usr/bin/apt ]; then
-      apt install -y open-iscsi nfs-common
-    else
-      echo "Don't know how to install iscsi/nfs"
-    fi
+%{ if username == "ubuntu" }
+    systemctl disable rpcbind
+    systemctl disable rpc-statd
+%{ endif }
     echo "install docker"
     curl https://releases.rancher.com/install-docker/24.0.sh | sh
+    apt -qq update
+    apt -y dist-upgrade
     systemctl enable docker
     systemctl start docker
     usermod -aG docker ${username}
@@ -56,9 +108,12 @@ write_files:
     ${node_command} ${node_options} ${node_labels}
     echo "mounting taiga"
     mkdir /taiga
-    #mount -av
     echo "all done"
 
 # run this command once the system is booted
 runcmd:
 - /usr/local/bin/rke1
+
+power_state:
+ delay: "+5"
+ mode: reboot
