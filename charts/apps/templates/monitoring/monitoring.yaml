@@ -6,7 +6,7 @@ metadata:
   labels:
     cluster: {{ .Values.cluster.name | quote }}
     app: rancher-monitoring
-  namespace: argocd
+  namespace: {{ .Values.cluster.namespace | quote }}
   annotations:
     {{- toYaml .Values.notifications | nindent 4 }}
 spec:

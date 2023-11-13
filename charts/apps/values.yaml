@@ -1,5 +1,6 @@
 cluster:
   name: in-cluster
+  namespace: argocd
   url: ""
   rancher:
     id: c-XXXX
