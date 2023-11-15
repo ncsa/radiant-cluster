@@ -8,7 +8,7 @@ metadata:
   labels:
     cluster: {{ $.Values.cluster.name | quote }}
     app: nfs
-  namespace: {{ .Values.cluster.namespace | quote }}
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
     {{- toYaml $.Values.notifications | nindent 4 }}
 spec:
