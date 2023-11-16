@@ -41,7 +41,7 @@ spec:
           web:
             redirectTo:
               port: websecure
-              priority: 10
+              priority: 9999
           websecure:
             tls:
               enabled: true
