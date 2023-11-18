@@ -94,8 +94,8 @@ write_files:
     echo "sleeping to wait for network"
     while ! ping -c 1 -w 0  1.1.1.1 > /dev/null ; do echo "Sleep 10s"; sleep 10; done
 %{ if username == "ubuntu" }
-    systemctl disable rpcbind
-    systemctl disable rpc-statd
+    systemctl disable --now rpcbind
+    systemctl disable --now rpc-statd
 %{ endif }
     echo "install docker"
     curl https://releases.rancher.com/install-docker/24.0.sh | sh
