@@ -40,6 +40,10 @@ spec:
           plugin:
             image:
               tag: v1.27.1
+            volumes:
+              - name: cacert
+                hostPath:
+                  path: /tmp/cacert
         secret:
           enabled: true
           create: true

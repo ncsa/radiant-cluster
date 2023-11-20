@@ -8,8 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - changed default priority for redirect to https to be part 9999
-- metallb, cinder, longhorn needs pod-security on namespace to work correctly (needed for talos)
 - move metallb specific pieces from raw to metallb application
+- metallb, cinder, longhorn needs pod-security on namespace to work correctly (needed for talos)
+- cinder plugins volume for cacert uses /tmp folder (/etc is readonly for talos)
 
 ## 2.3.5 - 2023-09-09
 
