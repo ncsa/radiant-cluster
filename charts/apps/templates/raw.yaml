@@ -35,24 +35,6 @@ spec:
           {{- range .Values.raw.resources }}
           - {{ toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.metallb.enabled }}
-          - apiVersion: metallb.io/v1beta1
-            kind: IPAddressPool
-            metadata:
-              name: terraform
-              namespace: metallb-system
-            spec:
-              addresses:
-              {{- toYaml .Values.metallb.addresses | nindent 14 }}
-          - apiVersion: metallb.io/v1beta1
-            kind: L2Advertisement
-            metadata:
-              name: l2advertisement1
-              namespace: metallb-system
-            spec:
-              ipAddressPools:
-              - terraform
-          {{- end }}
         templates:
           {{- range .Values.raw.templates }}
           - {{ toYaml . | nindent 12 }}
