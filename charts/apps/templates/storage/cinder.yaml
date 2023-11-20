@@ -23,6 +23,11 @@ spec:
     {{- end }}
     syncOptions:
       - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://kubernetes.github.io/cloud-provider-openstack
     chart: openstack-cinder-csi
