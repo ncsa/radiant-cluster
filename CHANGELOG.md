@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - changed default priority for redirect to https to be part 9999
 - move metallb specific pieces from raw to metallb application
+- add cert-manager
 - added pod-security on namespaces to work correctly (needed for talos)
   - metallb
   - cinder

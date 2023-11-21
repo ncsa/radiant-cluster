@@ -1,0 +1,105 @@
+{{ if .Values.certmanager.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-certmanager
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: certmanager
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: certmanager
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
+  source:
+    repoURL: https://charts.jetstack.io
+    chart: certmanager
+    targetRevision: {{ .Values.certmanager.version | quote }}
+    helm:
+      version: v3
+      releaseName: certmanager
+      values: |
+        ingressShim:
+          defaultIssuerKind: ClusterIssuer
+          defaultIssuerName: letsencrypt-prod
+        installCRDs: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-certmanager-issuer
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: certmanager-issuer
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: certmanager
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+  source:
+    repoURL: https://bedag.github.io/helm-charts/
+    chart: raw
+    targetRevision: {{ .Values.raw.version | quote }}
+    helm:
+      version: v3
+      releaseName: raw
+      values: |
+        resources:
+          - apiVersion: certmanager.io/v1
+            kind: ClusterIssuer
+            metadata:
+              name: letsencrypt-prod
+            spec:
+              acme:
+                server: https://acme-v02.api.letsencrypt.org/directory
+                email: {{ .Values.certmanager.email }}
+                privateKeySecretRef:
+                  name: letsencrypt-prod-account
+                solvers:
+                - http01:
+                    ingress:
+                      ingressClassName: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+                      class: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+          - apiVersion: certmanager.io/v1
+            kind: ClusterIssuer
+            metadata:
+              name: letsencrypt-staging
+            spec:
+              acme:
+                server: https://acme-staging-v02.api.letsencrypt.org/directory
+                email: {{ .Values.certmanager.email }}
+                privateKeySecretRef:
+                  name: letsencrypt-staging-account
+                solvers:
+                - http01:
+                    ingress:
+                      ingressClassName: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+                      class: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+{{- end }}
