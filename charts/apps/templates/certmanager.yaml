@@ -86,6 +86,11 @@ spec:
                 - http01:
                     ingress:
                       ingressClassName: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+                      ingressTemplate:
+                        metadata:
+                          annotations:
+                            "traefik.ingress.kubernetes.io/router.priority": "99999"
+                            "traefik.ingress.kubernetes.io/frontend-entry-points": "web"
           - apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
@@ -100,4 +105,9 @@ spec:
                 - http01:
                     ingress:
                       ingressClassName: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
+                      ingressTemplate:
+                        metadata:
+                          annotations:
+                            "traefik.ingress.kubernetes.io/router.priority": "99999"
+                            "traefik.ingress.kubernetes.io/frontend-entry-points": "web"
 {{- end }}
