@@ -2,10 +2,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-certmanager
+  name: {{ .Values.cluster.name }}-cert-manager
   labels:
     cluster: {{ .Values.cluster.name | quote }}
-    app: certmanager
+    app: cert-manager
   namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
     {{- toYaml .Values.notifications | nindent 4 }}
@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: certmanager
+    namespace: cert-manager
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -30,11 +30,11 @@ spec:
         pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://charts.jetstack.io
-    chart: certmanager
+    chart: cert-manager
     targetRevision: {{ .Values.certmanager.version | quote }}
     helm:
       version: v3
-      releaseName: certmanager
+      releaseName: cert-manager
       values: |
         ingressShim:
           defaultIssuerKind: ClusterIssuer
@@ -44,10 +44,10 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-certmanager-issuer
+  name: {{ .Values.cluster.name }}-cert-manager-issuer
   labels:
     cluster: {{ .Values.cluster.name | quote }}
-    app: certmanager-issuer
+    app: cert-manager-issuer
   namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
     {{- toYaml .Values.notifications | nindent 4 }}
@@ -55,7 +55,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: certmanager
+    namespace: cert-manager
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -72,7 +72,7 @@ spec:
       releaseName: raw
       values: |
         resources:
-          - apiVersion: certmanager.io/v1
+          - apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
               name: letsencrypt-prod
@@ -87,7 +87,7 @@ spec:
                     ingress:
                       ingressClassName: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
                       class: {{ .Values.certmanager.class | default .Values.ingresscontroller.class }}
-          - apiVersion: certmanager.io/v1
+          - apiVersion: cert-manager.io/v1
             kind: ClusterIssuer
             metadata:
               name: letsencrypt-staging
