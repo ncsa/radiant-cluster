@@ -9,13 +9,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 - changed default priority for redirect to https to be part 9999
 - move metallb specific pieces from raw to metallb application
-- add cert-manager
+- traefik doesn't use persistant volumes if acme is not enabled
+
+### Fixed
 - added pod-security on namespaces to work correctly (needed for talos)
   - metallb
   - cinder
   - longhorn
   - rancher monitoring
 - cinder plugins volume for cacert uses /tmp folder (/etc is readonly for talos)
+
+### Added
+- cert-manager can now be installed
 
 ## 2.3.5 - 2023-09-09
 
