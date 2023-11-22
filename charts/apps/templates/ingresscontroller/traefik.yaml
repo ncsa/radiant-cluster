@@ -45,7 +45,9 @@ spec:
           websecure:
             tls:
               enabled: true
+              {{- if .Values.ingresscontroller.traefik.acme }}
               certResolver: letsencrypt
+              {{- end }}
           {{- if .Values.ingresscontroller.traefik.ports }}
           {{- .Values.ingresscontroller.traefik.ports | toYaml | nindent 10 }}
           {{- end }}
