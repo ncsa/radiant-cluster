@@ -123,10 +123,10 @@ spec:
             rules:
             - apiGroups: ["traefik.containo.us"]
               resources: ["ingressroutes"]
-              verbs: ["watch"]
+              verbs: ["watch", "patch"]
             - apiGroups: ["traefik.io"]
               resources: ["ingressroutes"]
-              verbs: ["watch"]
+              verbs: ["watch", "patch"]
             - apiGroups: ["cert-manager.io"]
               resources: ["certificates"]
               verbs: ["get", "create", "delete"]
@@ -169,5 +169,7 @@ spec:
                       value: ClusterIssuer
                     - name: CERT_CLEANUP
                       value: "false"
+                    - name: PATCH_SECRETNAME
+                      value: "true"
           {{- end }}
 {{- end }}
