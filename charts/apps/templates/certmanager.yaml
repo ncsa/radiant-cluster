@@ -110,4 +110,61 @@ spec:
                           annotations:
                             "traefik.ingress.kubernetes.io/router.priority": "99999"
                             "traefik.ingress.kubernetes.io/frontend-entry-points": "web"
+          {{- if .Values.ingresscontroller.class == "traefik" }}
+          - apiVersion: v1
+            kind: ServiceAccount
+            metadata:
+              name: traefik-certmanager
+              namespace: traefik
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRole
+            metadata:
+              name: traefik-certmanager
+            rules:
+            - apiGroups: ["traefik.containo.us"]
+              resources: ["ingressroutes"]
+              verbs: ["watch"]
+            - apiGroups: ["cert-manager.io"]
+              resources: ["certificates"]
+              verbs: ["get", "create", "delete"]
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRoleBinding
+            metadata:
+              name: traefik-certmanager
+            subjects:
+            - kind: ServiceAccount
+              name: traefik-certmanager
+              namespace: traefik
+            roleRef:
+              kind: ClusterRole
+              name: traefik-certmanager
+              apiGroup: rbac.authorization.k8s.io
+          - apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: traefik-certmanager
+              namespace: traefik
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: traefik-certmanager
+              template:
+                metadata:
+                  labels:
+                    app.kubernetes.io/name: traefik-certmanager
+                spec:
+                  serviceAccount: traefik-certmanager
+                  containers:
+                  - name: traefik-certmanager
+                    image: kooper/traefik-certmanager
+                    imagePullPolicy: Always
+                    env:
+                    - name: ISSUER_NAME
+                      value: letsencrypt-prod
+                    - name: ISSUER_KIND
+                      value: ClusterIssuer
+                    - name: CERT_CLEANUP
+                      value: "false"
+          {{- end }}
 {{- end }}
