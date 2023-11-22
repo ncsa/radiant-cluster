@@ -110,7 +110,7 @@ spec:
                           annotations:
                             "traefik.ingress.kubernetes.io/router.priority": "99999"
                             "traefik.ingress.kubernetes.io/frontend-entry-points": "web"
-          {{- if .Values.ingresscontroller.class == "traefik" }}
+          {{- if eq .Values.ingresscontroller.class "traefik" }}
           - apiVersion: v1
             kind: ServiceAccount
             metadata:
