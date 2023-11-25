@@ -39,6 +39,7 @@ spec:
         ingressShim:
           defaultIssuerKind: ClusterIssuer
           defaultIssuerName: letsencrypt-prod
+          defaultIssuerGroup: cert-manager.io
         installCRDs: true
 ---
 apiVersion: argoproj.io/v1alpha1
