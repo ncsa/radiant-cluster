@@ -53,6 +53,7 @@ spec:
           {{- end }}
         additionalArguments:
           - --providers.kubernetesingress.ingressendpoint.ip={{ .Values.ingresscontroller.publicIP }}
+          - --serverstransport.insecureskipverify=true
           {{- if .Values.ingresscontroller.traefik.acme }}
           - --certificatesresolvers.letsencrypt.acme.caserver={{ .Values.ingresscontroller.traefik.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
           - --certificatesresolvers.letsencrypt.acme.email={{ .Values.ingresscontroller.traefik.acme.email }}
@@ -79,8 +80,6 @@ spec:
         ingressRoute:
           dashboard:
             enabled: false
-        ssl:
-          insecureSkipVerify: false
         tlsOptions:
           default:
             minVersion: VersionTLS12
