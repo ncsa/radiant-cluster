@@ -257,3 +257,9 @@ variable "floating_ip" {
   description = "Number of floating IP addresses available for loadbalancers"
   default     = 2
 }
+
+variable "taiga_enabled" {
+  type        = bool
+  description = "Enable Taiga mount"
+  default     = true
+}

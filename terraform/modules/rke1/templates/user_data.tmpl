@@ -14,12 +14,14 @@ timezone: America/Chicago
 
 # files to be created on the system
 write_files:
+%{ if taiga_enabled ~}
 - path: /etc/fstab
   permissions: "0644"
   owner: root:root
   content: |
     taiga-nfs.ncsa.illinois.edu:/taiga/ncsa/radiant/${project_name}/${cluster_name} /taiga nfs defaults 0 0
   append: true
+%{ endif ~}
 - path: /etc/docker/daemon.json
   permissions: "0644"
   owner: root:root
@@ -54,9 +56,11 @@ write_files:
     usermod -aG docker ${username}
     echo "connect to rancher"
     ${node_command} ${node_options} ${node_labels}
+    %{ if taiga_enabled ~}
     echo "mounting taiga"
     mkdir /taiga
     #mount -av
+    %{ endif ~}
     echo "all done"
 
 # run this command once the system is booted

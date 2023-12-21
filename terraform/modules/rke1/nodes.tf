@@ -74,6 +74,7 @@ resource "openstack_compute_instance_v2" "machine" {
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options = lookup(local.node_options, each.value.role, "--worker")
     node_labels  = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
+    taiga_enabled = var.taiga_enabled
   }))
 
   lifecycle {
@@ -121,6 +122,7 @@ resource "openstack_compute_instance_v2" "controlplane" {
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options = "--address awspublic --internal-address awslocal --controlplane --etcd"
     node_labels  = ""
+    taiga_enabled = var.taiga_enabled
   }))
 
   block_device {
@@ -175,6 +177,7 @@ resource "openstack_compute_instance_v2" "worker" {
     node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options = "--worker"
     node_labels  = ""
+    taiga_enabled = var.taiga_enabled
   }))
 
   block_device {
