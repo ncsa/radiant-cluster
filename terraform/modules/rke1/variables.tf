@@ -110,6 +110,12 @@ variable "openstack_url" {
   default     = "https://radiant.ncsa.illinois.edu"
 }
 
+variable "openstack_region_name" {
+  type        = string
+  description = "OpenStack region name"
+  default     = "RegionOne"
+}
+
 variable "openstack_credential_id" {
   type        = string
   sensitive   = true
