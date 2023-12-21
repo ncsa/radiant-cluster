@@ -45,7 +45,7 @@ write_files:
     if [ -e /usr/bin/yum ]; then
       yum -y install iscsi-initiator-utils nfs-utils
     elif [ -e /usr/bin/apt ]; then
-      apt install -y open-iscsi nfs-common
+      apt-get install -y open-iscsi nfs-common
     else
       echo "Don't know how to install iscsi/nfs"
     fi
