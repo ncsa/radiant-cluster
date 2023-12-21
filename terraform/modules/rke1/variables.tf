@@ -263,3 +263,9 @@ variable "taiga_enabled" {
   description = "Enable Taiga mount"
   default     = true
 }
+
+variable "install_docker" {
+  type        = bool
+  description = "Install Docker when provisioning node"
+  default     = true
+}

@@ -49,11 +49,13 @@ write_files:
     else
       echo "Don't know how to install iscsi/nfs"
     fi
+    %{ if install_docker ~}
     echo "install docker"
     curl https://releases.rancher.com/install-docker/24.0.sh | sh
     systemctl enable docker
     systemctl start docker
     usermod -aG docker ${username}
+    %{ endif ~}
     echo "connect to rancher"
     ${node_command} ${node_options} ${node_labels}
     %{ if taiga_enabled ~}
