@@ -110,6 +110,12 @@ variable "openstack_url" {
   default     = "https://radiant.ncsa.illinois.edu"
 }
 
+variable "openstack_region_name" {
+  type        = string
+  description = "OpenStack region name"
+  default     = "RegionOne"
+}
+
 variable "openstack_credential_id" {
   type        = string
   sensitive   = true
@@ -260,4 +266,16 @@ variable "floating_ip" {
   type        = string
   description = "Number of floating IP addresses available for loadbalancers"
   default     = 2
+}
+
+variable "taiga_enabled" {
+  type        = bool
+  description = "Enable Taiga mount"
+  default     = true
+}
+
+variable "install_docker" {
+  type        = bool
+  description = "Install Docker when provisioning node"
+  default     = true
 }
