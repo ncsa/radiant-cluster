@@ -231,6 +231,16 @@ variable "worker_disksize" {
 }
 
 # ----------------------------------------------------------------------
+# NCSA SPECIFIC OPTIONS
+# ----------------------------------------------------------------------
+
+variable "ncsa_security" {
+  type        = bool
+  description = "Install NCSA security options, for example rsyslog"
+  default     = false
+}
+
+# ----------------------------------------------------------------------
 # NETWORKING
 # ----------------------------------------------------------------------
 

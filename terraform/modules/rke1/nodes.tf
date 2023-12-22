@@ -20,7 +20,6 @@ locals {
         disk_size     = try(x.disk, 40)
         zone          = try(x.zone, "nova")
         role          = try(x.role, "worker")
-        ncsa_security = try(x.ncsa_security, "no")
         floating_ip   = try(x.floating_ip, can(x.role == "controlplane"))
         labels        = flatten([format("ncsa.role=%s", x.name), format("ncsa.flavor=%s", try(x.flavor, "gp.medium")), try(x.labels, [])])
       }
@@ -72,7 +71,7 @@ resource "openstack_compute_instance_v2" "machine" {
     cluster_name  = var.cluster_name
     username      = each.value.username
     node_name     = each.value.hostname
-    ncsa_security = each.value.ncsa_security
+    ncsa_security = var.ncsa_security
     node_command  = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options  = lookup(local.node_options, each.value.role, "--worker")
     node_labels   = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
@@ -123,7 +122,7 @@ resource "openstack_compute_instance_v2" "controlplane" {
     node_command  = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options  = "--address awspublic --internal-address awslocal --controlplane --etcd"
     node_labels   = ""
-    ncsa_security = "no"
+    ncsa_security = false
   }))
 
   block_device {
@@ -178,7 +177,7 @@ resource "openstack_compute_instance_v2" "worker" {
     node_command  = rancher2_cluster.kube.cluster_registration_token.0.node_command
     node_options  = "--worker"
     node_labels   = ""
-    ncsa_security = "no"
+    ncsa_security = false
   }))
 
   block_device {

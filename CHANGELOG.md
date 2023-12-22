@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 2.4.0 - 2023-10-27
 
 ### Changed
-- added `ncsa_security` option to cluster.json. This will add NCSA specific code to the cluster.
+- added `ncsa_security` option to variables. This will add NCSA specific code to the cluster.
 
 ## 2.3.5 - 2023-09-09
 

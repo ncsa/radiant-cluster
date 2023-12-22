@@ -19,14 +19,14 @@ packages:
 %{ if username == "ubuntu" }
   - open-iscsi
   - nfs-common
-%{ if ncsa_security == "yes" }
+%{ if ncsa_security }
   - rsyslog-relp
 %{ endif }
 %{ endif }
 
 users:
   - default
-%{ if ncsa_security == "yes" }
+%{ if ncsa_security }
   - name: qualys
     gecos: Qualys Service
     groups: users
@@ -59,7 +59,7 @@ write_files:
       },
       "storage-driver": "overlay2"
     }
-%{ if ncsa_security == "yes" }
+%{ if ncsa_security }
 - path: /etc/rsyslog.d/00-ncsa.conf
   permissions: "0644"
   owner: root:root
@@ -74,7 +74,7 @@ write_files:
     $ActionQueueSaveOnShutdown on           # save in-memory data if rsyslog shuts down
     *.* :omrelp:syslog.security.ncsa.illinois.edu:1514
 %{ endif }
-%{ if ncsa_security == "yes" }
+%{ if ncsa_security }
 %{ if username == "ubuntu" }
 - path: /etc/chrony/sources.d/ncsa.sources
   permissions: "0644"
