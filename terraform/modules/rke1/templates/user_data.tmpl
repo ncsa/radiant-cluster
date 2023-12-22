@@ -115,8 +115,8 @@ write_files:
 %{ if install_docker ~}
     echo "install docker"
     curl https://releases.rancher.com/install-docker/24.0.sh | sh
-    apt -qq update
-    apt -y dist-upgrade
+    apt-get -qq update
+    apt-get -y dist-upgrade
     systemctl enable docker
     systemctl start docker
     usermod -aG docker ${username}
