@@ -77,6 +77,14 @@ write_files:
     *.* :omrelp:syslog.security.ncsa.illinois.edu:1514
 %{ endif }
 %{ if ncsa_security }
+- path: /etc/sysctl.d/50-disable-ipv6.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+%{ endif }
+%{ if ncsa_security }
 %{ if username == "ubuntu" }
 - path: /etc/chrony/sources.d/ncsa.sources
   permissions: "0644"
@@ -95,9 +103,14 @@ write_files:
     #!/usr/bin/bash
     echo "sleeping to wait for network"
     while ! ping -c 1 -w 0  1.1.1.1 > /dev/null ; do echo "Sleep 10s"; sleep 10; done
+%{ if ncsa_security }
+    sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    sysctl -w net.ipv6.route.flush=1
 %{ if username == "ubuntu" }
     systemctl disable --now rpcbind
     systemctl disable --now rpc-statd
+%{ endif }
 %{ endif }
 %{ if install_docker ~}
     echo "install docker"

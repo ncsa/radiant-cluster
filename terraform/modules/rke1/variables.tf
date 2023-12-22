@@ -237,16 +237,6 @@ variable "worker_disksize" {
 }
 
 # ----------------------------------------------------------------------
-# NCSA SPECIFIC OPTIONS
-# ----------------------------------------------------------------------
-
-variable "ncsa_security" {
-  type        = bool
-  description = "Install NCSA security options, for example rsyslog"
-  default     = false
-}
-
-# ----------------------------------------------------------------------
 # NETWORKING
 # ----------------------------------------------------------------------
 
@@ -266,6 +256,16 @@ variable "floating_ip" {
   type        = string
   description = "Number of floating IP addresses available for loadbalancers"
   default     = 2
+}
+
+# ----------------------------------------------------------------------
+# NODE CREATION OPTIONS
+# ----------------------------------------------------------------------
+
+variable "ncsa_security" {
+  type        = bool
+  description = "Install NCSA security options, for example rsyslog"
+  default     = false
 }
 
 variable "taiga_enabled" {

@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - changed default priority for redirect to https to be part 9999
 - move metallb specific pieces from raw to metallb application
 - traefik doesn't use persistant volumes if acme is not enabled
+- Use apt-get instead of apt in node provisioning
+- Parameterize OpenStack region name
 
 ### Fixed
 - added pod-security on namespaces to work correctly (needed for talos)
@@ -21,7 +23,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - cert-manager can now be installed
-- added `ncsa_security` option to variables. This will add NCSA specific code to the cluster.
+- nodes are labeled with `ncsa.role` and `ncsa.flavor` from cluster.json
+- added option `install_docker` to disable Docker installation when provisioning nodes
+- added option `taiga_enabled` to disable Taiga actions in node provisioning
+- added option `ncsa_security` tp install ncsa specific security options
+  - disable IPv6
+  - configure chrony for NCSA
+  - configure rsyslog for NCSA
+  - add qualys account
 
 ## 2.3.5 - 2023-09-09
 
