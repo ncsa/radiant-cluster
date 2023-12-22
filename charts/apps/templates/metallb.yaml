@@ -6,7 +6,7 @@ metadata:
   labels:
     cluster: {{ .Values.cluster.name | quote }}
     app: metallb
-  namespace: argocd
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
     {{- toYaml .Values.notifications | nindent 4 }}
 spec:
@@ -23,6 +23,11 @@ spec:
     {{- end }}
     syncOptions:
       - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://metallb.github.io/metallb
     chart: metallb
@@ -35,4 +40,52 @@ spec:
       kind: CustomResourceDefinition
       jsonPointers:
         - /spec/conversion/webhook/clientConfig/caBundle
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-metallb-pool
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: metallb
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: metallb-system
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+  source:
+    repoURL: https://bedag.github.io/helm-charts/
+    chart: raw
+    targetRevision: {{ .Values.raw.version | quote }}
+    helm:
+      version: v3
+      releaseName: raw
+      values: |
+        resources:
+          - apiVersion: metallb.io/v1beta1
+            kind: IPAddressPool
+            metadata:
+              name: terraform
+              namespace: metallb-system
+            spec:
+              addresses:
+              {{- toYaml .Values.metallb.addresses | nindent 14 }}
+          - apiVersion: metallb.io/v1beta1
+            kind: L2Advertisement
+            metadata:
+              name: l2advertisement1
+              namespace: metallb-system
+            spec:
+              ipAddressPools:
+              - terraform
 {{- end }}

@@ -6,7 +6,7 @@ metadata:
   labels:
     cluster: {{ .Values.cluster.name | quote }}
     app: traefik
-  namespace: argocd
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
     {{- toYaml .Values.notifications | nindent 4 }}
 spec:
@@ -41,35 +41,42 @@ spec:
           web:
             redirectTo:
               port: websecure
-              priority: 10
+              priority: 9999
           websecure:
             tls:
               enabled: true
+              {{- if .Values.ingresscontroller.traefik.acme }}
               certResolver: letsencrypt
+              {{- end }}
           {{- if .Values.ingresscontroller.traefik.ports }}
           {{- .Values.ingresscontroller.traefik.ports | toYaml | nindent 10 }}
           {{- end }}
         additionalArguments:
           - --providers.kubernetesingress.ingressendpoint.ip={{ .Values.ingresscontroller.publicIP }}
+          - --serverstransport.insecureskipverify=true
           {{- if .Values.ingresscontroller.traefik.acme }}
           - --certificatesresolvers.letsencrypt.acme.caserver={{ .Values.ingresscontroller.traefik.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
           - --certificatesresolvers.letsencrypt.acme.email={{ .Values.ingresscontroller.traefik.acme.email }}
           - --certificatesresolvers.letsencrypt.acme.storage=/data/acme.json
           - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
           {{- end }}
+        {{- if .Values.ingresscontroller.traefik.acme }}
         persistence:
           enabled: true
           storageClass: {{ .Values.ingresscontroller.traefik.storageClass | quote}}
+        {{- end }}
         deployment:
           initContainers:
           # The "volume-permissions" init container is required if you run into permission issues.
           # Related issue: https://github.com/traefik/traefik/issues/6972
+          {{- if .Values.ingresscontroller.traefik.acme }}
             - name: volume-permissions
               image: busybox:1.31.1
               command: ["sh", "-c", "if [ -e /data/acme.json ]; then chmod -Rv 600 /data/*; fi"]
               volumeMounts:
                 - name: data
                   mountPath: /data
+          {{- end }}
         ingressRoute:
           dashboard:
             enabled: false

@@ -1,5 +1,6 @@
 cluster:
   name: in-cluster
+  namespace: argocd
   url: ""
   rancher:
     id: c-XXXX
@@ -20,6 +21,12 @@ metallb:
   version: "0.13.*"
   addresses: []
 
+certmanager:
+  enabled: false
+  version: "1.*"
+  email: acme@exmaple.com
+  class: ""
+  
 ingresscontroller:
   enabled: false
   class: traefik
@@ -31,7 +38,7 @@ ingresscontroller:
     version: "*"
     storageClass: ""
     #acme:
-    #  email: devops.isda@lists.illinois.edu
+    #  email: acme@exmaple.com
     ports: {}
       # postgres:
       #   port: 5432

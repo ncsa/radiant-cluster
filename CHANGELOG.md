@@ -4,9 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.4.0 - 2023-10-27
+## Unreleased
 
 ### Changed
+- changed default priority for redirect to https to be part 9999
+- move metallb specific pieces from raw to metallb application
+- traefik doesn't use persistant volumes if acme is not enabled
+
+### Fixed
+- added pod-security on namespaces to work correctly (needed for talos)
+  - metallb
+  - cinder
+  - longhorn
+  - rancher monitoring
+- cinder plugins volume for cacert uses /tmp folder (/etc is readonly for talos)
+
+### Added
+- cert-manager can now be installed
 - added `ncsa_security` option to variables. This will add NCSA specific code to the cluster.
 
 ## 2.3.5 - 2023-09-09

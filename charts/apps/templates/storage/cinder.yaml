@@ -6,7 +6,7 @@ metadata:
   labels:
     cluster: {{ .Values.cluster.name | quote }}
     app: cinder
-  namespace: argocd
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
   {{- toYaml .Values.notifications | nindent 4 }}
 spec:
@@ -23,6 +23,11 @@ spec:
     {{- end }}
     syncOptions:
       - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://kubernetes.github.io/cloud-provider-openstack
     chart: openstack-cinder-csi
@@ -35,6 +40,10 @@ spec:
           plugin:
             image:
               tag: v1.27.1
+            volumes:
+              - name: cacert
+                hostPath:
+                  path: /tmp/cacert
         secret:
           enabled: true
           create: true
