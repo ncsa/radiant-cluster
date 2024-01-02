@@ -84,6 +84,14 @@ write_files:
     net.ipv6.conf.all.disable_ipv6 = 1
     net.ipv6.conf.default.disable_ipv6 = 1
 %{ endif }
+%{ if username == "ubuntu" }
+- path: /etc/sysctl.d/50-increase-inotify.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    fs.inotify.max_user_instances=8192
+    fs.inotify.max_user_instances=8192
+%{ endif }
 %{ if ncsa_security }
 %{ if username == "ubuntu" }
 - path: /etc/chrony/sources.d/ncsa.sources
@@ -111,6 +119,10 @@ write_files:
     systemctl disable --now rpcbind
     systemctl disable --now rpc-statd
 %{ endif }
+%{ endif }
+%{ if username == "ubuntu" }
+    sysctl fs.inotify.max_user_instances=8192 
+    sysctl fs.inotify.max_user_instances=8192
 %{ endif }
 %{ if install_docker ~}
     echo "install docker"
