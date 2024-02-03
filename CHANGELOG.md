@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - nodes are labeled with `ncsa.role` and `ncsa.flavor` from cluster.json
 - added option `install_docker` to disable Docker installation when provisioning nodes
 - added option `taiga_enabled` to disable Taiga actions in node provisioning
-- added option `ncsa_security` tp install ncsa specific security options
+- added option `ncsa_security` to install ncsa specific security options
   - disable IPv6
   - configure chrony for NCSA
   - configure rsyslog for NCSA

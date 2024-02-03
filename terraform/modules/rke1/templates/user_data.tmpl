@@ -129,8 +129,7 @@ write_files:
     curl https://releases.rancher.com/install-docker/24.0.sh | sh
     apt-get -qq update
     apt-get -y dist-upgrade
-    systemctl enable docker
-    systemctl start docker
+    systemctl enable --now docker
     usermod -aG docker ${username}
 %{ endif ~}
     echo "connect to rancher"
