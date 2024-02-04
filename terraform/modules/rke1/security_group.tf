@@ -88,6 +88,19 @@ resource "openstack_networking_secgroup_rule_v2" "ingress_kubeapi" {
   depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
 }
 
+resource "openstack_networking_secgroup_rule_v2" "custom" {
+  for_each          = var.openstack_security_custom
+  description       = "custom ${each.key}"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = each.value.port_range_min
+  port_range_max    = each.value.port_range_max
+  remote_ip_prefix  = each.value.remote_ip_prefix
+  security_group_id = openstack_networking_secgroup_v2.cluster_security_group.id
+  depends_on        = [openstack_networking_secgroup_v2.cluster_security_group]
+}
+
 resource "openstack_networking_secgroup_rule_v2" "same_security_group_ingress_tcp" {
   direction         = "ingress"
   ethertype         = "IPv4"

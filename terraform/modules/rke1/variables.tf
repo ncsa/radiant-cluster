@@ -167,6 +167,13 @@ variable "openstack_security_ssh" {
   }
 }
 
+variable "openstack_security_custom" {
+  type        = map(any)
+  description = "ports to open for custom services to the world, assumed these are blocked in other ways"
+  default = {
+  }
+}
+
 variable "openstack_os_image" {
   type        = map(any)
   description = "Map from short OS name to image"
