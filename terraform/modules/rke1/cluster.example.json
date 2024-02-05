@@ -1,0 +1,25 @@
+{
+  "machines": [
+    {
+      "name": "controlplane",
+      "role": "controlplane",
+      "flavor": "gp.medium",
+      "os": "ubuntu",
+      "count": 3
+    },
+    {
+      "name": "worker",
+      "flavor": "gp.xlarge",
+      "os": "ubuntu",
+      "disk": 80,
+      "count": 2
+    },
+    {
+      "name": "worker",
+      "flavor": "m1.xlarge",
+      "os": "ubuntu",
+      "disk": 60,
+      "start_index": 3
+    }
+  ]
+}

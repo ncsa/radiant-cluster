@@ -11,8 +11,8 @@ locals {
 
   machines = flatten([
     for x in var.cluster_machines : [
-      for i in range(x.count == null ? 1 : x.count) : {
-        hostname    = format("%s-%s-%02d", var.cluster_name, x.name, (i + 1))
+      for i in range(contains(keys(x), "count") ? x.count : 1) : {
+        hostname    = format("%s-%s-%02d", var.cluster_name, x.name, (i + (contains(keys(x), "start_index") ? x.start_index : 1)))
         username    = lookup(local.usernames, x.os, "UNDEFINED")
         image_name  = lookup(var.openstack_os_image, x.os, "UNDEFINED")
         flavor      = try(x.flavor, "gp.medium")
