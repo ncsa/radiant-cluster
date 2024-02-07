@@ -49,9 +49,26 @@ cluster:
   - docker installed
   - connected to rancher
 
+### Definition of machines
+
+Create a file named `cluster.json` following the example in `cluster.example.json` and customize to define the desired set of nodes. The global cluster name is combined with the `name` value and the index of the machine to generate the individual hostnames, where the index ranges from `start_index` to `start_index + count - 1`. The `start_index` spec allows you to avoid name collisions while having multiple machine configurations following the same sequential naming convention. 
+
+For example, if the cluster name is `k8s`, then the `cluster.example.json` file would generate the following list of machines:
+
+```plain
+k8s-controlplane-1 (gp.medium, 40GB disk)
+k8s-controlplane-2 (gp.medium, 40GB disk)
+k8s-controlplane-3 (gp.medium, 40GB disk)
+k8s-worker-01      (gp.xlarge, 60GB disk)
+k8s-worker-02      (gp.xlarge, 60GB disk)
+k8s-worker-03      (m1.xlarge, 60GB disk)
+```
+
+
+
 ## RKE2 (terraform/modules/rke2)
 
-This module is not supported yet, wil create an RKE2 cluster
+This module is not supported yet, will create an RKE2 cluster
 
 ## compute/openstack and rancher
 
