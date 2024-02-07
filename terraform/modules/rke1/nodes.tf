@@ -11,8 +11,8 @@ locals {
 
   machines = flatten([
     for x in var.cluster_machines : [
-      for i in range(x.count == null ? 1 : x.count) : {
-        hostname    = format("%s-%s-%02d", var.cluster_name, x.name, (i + 1))
+      for i in range(contains(keys(x), "count") ? x.count : 1) : {
+        hostname    = format("%s-%s-%02d", var.cluster_name, x.name, (i + (contains(keys(x), "start_index") ? x.start_index : 1)))
         username    = lookup(local.usernames, x.os, "UNDEFINED")
         image_name  = lookup(var.openstack_os_image, x.os, "UNDEFINED")
         flavor      = try(x.flavor, "gp.medium")
@@ -21,7 +21,7 @@ locals {
         zone        = try(x.zone, "nova")
         role        = try(x.role, "worker")
         floating_ip = try(x.floating_ip, can(x.role == "controlplane"))
-        labels      = flatten([x.name, try(x.labels, [])])
+        labels      = flatten([format("ncsa.role=%s", x.name), format("ncsa.flavor=%s", try(x.flavor, "gp.medium")), try(x.labels, [])])
       }
     ]
   ])
@@ -66,14 +66,17 @@ resource "openstack_compute_instance_v2" "machine" {
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    private_key  = openstack_compute_keypair_v2.key.private_key
-    project_name = data.openstack_identity_auth_scope_v3.scope.project_name
-    cluster_name = var.cluster_name
-    username     = each.value.username
-    node_name    = each.value.hostname
-    node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
-    node_options = lookup(local.node_options, each.value.role, "--worker")
-    node_labels  = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
+    private_key    = openstack_compute_keypair_v2.key.private_key
+    project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
+    cluster_name   = var.cluster_name
+    username       = each.value.username
+    node_name      = each.value.hostname
+    node_command   = rancher2_cluster.kube.cluster_registration_token.0.node_command
+    node_options   = lookup(local.node_options, each.value.role, "--worker")
+    node_labels    = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
+    ncsa_security  = var.ncsa_security
+    taiga_enabled  = var.taiga_enabled
+    install_docker = var.install_docker
   }))
 
   lifecycle {
@@ -113,14 +116,17 @@ resource "openstack_compute_instance_v2" "controlplane" {
   #%{ endfor }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    private_key  = openstack_compute_keypair_v2.key.private_key
-    project_name = data.openstack_identity_auth_scope_v3.scope.project_name
-    cluster_name = var.cluster_name
-    username     = "centos"
-    node_name    = local.controlplane[count.index]
-    node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
-    node_options = "--address awspublic --internal-address awslocal --controlplane --etcd"
-    node_labels  = ""
+    private_key    = openstack_compute_keypair_v2.key.private_key
+    project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
+    cluster_name   = var.cluster_name
+    username       = "centos"
+    node_name      = local.controlplane[count.index]
+    node_command   = rancher2_cluster.kube.cluster_registration_token.0.node_command
+    node_options   = "--address awspublic --internal-address awslocal --controlplane --etcd"
+    node_labels    = ""
+    ncsa_security  = false
+    taiga_enabled  = var.taiga_enabled
+    install_docker = var.install_docker
   }))
 
   block_device {
@@ -167,14 +173,17 @@ resource "openstack_compute_instance_v2" "worker" {
   ]
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    private_key  = openstack_compute_keypair_v2.key.private_key
-    project_name = data.openstack_identity_auth_scope_v3.scope.project_name
-    cluster_name = var.cluster_name
-    node_name    = local.worker[count.index]
-    username     = "centos"
-    node_command = rancher2_cluster.kube.cluster_registration_token.0.node_command
-    node_options = "--worker"
-    node_labels  = ""
+    private_key    = openstack_compute_keypair_v2.key.private_key
+    project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
+    cluster_name   = var.cluster_name
+    node_name      = local.worker[count.index]
+    username       = "centos"
+    node_command   = rancher2_cluster.kube.cluster_registration_token.0.node_command
+    node_options   = "--worker"
+    node_labels    = ""
+    ncsa_security  = false
+    taiga_enabled  = var.taiga_enabled
+    install_docker = var.install_docker
   }))
 
   block_device {
