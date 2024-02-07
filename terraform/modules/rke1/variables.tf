@@ -110,6 +110,12 @@ variable "openstack_url" {
   default     = "https://radiant.ncsa.illinois.edu"
 }
 
+variable "openstack_region_name" {
+  type        = string
+  description = "OpenStack region name"
+  default     = "RegionOne"
+}
+
 variable "openstack_credential_id" {
   type        = string
   sensitive   = true
@@ -158,6 +164,13 @@ variable "openstack_security_ssh" {
   description = "IP address to allow connections to ssh, default is open to the world"
   default = {
     "world" : "0.0.0.0/0"
+  }
+}
+
+variable "openstack_security_custom" {
+  type        = map(any)
+  description = "ports to open for custom services to the world, assumed these are blocked in other ways"
+  default = {
   }
 }
 
@@ -250,4 +263,26 @@ variable "floating_ip" {
   type        = string
   description = "Number of floating IP addresses available for loadbalancers"
   default     = 2
+}
+
+# ----------------------------------------------------------------------
+# NODE CREATION OPTIONS
+# ----------------------------------------------------------------------
+
+variable "ncsa_security" {
+  type        = bool
+  description = "Install NCSA security options, for example rsyslog"
+  default     = false
+}
+
+variable "taiga_enabled" {
+  type        = bool
+  description = "Enable Taiga mount"
+  default     = true
+}
+
+variable "install_docker" {
+  type        = bool
+  description = "Install Docker when provisioning node"
+  default     = true
 }
