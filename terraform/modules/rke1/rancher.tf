@@ -14,7 +14,7 @@ resource "rancher2_cluster" "kube" {
     kubernetes_version = var.rke1_version
     enable_cri_dockerd = true
     network {
-      plugin = "weave"
+      plugin = var.network_plugin
     }
     ingress {
       provider = "none"
@@ -34,7 +34,7 @@ resource "rancher2_cluster" "kube" {
 
 # Create a new rancher2 Cluster Sync for foo-custom cluster
 resource "rancher2_cluster_sync" "kube" {
-  depends_on    = [openstack_compute_instance_v2.controlplane[0]]
+  depends_on    = [openstack_compute_instance_v2.machine]
   cluster_id    = rancher2_cluster.kube.id
   wait_catalogs = false
 }
@@ -98,60 +98,6 @@ resource "rancher2_cluster_role_template_binding" "member_groups" {
       annotations,
       labels,
       user_id
-    ]
-  }
-}
-
-# ----------------------------------------------------------------------
-# longhorn storage
-# DEPRECATED
-# ----------------------------------------------------------------------
-resource "rancher2_app_v2" "longhorn-system" {
-  count      = var.longhorn_enabled ? 1 : 0
-  cluster_id = rancher2_cluster_sync.kube.cluster_id
-  name       = "longhorn"
-  namespace  = "longhorn-system"
-  repo_name  = "rancher-charts"
-  chart_name = "longhorn"
-  project_id = rancher2_cluster_sync.kube.system_project_id
-  values     = <<EOF
-defaultSettings:
-  backupTarget: nfs://radiant-nfs.ncsa.illinois.edu:/radiant/projects/${data.openstack_identity_auth_scope_v3.scope.project_name}/${var.cluster_name}/backup
-  defaultReplicaCount: ${var.longhorn_replicas}
-persistence:
-  defaultClass: false
-  defaultClassReplicaCount: ${var.longhorn_replicas}
-EOF
-  lifecycle {
-    ignore_changes = [
-      values
-    ]
-  }
-}
-
-# ----------------------------------------------------------------------
-# monitoring
-# DEPRECATED
-# ----------------------------------------------------------------------
-resource "rancher2_app_v2" "monitor" {
-  count      = var.monitoring_enabled ? 1 : 0
-  cluster_id = rancher2_cluster_sync.kube.cluster_id
-  name       = "rancher-monitoring"
-  namespace  = "cattle-monitoring-system"
-  repo_name  = "rancher-charts"
-  chart_name = "rancher-monitoring"
-  project_id = rancher2_cluster_sync.kube.system_project_id
-  //  values        = <<EOF
-  //prometheus:
-  //  resources:
-  //    core:
-  //      limits:
-  //        cpu: "4000m"
-  //        memory: "6144Mi"
-  //EOF
-  lifecycle {
-    ignore_changes = [
-      values
     ]
   }
 }

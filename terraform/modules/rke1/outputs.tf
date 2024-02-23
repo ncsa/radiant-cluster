@@ -24,15 +24,6 @@ output "ssh_config" {
   value       = <<-EOT
 # Automatically created by terraform
 
-%{~for i, x in openstack_compute_instance_v2.controlplane.*}
-Host ${x.name}
-  HostName ${openstack_networking_floatingip_v2.controlplane_ip[i].address}
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-  IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
-  User centos
-%{~endfor}
-
 %{~for x in [for m in local.machines : m if m.floating_ip]}
 Host ${x.hostname}
   HostName ${openstack_networking_floatingip_v2.machine_ip[x.hostname].address}
@@ -40,16 +31,6 @@ Host ${x.hostname}
   UserKnownHostsFile=/dev/null
   IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
   User ${x.username}
-%{~endfor}
-
-%{~for x in openstack_compute_instance_v2.worker.*}
-Host ${x.name}
-  HostName ${x.network[0].fixed_ip_v4}
-  StrictHostKeyChecking no
-  ProxyJump ${local.jumphost}
-  UserKnownHostsFile=/dev/null
-  IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
-  User centos
 %{~endfor}
 
 %{~for x in [for m in local.machines : m if !m.floating_ip]}

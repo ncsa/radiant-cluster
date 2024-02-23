@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.0.0 - 2023-02-22
+
+This removes the old variables for creating machines that were deprecated, and removes references to centos.
+
+### Changed
+- removed all deprecated code, clusters are defined in cluster.json
+
+### Added
+- ability to set network. Default is weave to be compatible with previous version but this should be changed. Weave is EOL 12/31/2024
+  - canal (rancher default)
+  - calico
+  - flannel
+  - weave (deprecated)
+  - none
+- ubuntu is an alias for ubuntu22 as an os type in cluster. This is in preperation for ubuntu 24.04.
+
+### Removed
+- removed centos image reference.
+
 ## 2.4.0 - 2023-12-21
 
 ### Changed
