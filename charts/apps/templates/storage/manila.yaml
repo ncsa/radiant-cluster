@@ -80,8 +80,8 @@ spec:
             stringData:
               os-authURL: {{ .Values.openstack.auth_url | quote }}
               os-region: {{ .Values.openstack.region | quote }}
-              os-applicationCredentialID={{ .Values.openstack.credential_id | quote }}
-              os-applicationCredentialSecret={{ .Values.openstack.credential_secret | quote }}
+              os-applicationCredentialID: {{ .Values.openstack.credential_id | quote }}
+              os-applicationCredentialSecret: {{ .Values.openstack.credential_secret | quote }}
           - apiVersion: storage.k8s.io/v1
             kind: StorageClass
             metadata:
