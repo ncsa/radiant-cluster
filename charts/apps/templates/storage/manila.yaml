@@ -1,11 +1,11 @@
-{{- if and .Values.manilla .Values.manilla.enabled }}
+{{- if and .Values.manila .Values.manila.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-manilla
+  name: {{ .Values.cluster.name }}-manila
   labels:
     cluster: {{ .Values.cluster.name | quote }}
-    app: manilla
+    app: manila
   namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
   {{- toYaml .Values.notifications | nindent 4 }}
@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: manilla-csi
+    namespace: manila-csi
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -30,16 +30,16 @@ spec:
         pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://kubernetes.github.io/cloud-provider-openstack
-    chart: openstack-manilla-csi
-    targetRevision: {{ .Values.manilla.version | quote }}
+    chart: openstack-manila-csi
+    targetRevision: {{ .Values.manila.version | quote }}
     helm:
       version: v3
-      releaseName: manilla-csi
+      releaseName: manila-csi
       values: |
         secret:
           enabled: true
           create: true
-          name: manilla-csi-cloud-config
+          name: manila-csi-cloud-config
           data:
             cloud.conf: |-
               [Global]

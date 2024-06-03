@@ -89,7 +89,7 @@ cinder:
   enabled: false
   version: "2.*"
 
-manilla:
+manila:
   enabled: false
   version: "2.*"
 

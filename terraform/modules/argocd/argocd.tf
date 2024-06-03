@@ -35,7 +35,7 @@ locals {
     longhorn_replicas           = var.longhorn_replicas
     nfs_enabled                 = var.nfs_enabled
     cinder_enabled              = var.cinder_enabled
-    manilla_enabled             = var.manilla_enabled
+    manila_enabled              = var.manila_enabled
     metallb_enabled             = var.metallb_enabled
     floating_ip                 = var.floating_ip
     ingress_controller_enabled  = var.ingress_controller_enabled

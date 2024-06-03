@@ -117,9 +117,9 @@ variable "cinder_enabled" {
   default     = true
 }
 
-variable "manilla_enabled" {
+variable "manila_enabled" {
   type        = bool
-  description = "Enable manilla storage"
+  description = "Enable manila storage"
   default     = false
 }
 
