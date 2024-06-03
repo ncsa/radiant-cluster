@@ -1,11 +1,11 @@
-{{- if and .Values.cinder .Values.cinder.enabled }}
+{{- if and .Values.manilla .Values.manilla.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-cinder
+  name: {{ .Values.cluster.name }}-manilla
   labels:
     cluster: {{ .Values.cluster.name | quote }}
-    app: cinder
+    app: manilla
   namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
   annotations:
   {{- toYaml .Values.notifications | nindent 4 }}
@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: cinder-csi
+    namespace: manilla-csi
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -30,24 +30,16 @@ spec:
         pod-security.kubernetes.io/warn: privileged
   source:
     repoURL: https://kubernetes.github.io/cloud-provider-openstack
-    chart: openstack-cinder-csi
-    targetRevision: {{ .Values.cinder.version | quote }}
+    chart: openstack-manilla-csi
+    targetRevision: {{ .Values.manilla.version | quote }}
     helm:
       version: v3
-      releaseName: cinder-csi
+      releaseName: manilla-csi
       values: |
-        csi:
-          plugin:
-            image:
-              tag: v1.27.1
-            volumes:
-              - name: cacert
-                hostPath:
-                  path: /tmp/cacert
         secret:
           enabled: true
           create: true
-          name: cinder-csi-cloud-config
+          name: manilla-csi-cloud-config
           data:
             cloud.conf: |-
               [Global]

@@ -27,6 +27,7 @@ locals {
     argocd_repo_url             = var.argocd_repo_url
     argocd_repo_version         = var.argocd_repo_version
     openstack_url               = var.openstack_url
+    openstack_region_name       = var.openstack_region_name
     openstack_credential_id     = var.openstack_credential_id
     openstack_credential_secret = var.openstack_credential_secret
     openstack_project           = var.openstack_project

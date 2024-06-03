@@ -47,6 +47,11 @@ variable "openstack_url" {
   description = "OpenStack URL"
 }
 
+variable "openstack_region_name" {
+  type        = string
+  description = "OpenStack Region name"
+}
+
 variable "openstack_credential_id" {
   type        = string
   sensitive   = true

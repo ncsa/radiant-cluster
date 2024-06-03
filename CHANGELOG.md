@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.1.0 - 2024-06-03
+
+### Added
+- can specify the region name when connecting to openstack
+- added manilla storage class
+
 ## 3.0.0 - 2023-02-22
 
 This removes the old variables for creating machines that were deprecated, and removes references to centos.
