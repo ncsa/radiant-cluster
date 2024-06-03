@@ -35,21 +35,68 @@ spec:
     helm:
       version: v3
       releaseName: manila-csi
-      values: |
-        secret:
-          enabled: true
-          create: true
-          name: manila-csi-cloud-config
-          data:
-            cloud.conf: |-
-              [Global]
-              auth-url={{ .Values.openstack.auth_url }}
-              region={{ .Values.openstack.region }}
-              application-credential-id={{ .Values.openstack.credential_id }}
-              application-credential-secret={{ .Values.openstack.credential_secret }}
   ignoreDifferences:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
       jsonPointers:
         - /rules
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-manila-raw
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: manila
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: manila-csi
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+  source:
+    repoURL: https://bedag.github.io/helm-charts/
+    chart: raw
+    targetRevision: {{ .Values.raw.version | quote }}
+    helm:
+      version: v3
+      releaseName: raw
+      values: |
+        resources:
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: csi-manila-secrets
+              namespace: manila-csi
+            stringData:
+              os-authURL: {{ .Values.openstack.auth_url | quote }}
+              os-region: {{ .Values.openstack.region | quote }}
+              os-applicationCredentialID={{ .Values.openstack.credential_id | quote }}
+              os-applicationCredentialSecret={{ .Values.openstack.credential_secret | quote }}
+          - apiVersion: storage.k8s.io/v1
+            kind: StorageClass
+            metadata:
+              name: csi-manila-nfs
+            provisioner: nfs.manila.csi.openstack.org
+            allowVolumeExpansion: true
+            parameters:
+              # Manila share type
+              type: default
+              csi.storage.k8s.io/provisioner-secret-name: csi-manila-secrets
+              csi.storage.k8s.io/provisioner-secret-namespace: manila-csi
+              csi.storage.k8s.io/controller-expand-secret-name: csi-manila-secrets
+              csi.storage.k8s.io/controller-expand-secret-namespace: manila-csi
+              csi.storage.k8s.io/node-stage-secret-name: csi-manila-secrets
+              csi.storage.k8s.io/node-stage-secret-namespace: manila-csi
+              csi.storage.k8s.io/node-publish-secret-name: csi-manila-secrets
+              csi.storage.k8s.io/node-publish-secret-namespace: manila-csi
 {{- end }}
