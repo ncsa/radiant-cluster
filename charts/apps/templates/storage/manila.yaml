@@ -47,4 +47,9 @@ spec:
               region={{ .Values.openstack.region }}
               application-credential-id={{ .Values.openstack.credential_id }}
               application-credential-secret={{ .Values.openstack.credential_secret }}
+  ignoreDifferences:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      jsonPointers:
+        - /rules
 {{- end }}
