@@ -117,6 +117,12 @@ variable "cinder_enabled" {
   default     = true
 }
 
+variable "manilla_enabled" {
+  type        = bool
+  description = "Enable manilla storage"
+  default     = false
+}
+
 variable "longhorn_enabled" {
   type        = bool
   description = "Enable longhorn storage"
