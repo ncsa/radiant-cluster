@@ -53,7 +53,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-manila-nfs-csi
+  name: {{ $.Values.cluster.name }}-manila-nfs-csi
   labels:
     cluster: {{ $.Values.cluster.name | quote }}
     app: manila
@@ -92,7 +92,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-manila-cephfs-csi
+  name: {{ $.Values.cluster.name }}-manila-cephfs-csi
   labels:
     cluster: {{ $.Values.cluster.name | quote }}
     app: manila

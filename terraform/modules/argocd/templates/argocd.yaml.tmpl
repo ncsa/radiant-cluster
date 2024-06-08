@@ -133,7 +133,7 @@ spec:
               type: default
           %{~ endif ~}
           %{~ if manila_cephfs_enabled ~}
-            - name: CEPFS
+            - name: CEPHFS
               storageClass: true
               fsGroupPolicy: None
               type: ${manila_cephfs_type}
