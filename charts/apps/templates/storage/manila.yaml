@@ -128,6 +128,11 @@ spec:
       values: |
         provisioner:
           replicaCount: 1
+  ignoreDifferences:
+    - group: storage.k8s.io
+      kind: CSIDriver
+      jsonPointers:
+        - /spec/seLinuxMount
 {{- end }}
 ---
 {{- end }}
