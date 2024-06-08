@@ -37,6 +37,7 @@ spec:
       version: v3
       releaseName: manila-csi-{{ .name | lower }}
       values: |
+        nameOverride: manila-csi-{{ .name | lower }}
         shareProtocols:
           - protocolSelector: {{ .name | upper }}
             fsGroupPolicy: {{ .fsGroupPolicy | quote }}
