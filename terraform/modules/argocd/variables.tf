@@ -117,16 +117,28 @@ variable "cinder_enabled" {
   default     = true
 }
 
-variable "manila_enabled" {
+variable "manila_nfs_enabled" {
   type        = bool
-  description = "Enable manila storage"
+  description = "Enable manila nfs storage"
   default     = false
+}
+
+variable "manila_cephfs_enabled" {
+  type        = bool
+  description = "Enable manila cephfs storage"
+  default     = false
+}
+
+variable "manila_cephfs_type" {
+  type        = string
+  description = "Manila cephfs type"
+  default     = "default"
 }
 
 variable "longhorn_enabled" {
   type        = bool
   description = "Enable longhorn storage"
-  default     = true
+  default     = false
 }
 
 variable "longhorn_replicas" {
@@ -144,7 +156,7 @@ variable "nfs_enabled" {
 variable "healthmonitor_enabled" {
   type        = bool
   description = "Enable healthmonitor"
-  default     = true
+  default     = false
 }
 
 variable "healthmonitor_nfs" {

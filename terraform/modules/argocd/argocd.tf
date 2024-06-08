@@ -35,7 +35,10 @@ locals {
     longhorn_replicas           = var.longhorn_replicas
     nfs_enabled                 = var.nfs_enabled
     cinder_enabled              = var.cinder_enabled
-    manila_enabled              = var.manila_enabled
+    manila_enabled              = var.manila_nfs_enabled || var.manila_cephfs_enabled
+    manila_nfs_enabled          = var.manila_nfs_enabled
+    manila_cephfs_enabled       = var.manila_cephfs_enabled
+    manila_cephfs_type          = var.manila_cephfs_type
     metallb_enabled             = var.metallb_enabled
     floating_ip                 = var.floating_ip
     ingress_controller_enabled  = var.ingress_controller_enabled

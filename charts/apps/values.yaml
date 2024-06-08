@@ -39,6 +39,7 @@ ingresscontroller:
     storageClass: ""
     #acme:
     #  email: acme@exmaple.com
+    #  permissions: false
     ports: {}
       # postgres:
       #   port: 5432
@@ -92,6 +93,17 @@ cinder:
 manila:
   enabled: false
   version: "2.*"
+  protocols:
+    - name: CEPFS
+      enabled: false
+      storageclass: true
+      fsGroupPolicy: None
+      type: default # cephfsnativetype
+    - name: NFS
+      enabled: true
+      storageclass: true
+      fsGroupPolicy: None
+      type: default
 
 # ----------------------------------------------------------------------
 # MISC RESOURCES

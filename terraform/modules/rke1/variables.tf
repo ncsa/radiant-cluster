@@ -145,12 +145,12 @@ variable "openstack_os_image" {
   description = "Map from short OS name to image"
   default = {
     "ubuntu" = {
-      "imagename": "Ubuntu Jammy (22.04) latest"
-      "username": "ubuntu"
+      "imagename" : "Ubuntu Jammy (22.04) latest"
+      "username" : "ubuntu"
     }
     "ubuntu22" = {
-      "imagename": "Ubuntu Jammy (22.04) latest"
-      "username": "ubuntu"
+      "imagename" : "Ubuntu Jammy (22.04) latest"
+      "username" : "ubuntu"
     }
   }
 }

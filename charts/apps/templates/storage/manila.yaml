@@ -1,21 +1,22 @@
 {{- if and .Values.manila .Values.manila.enabled }}
+{{- range .Values.manila.protocols }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-manila
+  name: {{ $.Values.cluster.name }}-manila-{{ .name | lower }}
   labels:
-    cluster: {{ .Values.cluster.name | quote }}
+    cluster: {{ $.Values.cluster.name | quote }}
     app: manila
-  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  namespace: {{ $.Values.cluster.namespace | default "argocd" | quote }}
   annotations:
-  {{- toYaml .Values.notifications | nindent 4 }}
+  {{- toYaml $.Values.notifications | nindent 4 }}
 spec:
-  project: {{ .Values.cluster.name }}
+  project: {{ $.Values.cluster.name }}
   destination:
-    server: {{ .Values.cluster.url }}
+    server: {{ $.Values.cluster.url }}
     namespace: manila-csi
   syncPolicy:
-    {{- if .Values.sync }}
+    {{- if $.Values.sync }}
     automated:
       prune: true
       selfHeal: true
@@ -31,20 +32,110 @@ spec:
   source:
     repoURL: https://kubernetes.github.io/cloud-provider-openstack
     chart: openstack-manila-csi
-    targetRevision: {{ .Values.manila.version | quote }}
+    targetRevision: {{ $.Values.manila.version | quote }}
     helm:
       version: v3
-      releaseName: manila-csi
+      releaseName: manila-csi-{{ .name | lower }}
+      values: |
+        shareProtocols:
+          - protocolSelector: {{ .name | upper }}
+            fsGroupPolicy: {{ .fsGroupPolicy | quote }}
+            fwdNodePluginEndpoint:
+              dir: /var/lib/kubelet/plugins/cephfs.csi.ceph.com
+              sockFile: csi.sock
   ignoreDifferences:
     - group: rbac.authorization.k8s.io
       kind: ClusterRole
       jsonPointers:
         - /rules
+{{ if .name | lower | eq "nfs" }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.cluster.name }}-manila-raw
+  name: {{ .Values.cluster.name }}-manila-nfs-csi
+  labels:
+    cluster: {{ $.Values.cluster.name | quote }}
+    app: manila
+  namespace: {{ $.Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+  {{- toYaml $.Values.notifications | nindent 4 }}
+spec:
+  project: {{ $.Values.cluster.name }}
+  destination:
+    server: {{ $.Values.cluster.url }}
+    namespace: manila-csi
+  syncPolicy:
+    {{- if $.Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
+  source:
+    repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+    chart: csi-driver-nfs
+    targetRevision: {{ .csiVersion | default '*' | quote }}
+    helm:
+      version: v3
+      releaseName: csi-driver-nfs
+{{- end }}
+{{ if .name | lower | eq "cephfs" }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-manila-cephfs-csi
+  labels:
+    cluster: {{ $.Values.cluster.name | quote }}
+    app: manila
+  namespace: {{ $.Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+  {{- toYaml $.Values.notifications | nindent 4 }}
+spec:
+  project: {{ $.Values.cluster.name }}
+  destination:
+    server: {{ $.Values.cluster.url }}
+    namespace: manila-csi
+  syncPolicy:
+    {{- if $.Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
+  source:
+    repoURL: https://ceph.github.io/csi-charts
+    chart: ceph-csi-cephfs
+    targetRevision: {{ .csiVersion | default '*' | quote }}
+    helm:
+      version: v3
+      releaseName: ceph-csi-cephfs
+      values: |
+        provisioner:
+          replicaCount: 1
+{{- end }}
+---
+{{- end }}
+{{- end }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $.Values.cluster.name }}-manila-raw
   labels:
     cluster: {{ .Values.cluster.name | quote }}
     app: manila
@@ -82,15 +173,17 @@ spec:
               os-region: {{ .Values.openstack.region | quote }}
               os-applicationCredentialID: {{ .Values.openstack.credential_id | quote }}
               os-applicationCredentialSecret: {{ .Values.openstack.credential_secret | quote }}
+{{- range .Values.manila.protocols }}
+{{- if .storageClass }}
           - apiVersion: storage.k8s.io/v1
             kind: StorageClass
             metadata:
-              name: csi-manila-nfs
+              name: csi-manila-{{ .name | lower }}
             provisioner: nfs.manila.csi.openstack.org
             allowVolumeExpansion: true
             parameters:
               # Manila share type
-              type: default
+              type: {{ .type | quote }}
               csi.storage.k8s.io/provisioner-secret-name: csi-manila-secrets
               csi.storage.k8s.io/provisioner-secret-namespace: manila-csi
               csi.storage.k8s.io/controller-expand-secret-name: csi-manila-secrets
@@ -99,4 +192,5 @@ spec:
               csi.storage.k8s.io/node-stage-secret-namespace: manila-csi
               csi.storage.k8s.io/node-publish-secret-name: csi-manila-secrets
               csi.storage.k8s.io/node-publish-secret-namespace: manila-csi
+{{- end }}
 {{- end }}
