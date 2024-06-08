@@ -82,7 +82,7 @@ spec:
   source:
     repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
     chart: csi-driver-nfs
-    targetRevision: {{ .csiVersion | default '*' | quote }}
+    targetRevision: {{ .csiVersion | default "*" | quote }}
     helm:
       version: v3
       releaseName: csi-driver-nfs
@@ -121,7 +121,7 @@ spec:
   source:
     repoURL: https://ceph.github.io/csi-charts
     chart: ceph-csi-cephfs
-    targetRevision: {{ .csiVersion | default '*' | quote }}
+    targetRevision: {{ .csiVersion | default "*" | quote }}
     helm:
       version: v3
       releaseName: ceph-csi-cephfs
