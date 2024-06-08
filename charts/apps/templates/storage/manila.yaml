@@ -14,7 +14,7 @@ spec:
   project: {{ $.Values.cluster.name }}
   destination:
     server: {{ $.Values.cluster.url }}
-    namespace: manila-csi
+    namespace: csi-manila
   syncPolicy:
     {{- if $.Values.sync }}
     automated:
@@ -65,7 +65,7 @@ spec:
   project: {{ $.Values.cluster.name }}
   destination:
     server: {{ $.Values.cluster.url }}
-    namespace: manila-csi
+    namespace: csi-manila
   syncPolicy:
     {{- if $.Values.sync }}
     automated:
@@ -104,7 +104,7 @@ spec:
   project: {{ $.Values.cluster.name }}
   destination:
     server: {{ $.Values.cluster.url }}
-    namespace: manila-csi
+    namespace: csi-manila
   syncPolicy:
     {{- if $.Values.sync }}
     automated:
@@ -152,7 +152,7 @@ spec:
   project: {{ .Values.cluster.name }}
   destination:
     server: {{ .Values.cluster.url }}
-    namespace: manila-csi
+    namespace: csi-manila
   syncPolicy:
     {{- if .Values.sync }}
     automated:
@@ -173,7 +173,7 @@ spec:
             kind: Secret
             metadata:
               name: csi-manila-secrets
-              namespace: manila-csi
+              namespace: csi-manila
             stringData:
               os-authURL: {{ .Values.openstack.auth_url | quote }}
               os-region: {{ .Values.openstack.region | quote }}
@@ -191,12 +191,12 @@ spec:
               # Manila share type
               type: {{ .type | quote }}
               csi.storage.k8s.io/provisioner-secret-name: csi-manila-secrets
-              csi.storage.k8s.io/provisioner-secret-namespace: manila-csi
+              csi.storage.k8s.io/provisioner-secret-namespace: csi-manila
               csi.storage.k8s.io/controller-expand-secret-name: csi-manila-secrets
-              csi.storage.k8s.io/controller-expand-secret-namespace: manila-csi
+              csi.storage.k8s.io/controller-expand-secret-namespace: csi-manila
               csi.storage.k8s.io/node-stage-secret-name: csi-manila-secrets
-              csi.storage.k8s.io/node-stage-secret-namespace: manila-csi
+              csi.storage.k8s.io/node-stage-secret-namespace: csi-manila
               csi.storage.k8s.io/node-publish-secret-name: csi-manila-secrets
-              csi.storage.k8s.io/node-publish-secret-namespace: manila-csi
+              csi.storage.k8s.io/node-publish-secret-namespace: csi-manila
 {{- end }}
 {{- end }}
