@@ -6,8 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 3.1.1 - 2024-06-08
 
-### Fixed
+### Changed
+
+- healthmonitor/longhorn are now disabled by default
+
+### Fixed 
+
 - missing secret/storageclass additional helm charts for manila
+- ability to enable/disable permissions fix for acme
 
 ## 3.1.0 - 2024-06-03
 

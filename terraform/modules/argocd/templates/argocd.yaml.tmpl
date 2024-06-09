@@ -125,6 +125,7 @@ spec:
 
         manila:
           enabled: ${manila_enabled}
+          %{~ if manila_enabled ~}
           protocols:
           %{~ if manila_nfs_enabled ~}
             - name: NFS
@@ -137,4 +138,5 @@ spec:
               storageClass: true
               fsGroupPolicy: None
               type: ${manila_cephfs_type}
+          %{~ endif ~}
           %{~ endif ~}
