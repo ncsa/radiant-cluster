@@ -185,7 +185,7 @@ spec:
             kind: StorageClass
             metadata:
               name: csi-manila-{{ .name | lower }}
-            provisioner: {{ .name | lowder }}.manila.csi.openstack.org
+            provisioner: {{ .name | lower }}.manila.csi.openstack.org
             allowVolumeExpansion: true
             parameters:
               # Manila share type
