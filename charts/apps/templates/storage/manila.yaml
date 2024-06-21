@@ -137,7 +137,6 @@ spec:
 {{- end }}
 ---
 {{- end }}
-{{- end }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -198,5 +197,6 @@ spec:
               csi.storage.k8s.io/node-stage-secret-namespace: csi-manila
               csi.storage.k8s.io/node-publish-secret-name: csi-manila-secrets
               csi.storage.k8s.io/node-publish-secret-namespace: csi-manila
+{{- end }}
 {{- end }}
 {{- end }}
