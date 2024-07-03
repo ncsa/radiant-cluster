@@ -109,7 +109,7 @@ write_files:
   content: |
     #!/usr/bin/bash
     echo "sleeping to wait for network"
-    while ! ping -c 1 -w 0  1.1.1.1 > /dev/null ; do echo "Sleep 10s"; sleep 10; done
+    while ! curl --fail --silent --output /dev/null http://ncsa.illinois.edu ; do echo "Sleep 10s"; sleep 10; done
 %{ if ncsa_security }
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1

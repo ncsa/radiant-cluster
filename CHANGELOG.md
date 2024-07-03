@@ -4,14 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.1.2 - 2024-07-03
+
+### Changed
+- use curl https://ncsa.illinois.edu/ to see if network is alive
+
 ## 3.1.1 - 2024-06-08
 
 ### Changed
-
 - healthmonitor/longhorn are now disabled by default
 
 ### Fixed 
-
 - missing secret/storageclass additional helm charts for manila
 - ability to enable/disable permissions fix for acme
 
