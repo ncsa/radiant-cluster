@@ -145,6 +145,7 @@ runcmd:
 %{ if username == "ubuntu" }
 # clean up default pool sources if we are using ncsa security
 - [/usr/bin/sed, -i, 's/^pool/# pool/', '/etc/chrony/chrony.conf']
+- [/usr/bin/systemctl, restart, chronyd]
 %{ endif }
 
 power_state:
