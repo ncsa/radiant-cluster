@@ -141,6 +141,11 @@ write_files:
 # run this command once the system is booted
 runcmd:
 - /usr/local/bin/rke1
+%{ if ncsa_security }
+%{ if username == "ubuntu" }
+# clean up default pool sources if we are using ncsa security
+- [/usr/bin/sed, -i, 's/^pool/# pool/', '/etc/chrony/chrony.conf']
+%{ endif }
 
 power_state:
  delay: "+5"
