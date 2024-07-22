@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.1.3-alpha - 2024-07-22
+
+### Fixed
+- added commands to clean up default chrony sources
+
 ## 3.1.2 - 2024-07-03
 
 ### Changed
