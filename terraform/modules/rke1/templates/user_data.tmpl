@@ -147,6 +147,7 @@ runcmd:
 - /usr/bin/sed -i 's/^pool/# pool/' /etc/chrony/chrony.conf
 - /usr/bin/systemctl restart chronyd
 %{ endif }
+%{ endif }
 
 power_state:
  delay: "+5"
