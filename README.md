@@ -14,40 +14,44 @@ Currently the only supported (and used) modules are RKE1 and ArgoCD.
 
 Creates a project/cluster/app in the managed argocd setup. The users with access to the cluster will also have access to this project in argocd. The app installed will point to the charts/apps folder which installs most of the components of the kubernetes cluster. Many of thse can be turn and off using the variables.
 
-If all options are enabled this will install:
-- ingress controller (traefik v2)
+The following modules are enabled by default:
+- ingress controller (traefik by default)
 - nfs provisioner (connected to taiga)
 - cinder provisioner (volumes as storage in openstack)
-- metallb (loadbalancer using floating ips from RKE1 module)
+- metallb (loadbalancer using floating ips from cluster module)
 - sealed secrets
+- monitoring
+- raw kubernetes
+The following modules are enabled by default:
+- longhorn 
 - healthmonitor (expects a secret, so sealed secrets should be enabled)
-- raw kubernetes (used by metallb)
 
-## RKE1 (terraform/modules/rke1)
+## Cluster (terraform/modules/cluster)
 
 Creates a cluster using rancher and openstack. This will create the following pieces for the
 cluster:
 - private network
 - floating IP for load balancer
 - security group
-  - port 22 open to the world
+  - port 22 open to NCSA
   - port 80/443 open to the world
-  - ports 30000 - 32000 open to the world
-  - port 6443 open to NCSA
+  - port 6443 open to all 3 rancher machines
   - all ports open to hosts in same network
-- ssh key
-- rancher managed RKE1 cluster 
-  - monitoring if requested
-  - longhorn if requested
+- ssh key (see note below)
+- rancher managed cluster 
   - admin/normal users using ldap
 - control nodes, with a floating IP for external access
   - iscsi (longhorn) and nfs installed
-  - docker installed
+  - docker installed in case of RKE1 cluster
   - connected to rancher
 - worker nodes, private network
   - iscsi (longhorn) and nfs installed
-  - docker installed
+  - docker installed in case of RKE1 cluster
   - connected to rancher
+
+### SSH key
+
+If multiple people run `terraform` it is critical that **everybody** has the same public key in openstack! This can be done by sharing the public key and asking people to import the public key in openstack and naming it the same as the cluster. If this is not done each user will creat their own public/private keypair and you end up with a mix of keys that are injected in the cluster.
 
 ### Definition of machines
 
@@ -63,16 +67,6 @@ k8s-worker-01      (gp.xlarge, 60GB disk)
 k8s-worker-02      (gp.xlarge, 60GB disk)
 k8s-worker-03      (m1.xlarge, 60GB disk)
 ```
-
-
-
-## RKE2 (terraform/modules/rke2)
-
-This module is not supported yet, will create an RKE2 cluster
-
-## compute/openstack and rancher
-
-No longer supported
 
 # ArgoCD (argocd)
 

@@ -10,7 +10,7 @@ output "machines" {
 
 output "node_command" {
   description = "Command to join?"
-  value       = rancher2_cluster.kube.cluster_registration_token[0].node_command
+  value       = local.kube.cluster_registration_token[0].node_command
 }
 
 output "private_key_ssh" {
@@ -48,12 +48,12 @@ EOT
 output "kubeconfig" {
   description = "KUBECONFIG file"
   sensitive   = true
-  value       = rancher2_cluster.kube.kube_config
+  value       = local.kube.kube_config
 }
 
 output "kube_id" {
   description = "OpenStack project name"
-  value       = rancher2_cluster.kube.id
+  value       = local.kube.id
 }
 
 output "floating_ip" {

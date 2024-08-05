@@ -40,6 +40,16 @@ variable "rancher_token" {
   description = "Access token for rancher, clusters are created as this user"
 }
 
+# RKE2
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.rke2.releases[].version'
+# K3S
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.k3s.releases[].version'
+variable kubernetes_version {
+  type        = string
+  description = "Version of rke2/k3s to install (leave blank to install rke1)"
+  default     = ""
+}
+
 # curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq -r '.K8sVersionRKESystemImages | keys'
 variable "rke1_version" {
   type        = string
@@ -49,7 +59,7 @@ variable "rke1_version" {
 
 variable "network_plugin" {
   type        = string
-  description = "Network plugin to be used"
+  description = "Network plugin to be used (canal, cilium, calico, flannel, ...)"
   default     = "weave"
 }
 
@@ -195,6 +205,6 @@ variable "taiga_enabled" {
 
 variable "install_docker" {
   type        = bool
-  description = "Install Docker when provisioning node"
+  description = "Install Docker when provisioning node (only for rke1)"
   default     = true
 }

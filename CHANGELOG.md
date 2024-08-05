@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.2.0 - 2024-08-04
+
+This allows to create a cluster that is RKE2 or K3S as well as RKE1. RKE1 is deprecated and will stop to be supported on July 31st, 2025. If you want to use either RKE2 or K3S you will need to change the `network_plugin`.
+
+In version 4.0.0 of these modules RKE1 will be removed.
+
+### Added
+- can use RKE2 or K3S clusters by setting kubernetes_version
+
+### Changed
+- renamed rke1 module to cluster module, until version 4.0.0 rke1 module will be pushed as well as cluster module.
+
+### Removed
+- removed rke2 module, this is now part of cluster module
+
 ## 3.1.2 - 2024-07-03
 
 ### Changed

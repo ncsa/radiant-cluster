@@ -62,12 +62,12 @@ resource "openstack_compute_instance_v2" "machine" {
     cluster_name   = var.cluster_name
     username       = each.value.username
     node_name      = each.value.hostname
-    node_command   = rancher2_cluster.kube.cluster_registration_token.0.node_command
+    node_command   = local.kube.cluster_registration_token.0.node_command
     node_options   = lookup(local.node_options, each.value.role, "--worker")
     node_labels    = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
     ncsa_security  = var.ncsa_security
     taiga_enabled  = var.taiga_enabled
-    install_docker = var.install_docker
+    install_docker = local.rke1 && var.install_docker
   }))
 
   lifecycle {
@@ -75,7 +75,9 @@ resource "openstack_compute_instance_v2" "machine" {
       key_pair,
       block_device,
       user_data,
-      availability_zone
+      availability_zone,
+      flavor_name,
+      image_name
     ]
   }
 }
