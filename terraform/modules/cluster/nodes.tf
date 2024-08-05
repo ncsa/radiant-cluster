@@ -33,7 +33,7 @@ resource "openstack_compute_instance_v2" "machine" {
   image_name        = each.value.image_name
   availability_zone = each.value.zone
   flavor_name       = each.value.flavor
-  key_pair          = openstack_compute_keypair_v2.key.name
+  key_pair          = local.key_name
   config_drive      = false
 
   depends_on = [
@@ -57,7 +57,6 @@ resource "openstack_compute_instance_v2" "machine" {
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    private_key    = openstack_compute_keypair_v2.key.private_key
     project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name   = var.cluster_name
     username       = each.value.username

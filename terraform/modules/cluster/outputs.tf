@@ -16,7 +16,12 @@ output "node_command" {
 output "private_key_ssh" {
   description = "Private SSH key"
   sensitive   = true
-  value       = openstack_compute_keypair_v2.key.private_key
+  value       = local.private_key
+}
+
+output "key_name" {
+  description = "SSH key name"
+  value       = local.key_name
 }
 
 output "ssh_config" {
@@ -29,7 +34,7 @@ Host ${x.hostname}
   HostName ${openstack_networking_floatingip_v2.machine_ip[x.hostname].address}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
-  IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
+  IdentityFile ${pathexpand("~/.ssh/${local.key_name}.pem")}
   User ${x.username}
 %{~endfor}
 
@@ -39,7 +44,7 @@ Host ${x.hostname}
   HostName ${openstack_networking_port_v2.machine_ip[x.hostname].all_fixed_ips[0]}
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
-  IdentityFile ${pathexpand("~/.ssh/${var.cluster_name}.pem")}
+  IdentityFile ${pathexpand("~/.ssh/${local.key_name}.pem")}
   User ${x.username}
 %{~endfor}
 EOT
@@ -52,8 +57,8 @@ output "kubeconfig" {
 }
 
 output "kube_id" {
-  description = "OpenStack project name"
-  value       = local.kube.id
+  description = "ID of rancher cluster"
+  value       = local.kube_id
 }
 
 output "floating_ip" {

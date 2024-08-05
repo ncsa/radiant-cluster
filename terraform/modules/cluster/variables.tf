@@ -44,7 +44,7 @@ variable "rancher_token" {
 # curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.rke2.releases[].version'
 # K3S
 # curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.k3s.releases[].version'
-variable kubernetes_version {
+variable "kubernetes_version" {
   type        = string
   description = "Version of rke2/k3s to install (leave blank to install rke1)"
   default     = ""
@@ -163,6 +163,12 @@ variable "openstack_os_image" {
       "username" : "ubuntu"
     }
   }
+}
+
+variable "openstack_ssh_key" {
+  type        = string
+  description = "OpenStack SSH key name, leave blank to generate new key"
+  default     = ""
 }
 
 # ----------------------------------------------------------------------

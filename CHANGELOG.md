@@ -11,7 +11,8 @@ This allows to create a cluster that is RKE2 or K3S as well as RKE1. RKE1 is dep
 In version 4.0.0 of these modules RKE1 will be removed.
 
 ### Added
-- can use RKE2 or K3S clusters by setting kubernetes_version
+- can use RKE2 or K3S clusters by setting kubernetes_version (leave blank to create RKE1 cluster)
+- can specify the key to use for the cluster, and not create a new key for each cluster (`openstack_ssh_key`)
 
 ### Changed
 - renamed rke1 module to cluster module, until version 4.0.0 rke1 module will be pushed as well as cluster module.
