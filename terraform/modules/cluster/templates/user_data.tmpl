@@ -30,7 +30,7 @@ users:
   - name: qualys
     gecos: Qualys Service
     groups: users
-    system: true
+    system: false
     shell: /bin/bash
     ssh_authorized_keys:
       - ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAGAwkmzfc0NyhjOdi1qfI5SVQ0prU1luu24xUNeEyEvH9CX80hmXt+ZnQt8Dc7HExUXDcSZo25g71WnuvlYbZefBgHkOLY5JpDcTGuQcb7W6CXD9UG7Unu4YbmBErQhs3u2iuNLYCDxAhoVvfK4Op/sNvMKME72KM3hQ6GE+H1QD8xZZA==
@@ -113,12 +113,17 @@ write_files:
     echo "sleeping to wait for network"
     while ! curl --fail --silent --output /dev/null http://ncsa.illinois.edu ; do echo "Sleep 10s"; sleep 10; done
 %{ if ncsa_security }
+    # disable ipv6
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1
     sysctl -w net.ipv6.route.flush=1
 %{ if username == "ubuntu" }
+    # disable rpcbind and rpc-statd
     systemctl disable --now rpcbind
     systemctl disable --now rpc-statd
+    # clean up default pool sources if we are using ncsa security
+    sed -i 's/^pool/# pool/' /etc/chrony/chrony.conf
+    systemctl restart chronyd
 %{ endif }
 %{ endif }
 %{ if username == "ubuntu" }

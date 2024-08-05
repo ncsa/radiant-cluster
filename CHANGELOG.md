@@ -15,6 +15,7 @@ In version 4.0.0 of these modules RKE1 will be removed.
 
 ### Changed
 - renamed rke1 module to cluster module, until version 4.0.0 rke1 module will be pushed as well as cluster module.
+- added commands to clean up default chrony sources
 
 ### Removed
 - removed rke2 module, this is now part of cluster module
