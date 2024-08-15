@@ -97,7 +97,7 @@ resource "rancher2_cluster_role_template_binding" "admin_users" {
   cluster_id        = local.kube_id
   role_template_id  = "cluster-owner"
   user_principal_id = "openldap_user://uid=${each.value},ou=People,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [ openstack_compute_instance_v2.machine ]
+  depends_on        = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
@@ -113,7 +113,7 @@ resource "rancher2_cluster_role_template_binding" "admin_groups" {
   cluster_id        = local.kube_id
   role_template_id  = "cluster-owner"
   user_principal_id = "openldap_group://cn=${each.value},ou=Groups,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [ openstack_compute_instance_v2.machine ]
+  depends_on        = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
@@ -129,7 +129,7 @@ resource "rancher2_cluster_role_template_binding" "member_users" {
   cluster_id        = local.kube_id
   role_template_id  = "cluster-member"
   user_principal_id = "openldap_user://uid=${each.value},ou=People,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [ openstack_compute_instance_v2.machine ]
+  depends_on        = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
@@ -145,7 +145,7 @@ resource "rancher2_cluster_role_template_binding" "member_groups" {
   cluster_id        = local.kube_id
   role_template_id  = "cluster-member"
   user_principal_id = "openldap_group://cn=${each.value},ou=Groups,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [ openstack_compute_instance_v2.machine ]
+  depends_on        = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
