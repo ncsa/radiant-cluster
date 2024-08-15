@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.2.0 - 2024-08-04
+
+This allows to create a cluster that is RKE2 or K3S as well as RKE1. RKE1 is deprecated and will stop to be supported on July 31st, 2025. If you want to use either RKE2 or K3S you will need to change the `network_plugin`.
+
+In version 3.5.0 the default network for RKE1 will be set to canal, please make sure to either upgrade or explicitly say to use weave.
+In version 4.0.0 RKE1 will be removed
+
+### Added
+- can use RKE2 or K3S clusters by setting kubernetes_version (leave blank to create RKE1 cluster)
+- can specify the key to use for the cluster, and not create a new key for each cluster (`openstack_ssh_key`)
+
+### Changed
+- renamed rke1 module to cluster module, until version 4.0.0 rke1 module will be pushed as well as cluster module.
+- added commands to clean up default chrony sources
+
+### Removed
+- removed rke2 module, this is now part of cluster module
+
 ## 3.1.2 - 2024-07-03
 
 ### Changed

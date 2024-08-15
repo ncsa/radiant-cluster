@@ -30,7 +30,7 @@ users:
   - name: qualys
     gecos: Qualys Service
     groups: users
-    system: true
+    system: false
     shell: /bin/bash
     ssh_authorized_keys:
       - ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAGAwkmzfc0NyhjOdi1qfI5SVQ0prU1luu24xUNeEyEvH9CX80hmXt+ZnQt8Dc7HExUXDcSZo25g71WnuvlYbZefBgHkOLY5JpDcTGuQcb7W6CXD9UG7Unu4YbmBErQhs3u2iuNLYCDxAhoVvfK4Op/sNvMKME72KM3hQ6GE+H1QD8xZZA==
@@ -49,6 +49,7 @@ write_files:
     taiga-nfs.ncsa.illinois.edu:/taiga/ncsa/radiant/${project_name}/${cluster_name} /taiga nfs defaults 0 0
   append: true
 %{ endif ~}
+%{ if install_docker ~}
 - path: /etc/docker/daemon.json
   permissions: "0644"
   owner: root:root
@@ -61,6 +62,7 @@ write_files:
       },
       "storage-driver": "overlay2"
     }
+%{ endif ~}
 %{ if ncsa_security }
 - path: /etc/rsyslog.d/00-ncsa.conf
   permissions: "0644"
@@ -103,7 +105,7 @@ write_files:
     pool ntp.ncsa.illinois.edu iburst maxsources 2
 %{ endif }
 %{ endif }
-- path: /usr/local/bin/rke1
+- path: /usr/local/bin/join_rancher
   permissions: "0700"
   owner: root:root
   content: |
@@ -111,12 +113,17 @@ write_files:
     echo "sleeping to wait for network"
     while ! curl --fail --silent --output /dev/null http://ncsa.illinois.edu ; do echo "Sleep 10s"; sleep 10; done
 %{ if ncsa_security }
+    # disable ipv6
     sysctl -w net.ipv6.conf.all.disable_ipv6=1
     sysctl -w net.ipv6.conf.default.disable_ipv6=1
     sysctl -w net.ipv6.route.flush=1
 %{ if username == "ubuntu" }
+    # disable rpcbind and rpc-statd
     systemctl disable --now rpcbind
     systemctl disable --now rpc-statd
+    # clean up default pool sources if we are using ncsa security
+    sed -i 's/^pool/# pool/' /etc/chrony/chrony.conf
+    systemctl restart chronyd
 %{ endif }
 %{ endif }
 %{ if username == "ubuntu" }
@@ -124,7 +131,7 @@ write_files:
 %{ endif }
 %{ if install_docker ~}
     echo "install docker"
-    curl https://releases.rancher.com/install-docker/24.0.sh | sh
+    curl https://releases.rancher.com/install-docker/26.1.sh | sh
     apt-get -qq update
     apt-get -y dist-upgrade
     systemctl enable --now docker
@@ -140,7 +147,7 @@ write_files:
 
 # run this command once the system is booted
 runcmd:
-- /usr/local/bin/rke1
+- /usr/local/bin/join_rancher
 
 power_state:
  delay: "+5"

@@ -18,6 +18,12 @@ variable "cluster_direct_access" {
   default     = true
 }
 
+variable "cluster_machines" {
+  type        = set(map(any))
+  description = "machine definition"
+  default     = []
+}
+
 # ----------------------------------------------------------------------
 # RANCHER
 # ----------------------------------------------------------------------
@@ -34,34 +40,27 @@ variable "rancher_token" {
   description = "Access token for rancher, clusters are created as this user"
 }
 
-# get latest version from rancher using:
-# curl https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq '.rke2.releases | .[].version' | sort
-variable "rke2_version" {
+# RKE2
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.rke2.releases[].version'
+# K3S
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.k3s.releases[].version'
+variable "kubernetes_version" {
   type        = string
-  description = "Version of rke2 to install."
+  description = "Version of rke2/k3s to install (leave blank to install rke1)"
   default     = ""
 }
 
-# ----------------------------------------------------------------------
-# APPLICATIONS
-# ----------------------------------------------------------------------
-
-variable "monitoring_enabled" {
-  type        = bool
-  description = "Enable monitoring in rancher"
-  default     = true
-}
-
-variable "longhorn_enabled" {
-  type        = bool
-  description = "Enable longhorn storage"
-  default     = true
-}
-
-variable "longhorn_replicas" {
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq -r '.K8sVersionRKESystemImages | keys'
+variable "rke1_version" {
   type        = string
-  description = "Number of replicas"
-  default     = 3
+  description = "Version of rke1 to install."
+  default     = "v1.21.14-rancher1-1"
+}
+
+variable "network_plugin" {
+  type        = string
+  description = "Network plugin to be used (canal, cilium, calico, flannel, ...)"
+  default     = "weave"
 }
 
 # ----------------------------------------------------------------------
@@ -102,6 +101,12 @@ variable "openstack_url" {
   default     = "https://radiant.ncsa.illinois.edu"
 }
 
+variable "openstack_region_name" {
+  type        = string
+  description = "OpenStack region name"
+  default     = "RegionOne"
+}
+
 variable "openstack_credential_id" {
   type        = string
   sensitive   = true
@@ -120,56 +125,50 @@ variable "openstack_external_net" {
   default     = "ext-net"
 }
 
+variable "openstack_security_kubernetes" {
+  type        = map(any)
+  description = "IP address to allow connections to kube api port, default is rancher nodes"
+  default = {
+    "rancher-1" : "141.142.218.167/32"
+    "rancher-2" : "141.142.217.171/32"
+    "rancher-3" : "141.142.217.184/32"
+  }
+}
+
+variable "openstack_security_ssh" {
+  type        = map(any)
+  description = "IP address to allow connections to ssh, default is open to NCSA"
+  default = {
+    "world" : "141.142.0.0/16"
+  }
+}
+
+variable "openstack_security_custom" {
+  type        = map(any)
+  description = "ports to open for custom services to the world, assumed these are blocked in other ways"
+  default = {
+  }
+}
+
+variable "openstack_os_image" {
+  type        = map(any)
+  description = "Map from short OS name to image"
+  default = {
+    "ubuntu" = {
+      "imagename" : "Ubuntu Jammy (22.04) latest"
+      "username" : "ubuntu"
+    }
+    "ubuntu22" = {
+      "imagename" : "Ubuntu Jammy (22.04) latest"
+      "username" : "ubuntu"
+    }
+  }
+}
+
 variable "openstack_ssh_key" {
   type        = string
-  description = "existing SSH key to use, leave blank for a new one"
+  description = "OpenStack SSH key name, leave blank to generate new key"
   default     = ""
-}
-
-# ----------------------------------------------------------------------
-# OPENSTACK KUBERNETES
-# ----------------------------------------------------------------------
-
-variable "os" {
-  type        = string
-  description = "Base image to use for the OS"
-  default     = "CentOS-7-GenericCloud-Latest"
-}
-
-variable "controlplane_count" {
-  type        = string
-  description = "Desired quantity of control-plane nodes"
-  default     = 1
-}
-
-variable "controlplane_flavor" {
-  type        = string
-  description = "Desired flavor of control-plane nodes"
-  default     = "m1.medium"
-}
-
-variable "controlplane_disksize" {
-  type        = string
-  description = "Desired disksize of control-plane nodes"
-  default     = 40
-}
-
-variable "worker_count" {
-  type        = string
-  description = "Desired quantity of worker nodes"
-  default     = 1
-}
-
-variable "worker_flavor" {
-  type        = string
-  description = "Desired flavor of worker nodes"
-  default     = "m1.large"
-}
-
-variable "worker_disksize" {
-  type        = string
-  description = "Desired disksize of worker nodes"
-  default     = 40
 }
 
 # ----------------------------------------------------------------------
@@ -192,4 +191,26 @@ variable "floating_ip" {
   type        = string
   description = "Number of floating IP addresses available for loadbalancers"
   default     = 2
+}
+
+# ----------------------------------------------------------------------
+# NODE CREATION OPTIONS
+# ----------------------------------------------------------------------
+
+variable "ncsa_security" {
+  type        = bool
+  description = "Install NCSA security options, for example rsyslog"
+  default     = false
+}
+
+variable "taiga_enabled" {
+  type        = bool
+  description = "Enable Taiga mount"
+  default     = true
+}
+
+variable "install_docker" {
+  type        = bool
+  description = "Install Docker when provisioning node (only for rke1)"
+  default     = true
 }

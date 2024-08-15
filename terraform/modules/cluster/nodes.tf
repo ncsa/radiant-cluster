@@ -33,7 +33,7 @@ resource "openstack_compute_instance_v2" "machine" {
   image_name        = each.value.image_name
   availability_zone = each.value.zone
   flavor_name       = each.value.flavor
-  key_pair          = openstack_compute_keypair_v2.key.name
+  key_pair          = local.key_name
   config_drive      = false
 
   depends_on = [
@@ -57,17 +57,16 @@ resource "openstack_compute_instance_v2" "machine" {
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    private_key    = openstack_compute_keypair_v2.key.private_key
     project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name   = var.cluster_name
     username       = each.value.username
     node_name      = each.value.hostname
-    node_command   = rancher2_cluster.kube.cluster_registration_token.0.node_command
+    node_command   = local.kube.cluster_registration_token.0.node_command
     node_options   = lookup(local.node_options, each.value.role, "--worker")
     node_labels    = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
     ncsa_security  = var.ncsa_security
     taiga_enabled  = var.taiga_enabled
-    install_docker = var.install_docker
+    install_docker = local.rke1 && var.install_docker
   }))
 
   lifecycle {
@@ -75,7 +74,9 @@ resource "openstack_compute_instance_v2" "machine" {
       key_pair,
       block_device,
       user_data,
-      availability_zone
+      availability_zone,
+      flavor_name,
+      image_name
     ]
   }
 }
