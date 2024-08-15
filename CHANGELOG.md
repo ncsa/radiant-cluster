@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 This allows to create a cluster that is RKE2 or K3S as well as RKE1. RKE1 is deprecated and will stop to be supported on July 31st, 2025. If you want to use either RKE2 or K3S you will need to change the `network_plugin`.
 
-In version 4.0.0 of these modules RKE1 will be removed.
+In version 3.5.0 the default network for RKE1 will be set to canal, please make sure to either upgrade or explicitly say to use weave.
+In version 4.0.0 RKE1 will be removed
 
 ### Added
 - can use RKE2 or K3S clusters by setting kubernetes_version (leave blank to create RKE1 cluster)
