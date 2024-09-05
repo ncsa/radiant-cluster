@@ -41,6 +41,38 @@ timezone: America/Chicago
 
 # files to be created on the system
 write_files:
+%{ if ncsa_security }
+- path: /etc/ssh/sshd_config.d/50-ncsa-only.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    # Disable all authentication modes later to be enabled as needed
+    # GSSAPI is enabled due to bug Redhat Bugzilla #1580017
+    ChallengeResponseAuthentication no
+    GSSAPIAuthentication yes
+    HostbasedAuthentication no
+    KbdInteractiveAuthentication no
+    KerberosAuthentication no
+    PasswordAuthentication no
+    PubkeyAuthentication no
+
+    # Allow any NCSA IP
+    Match Address "141.142.0.0/16"
+           PubkeyAuthentication yes
+           AuthorizedKeysFile .ssh/authorized_keys
+           AuthenticationMethods publickey
+
+    # Qualys Scanner
+    Match User qualys
+           AllowGroups qualys
+           AllowUsers qualys@141.142.148.51
+           PubkeyAuthentication yes
+           AuthorizedKeysFile .ssh/authorized_keys
+           AuthenticationMethods publickey
+           Banner none
+           MaxSessions 10
+           MaxAuthTries 10
+%{ endif }
 %{ if taiga_enabled ~}
 - path: /etc/fstab
   permissions: "0644"
