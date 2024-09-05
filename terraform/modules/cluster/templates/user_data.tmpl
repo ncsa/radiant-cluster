@@ -56,8 +56,8 @@ write_files:
     PasswordAuthentication no
     PubkeyAuthentication no
 
-    # Allow cerberus[1-4], NCSA VPN, cookiemonster
-    Match Address "141.142.148.5,141.142.236.23,141.142.148.24,141.142.236.22,141.142.146.0/24,141.142.217.231"
+    # Allow any NCSA IP
+    Match Address "141.142.0.0/16"
            PubkeyAuthentication yes
            AuthorizedKeysFile .ssh/authorized_keys
            AuthenticationMethods publickey
