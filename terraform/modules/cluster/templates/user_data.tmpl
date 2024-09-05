@@ -72,8 +72,7 @@ write_files:
            Banner none
            MaxSessions 10
            MaxAuthTries 10
-%{ endif ~}
-
+%{ endif }
 %{ if taiga_enabled ~}
 - path: /etc/fstab
   permissions: "0644"
