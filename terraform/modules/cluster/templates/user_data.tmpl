@@ -12,10 +12,6 @@ package_upgrade: true
 # install some packages
 packages:
   - chrony
-%{ if username == "centos" }
-  - iscsi-initiator-utils
-  - nfs-utils
-%{ endif }
 %{ if username == "ubuntu" }
   - open-iscsi
   - nfs-common
@@ -58,6 +54,11 @@ write_files:
 
     # Allow any NCSA IP
     Match Address "141.142.0.0/16"
+           PubkeyAuthentication yes
+           AuthorizedKeysFile .ssh/authorized_keys
+           AuthenticationMethods publickey
+    # Allow cluster network
+    Match Address "${network_cidr}"
            PubkeyAuthentication yes
            AuthorizedKeysFile .ssh/authorized_keys
            AuthenticationMethods publickey
@@ -118,6 +119,17 @@ write_files:
     net.ipv6.conf.all.disable_ipv6 = 1
     net.ipv6.conf.default.disable_ipv6 = 1
 %{ endif }
+%{ if ncsa_security }
+%{ if username == "ubuntu" }
+- path: /etc/apt/preferences.d/nosnap.pref
+  permissions: "0644"
+  owner: root:root
+  content: |
+    Package: snapd
+    Pin: release a=*
+    Pin-Priority: -1
+%{ endif }
+%{ endif }
 %{ if username == "ubuntu" }
 - path: /etc/sysctl.d/50-increase-inotify.conf
   permissions: "0644"
@@ -156,6 +168,11 @@ write_files:
     # clean up default pool sources if we are using ncsa security
     sed -i 's/^pool/# pool/' /etc/chrony/chrony.conf
     systemctl restart chronyd
+    # remove snap
+    snap remove --purge lxd
+    snap remove --purge core20
+    snap remove --purge snapd
+    apt-get purge --auto-remove -y snapd
 %{ endif }
 %{ endif }
 %{ if username == "ubuntu" }
