@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+- if ncsa_security, disable snap
+- if ncsa_security, limit ssh hosts to ncsa only
+
 ## 3.2.0 - 2024-08-04
 
 This allows to create a cluster that is RKE2 or K3S as well as RKE1. RKE1 is deprecated and will stop to be supported on July 31st, 2025. If you want to use either RKE2 or K3S you will need to change the `network_plugin`.

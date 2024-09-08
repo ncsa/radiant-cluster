@@ -65,7 +65,8 @@ resource "openstack_compute_instance_v2" "machine" {
     node_options   = lookup(local.node_options, each.value.role, "--worker")
     node_labels    = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
     ncsa_security  = var.ncsa_security
-    taiga_enabled  = var.taiga_enabled
+    taiga_enabled  = var.taiga_enabled 
+    network_cidr   = var.network_cidr
     install_docker = local.rke1 && var.install_docker
   }))
 
