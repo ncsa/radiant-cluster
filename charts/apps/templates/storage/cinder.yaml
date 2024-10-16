@@ -38,8 +38,6 @@ spec:
       values: |
         csi:
           plugin:
-            image:
-              tag: v1.27.1
             volumes:
               - name: cacert
                 hostPath:
