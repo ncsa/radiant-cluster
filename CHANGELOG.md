@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Changed
+- Remove hard-coded image tag in openstack-cinder-csi so it now follows upstream updates
+
 ## 3.2.1 - 2024-09-07
 
 ### Changed
