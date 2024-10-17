@@ -48,6 +48,11 @@ spec:
               {{- if .Values.ingresscontroller.traefik.acme }}
               certResolver: letsencrypt
               {{- end }}
+            transport:
+              respondingTimeouts:
+                idleTimeout: 600
+                writeTimeout: 600
+                readTimeout: 600
           {{- if .Values.ingresscontroller.traefik.ports }}
           {{- .Values.ingresscontroller.traefik.ports | toYaml | nindent 10 }}
           {{- end }}
