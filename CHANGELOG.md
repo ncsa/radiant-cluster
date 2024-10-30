@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - added timeouts for traefik (fixes harbor)
 
+### Changed
+- disable FRR in metallb since we only use L2 announcements
+
 ## 3.2.1 - 2024-09-07
 
 ### Changed
