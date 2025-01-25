@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.3.0 - 2025-01-24
+## Unreleased
 
 ### Fixed
 - removed hard coded image in cinder
@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - disable FRR in metallb since we only use L2 announcements
+- bumped monitoring to 105.*
 
 ## 3.2.1 - 2024-09-07
 
