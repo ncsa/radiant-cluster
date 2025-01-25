@@ -39,9 +39,12 @@ spec:
             loadBalancerIP: {{ .Values.ingresscontroller.privateIP | default .Values.ingresscontroller.publicIP }}
         ports:
           web:
-            redirectTo:
-              port: websecure
-              priority: 9999
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                permanent: true
+                priority: 9999
           websecure:
             tls:
               enabled: true
