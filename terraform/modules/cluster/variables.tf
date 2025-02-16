@@ -57,12 +57,6 @@ variable "rke1_version" {
   default     = "v1.21.14-rancher1-1"
 }
 
-variable "rke1_migrate" {
-  type        = bool
-  description = "set to true if migrating (adds zzz- to the cluster name)"
-  default     = false
-}
-
 variable "network_plugin" {
   type        = string
   description = "Network plugin to be used (canal, cilium, calico, flannel, ...)"
