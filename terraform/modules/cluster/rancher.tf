@@ -59,7 +59,7 @@ resource "rancher2_cluster_v2" "kube" {
 
 resource "rancher2_cluster" "kube" {
   count       = local.rke1 ? 1 : 0
-  name        = "${rke1_prefix}${var.cluster_name}"
+  name        = "${local.rke1_prefix}${var.cluster_name}"
   description = var.cluster_description
   driver      = "rancherKubernetesEngine"
 
