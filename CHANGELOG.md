@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 3.3.0 - 2025-02-15
 
 ### Fixed
 - removed hard coded image in cinder
@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - added timeouts for traefik (fixes harbor)
+- add flag `rke1_migrate` to add "zzz-" as prefix to cluster
 
 ### Changed
 - disable FRR in metallb since we only use L2 announcements
