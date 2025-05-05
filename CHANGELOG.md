@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.4.0 - 2025-05-05
+
+### Changed
+- changed the data structure in variables that holds the machine definition
+
 ## 3.3.0 - 2025-05-04
 
 ### Added
