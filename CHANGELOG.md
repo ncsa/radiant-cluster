@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.3.0 - 2025-05-04
+
+### Added
+- can now configure Qualys agent
+
+### Changed
+- bumped monitoring to 106.*
+- set retentionSize for prometheus to be 10GB
+
 ## 3.2.2 - 2025-02-15
 
 ### Fixed
