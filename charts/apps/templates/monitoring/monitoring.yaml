@@ -43,6 +43,9 @@ spec:
             clusterName: {{ .Values.cluster.name }}
             systemDefaultRegistry: ""
           systemDefaultRegistry: ""
+        prometheus:
+          prometheusSpec:
+            retentionSize: 10GiB
   ignoreDifferences:
     - group: ""
       kind: ConfigMap
