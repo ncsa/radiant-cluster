@@ -203,6 +203,30 @@ variable "ncsa_security" {
   default     = false
 }
 
+variable "qualys_url" {
+  type        = string
+  description = "When installing qualys-cloud-agent, the URL to download the agent from"
+  default     = ""
+}
+
+variable "qualys_activation_id" {
+  type        = string
+  description = "When installing qualys-cloud-agent, this is the activation id"
+  default     = ""
+}
+
+variable "qualys_customer_id" {
+  type        = string
+  description = "When installing qualys-cloud-agent, this is the customer id"
+  default     = ""
+}
+
+variable "qualys_server" {
+  type        = string
+  description = "When installing qualys-cloud-agent, this is the server to connect to"
+  default     = ""
+}
+
 variable "taiga_enabled" {
   type        = bool
   description = "Enable Taiga mount"

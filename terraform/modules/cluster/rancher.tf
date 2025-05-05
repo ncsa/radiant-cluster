@@ -1,7 +1,7 @@
 locals {
-  rke1        = var.kubernetes_version == ""
-  kube        = local.rke1 ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
-  kube_id     = local.rke1 ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
+  rke1    = var.kubernetes_version == ""
+  kube    = local.rke1 ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
+  kube_id = local.rke1 ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
 }
 
 # ----------------------------------------------------------------------

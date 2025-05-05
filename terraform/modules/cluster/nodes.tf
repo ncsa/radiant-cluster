@@ -57,17 +57,21 @@ resource "openstack_compute_instance_v2" "machine" {
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    project_name   = data.openstack_identity_auth_scope_v3.scope.project_name
-    cluster_name   = var.cluster_name
-    username       = each.value.username
-    node_name      = each.value.hostname
-    node_command   = local.kube.cluster_registration_token.0.node_command
-    node_options   = lookup(local.node_options, each.value.role, "--worker")
-    node_labels    = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
-    ncsa_security  = var.ncsa_security
-    taiga_enabled  = var.taiga_enabled
-    network_cidr   = var.network_cidr
-    install_docker = local.rke1 && var.install_docker
+    project_name       = data.openstack_identity_auth_scope_v3.scope.project_name
+    cluster_name       = var.cluster_name
+    username           = each.value.username
+    node_name          = each.value.hostname
+    node_command       = local.kube.cluster_registration_token.0.node_command
+    node_options       = lookup(local.node_options, each.value.role, "--worker")
+    node_labels        = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
+    ncsa_security      = var.ncsa_security
+    qualys_url         = var.qualys_url
+    qualys_activation_id  = var.qualys_activation_id
+    qualys_customer_id = var.qualys_customer_id
+    qualys_server      = var.qualys_server
+    taiga_enabled      = var.taiga_enabled
+    network_cidr       = var.network_cidr
+    install_docker     = local.rke1 && var.install_docker
   }))
 
   lifecycle {

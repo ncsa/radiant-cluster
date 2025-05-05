@@ -173,6 +173,14 @@ write_files:
     snap remove --purge core20
     snap remove --purge snapd
     apt-get purge --auto-remove -y snapd
+%{ if qualys_url != "" && qualys_activation_id != "" && qualys_customer_id != "" && qualys_server != "" }
+    # install qualys agent
+    curl -o /tmp/QualysCloudAgent.deb ${qualys_url}
+    dpkg --install /tmp/QualysCloudAgent.deb
+    rm /tmp/QualysCloudAgent.deb
+    # enable qualys agent
+    /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId=${qualys_activation_id} CustomerId=${qualys_customer_id} ServerUri=${qualys_server}
+%{ endif }
 %{ endif }
 %{ endif }
 %{ if username == "ubuntu" }

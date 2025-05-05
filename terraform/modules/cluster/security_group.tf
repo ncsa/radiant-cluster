@@ -93,7 +93,7 @@ resource "openstack_networking_secgroup_rule_v2" "custom" {
   description       = "custom ${each.key}"
   direction         = "ingress"
   ethertype         = "IPv4"
-  protocol          = "tcp"
+  protocol          = lower(each.value.protocol)
   port_range_min    = each.value.port_range_min
   port_range_max    = each.value.port_range_max
   remote_ip_prefix  = each.value.remote_ip_prefix
