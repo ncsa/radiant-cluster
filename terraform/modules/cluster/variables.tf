@@ -19,9 +19,19 @@ variable "cluster_direct_access" {
 }
 
 variable "cluster_machines" {
-  type        = set(map(any))
+  type = set(object({
+    name        = string
+    os          = string
+    role        = optional(string, "worker")
+    count       = optional(number, 1)
+    start_index = optional(number, 1)
+    flavor      = optional(string, "gp.medium")
+    disk        = optional(number, 40)
+    zone        = optional(string, "nova")
+    floating_ip = optional(bool)
+    labels      = optional(set(string), [])
+  }))
   description = "machine definition"
-  default     = []
 }
 
 # ----------------------------------------------------------------------

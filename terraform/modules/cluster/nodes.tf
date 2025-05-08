@@ -10,12 +10,12 @@ locals {
         hostname    = format("%s-%s-%02d", var.cluster_name, x.name, (i + (contains(keys(x), "start_index") ? x.start_index : 1)))
         username    = var.openstack_os_image[x.os].username
         image_name  = var.openstack_os_image[x.os].imagename
-        flavor      = try(x.flavor, "gp.medium")
+        flavor      = x.flavor
         image_id    = data.openstack_images_image_v2.os_image[x.os].id
-        disk_size   = try(x.disk, 40)
-        zone        = try(x.zone, "nova")
-        role        = try(x.role, "worker")
-        floating_ip = try(x.floating_ip, can(x.role == "controlplane"))
+        disk_size   = x.disk
+        zone        = x.zone
+        role        = x.role
+        floating_ip = x.floating_ip != null ? x.floating_ip : (x.role == "controlplane")
         labels      = flatten([format("ncsa.role=%s", x.name), format("ncsa.flavor=%s", try(x.flavor, "gp.medium")), try(x.labels, [])])
       }
     ]
@@ -57,21 +57,21 @@ resource "openstack_compute_instance_v2" "machine" {
   }
 
   user_data = base64encode(templatefile("${path.module}/templates/user_data.tmpl", {
-    project_name       = data.openstack_identity_auth_scope_v3.scope.project_name
-    cluster_name       = var.cluster_name
-    username           = each.value.username
-    node_name          = each.value.hostname
-    node_command       = local.kube.cluster_registration_token.0.node_command
-    node_options       = lookup(local.node_options, each.value.role, "--worker")
-    node_labels        = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
-    ncsa_security      = var.ncsa_security
-    qualys_url         = var.qualys_url
-    qualys_activation_id  = var.qualys_activation_id
-    qualys_customer_id = var.qualys_customer_id
-    qualys_server      = var.qualys_server
-    taiga_enabled      = var.taiga_enabled
-    network_cidr       = var.network_cidr
-    install_docker     = local.rke1 && var.install_docker
+    project_name         = data.openstack_identity_auth_scope_v3.scope.project_name
+    cluster_name         = var.cluster_name
+    username             = each.value.username
+    node_name            = each.value.hostname
+    node_command         = local.kube.cluster_registration_token.0.node_command
+    node_options         = lookup(local.node_options, each.value.role, "--worker")
+    node_labels          = join(" ", [for l in each.value.labels : format("-l %s", replace(l, " ", "_"))])
+    ncsa_security        = var.ncsa_security
+    qualys_url           = var.qualys_url
+    qualys_activation_id = var.qualys_activation_id
+    qualys_customer_id   = var.qualys_customer_id
+    qualys_server        = var.qualys_server
+    taiga_enabled        = var.taiga_enabled
+    network_cidr         = var.network_cidr
+    install_docker       = local.rke1 && var.install_docker
   }))
 
   lifecycle {
