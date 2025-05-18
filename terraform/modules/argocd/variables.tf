@@ -231,6 +231,12 @@ variable "ingress_controller" {
   }
 }
 
+variable "certmanager_enabled" {
+  type        = bool
+  description = "Enable CertManager"
+  default     = false
+}
+
 # ----------------------------------------------------------------------
 # TRAEFIK
 # ----------------------------------------------------------------------
