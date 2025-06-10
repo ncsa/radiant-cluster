@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - upgraded metallb to 0.14.*
-- pinned cinder-csi to 2.32.* see https://github.com/kubernetes/cloud-provider-openstack/issues/2908
 
 ## 3.4.0 - 2025-05-05
 
