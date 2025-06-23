@@ -60,6 +60,7 @@ resource "openstack_compute_instance_v2" "machine" {
     project_name         = data.openstack_identity_auth_scope_v3.scope.project_name
     cluster_name         = var.cluster_name
     username             = each.value.username
+    k8s_cis_hardening    = var.k8s_cis_hardening
     node_name            = each.value.hostname
     node_command         = local.kube.cluster_registration_token.0.node_command
     node_options         = lookup(local.node_options, each.value.role, "--worker")

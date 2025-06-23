@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+### Added
+- added option `k8s_cis_hardening` to install security options for CIS Benchmark compliance
+  - add etcd user/group
+  - configure kernel params for CIS benchmark
+
 ### Changed
 - upgraded metallb to 0.14.*
 

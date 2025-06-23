@@ -207,6 +207,12 @@ variable "floating_ip" {
 # NODE CREATION OPTIONS
 # ----------------------------------------------------------------------
 
+variable "k8s_cis_hardening" {
+  type        = bool
+  description = "Install host-level and kubernetes-level security options for CIS Benchmark compliance"
+  default     = false
+}
+
 variable "ncsa_security" {
   type        = bool
   description = "Install NCSA security options, for example rsyslog"
