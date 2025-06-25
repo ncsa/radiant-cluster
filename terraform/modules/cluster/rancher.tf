@@ -26,10 +26,11 @@ resource "rancher2_cluster_v2" "kube" {
   default_pod_security_admission_configuration_template_name = var.default_psa_template
   rke_config {
     machine_selector_config {
-      config = {
-        # Set profile only if it's a RKE2 hardened cluster
-        profile = var.k8s_cis_hardening && local.kube_dist == "rke2" ? var.cis_benchmark : ""
-      }
+      # Set profile only if it's a RKE2 hardened cluster
+      config = (
+        var.k8s_cis_hardening && local.kube_dist == "rke2" ?
+          yamlencode({ profile = var.cis_benchmark }) : ""
+      )
     }
     machine_global_config = yamlencode({
       cni = var.network_plugin
