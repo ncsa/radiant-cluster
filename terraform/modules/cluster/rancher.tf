@@ -1,9 +1,9 @@
 locals {
   kube_version = var.kubernetes_version
   kube_dist = (
-    kube_version == ""                ? "rke1" :
-    strcontains(kube_version, "rke2") ? "rke2" :
-    strcontains(kube_version, "k3s")  ? "k3s"  :
+    local.kube_version == ""                ? "rke1" :
+    strcontains(local.kube_version, "rke2") ? "rke2" :
+    strcontains(local.kube_version, "k3s")  ? "k3s"  :
     "rke1"
   )
 
@@ -22,7 +22,7 @@ locals {
 resource "rancher2_cluster_v2" "kube" {
   count              = local.kube_dist == "rke1" ? 0 : 1
   name               = var.cluster_name
-  kubernetes_version = locals.kube_version
+  kubernetes_version = local.kube_version
   default_pod_security_admission_configuration_template_name = var.default_psa_template
   rke_config {
     machine_selector_config {
@@ -77,7 +77,7 @@ resource "rancher2_cluster_v2" "kube" {
 }
 
 resource "rancher2_cluster" "kube" {
-  count       = local.rke1 ? 1 : 0
+  count       = local.kube_dist == "rke1" ? 0 : 1
   name        = var.cluster_name
   description = var.cluster_description
   driver      = "rancherKubernetesEngine"
