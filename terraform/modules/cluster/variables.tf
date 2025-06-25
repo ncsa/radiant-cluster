@@ -52,7 +52,7 @@ variable "rancher_token" {
 
 variable "cis_benchmark" {
   type        = string
-  description = "CIS Benchmark profile used to validate configuration"
+  description = "CIS Benchmark RKE2 profile used to validate configuration"
   default     = "cis"
 }
 

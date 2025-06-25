@@ -27,7 +27,8 @@ resource "rancher2_cluster_v2" "kube" {
   rke_config {
     machine_selector_config {
       config = {
-        profile = var.k8s_cis_hardening ? var.cis_benchmark : ""
+        # Set profile only if it's a RKE2 hardened cluster
+        profile = var.k8s_cis_hardening && local.kube_dist == "rke2" ? var.cis_benchmark : ""
       }
     }
     machine_global_config = yamlencode({
