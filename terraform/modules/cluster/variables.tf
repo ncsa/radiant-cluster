@@ -50,6 +50,12 @@ variable "rancher_token" {
   description = "Access token for rancher, clusters are created as this user"
 }
 
+variable "cis_benchmark" {
+  type        = string
+  description = "CIS Benchmark profile used to validate configuration"
+  default     = "cis"
+}
+
 # RKE2
 # curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.rke2.releases[].version'
 # K3S
@@ -57,6 +63,13 @@ variable "rancher_token" {
 variable "kubernetes_version" {
   type        = string
   description = "Version of rke2/k3s to install (leave blank to install rke1)"
+  default     = ""
+}
+
+# There are two builtin Pod Security Admission Configuration Template (PSACT): rancher-privileged and rancher-restricted.
+variable "default_psa_template" {
+  type        = string
+  description = "RKE2/K3s cluster-wide default Pod Security Admission Configuration Template"
   default     = ""
 }
 
