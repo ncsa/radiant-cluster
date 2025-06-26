@@ -77,7 +77,7 @@ resource "rancher2_cluster_v2" "kube" {
 }
 
 resource "rancher2_cluster" "kube" {
-  count       = local.kube_dist == "rke1" ? 0 : 1
+  count       = local.kube_dist == "rke1" ? 1 : 0
   name        = var.cluster_name
   description = var.cluster_description
   driver      = "rancherKubernetesEngine"
