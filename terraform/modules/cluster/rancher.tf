@@ -10,10 +10,9 @@ locals {
   kube = local.kube_dist == "rke1" ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
   kube_id = local.kube_dist == "rke1" ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
 
-  rancher_psact_mount_path = "/etc/rancher/${local.kube_dist}/config/rancher-psact.yaml"
-  kube_apiserver_arg = (
-    var.default_psa_template != null && var.default_psa_template != ""
-  ) ? ["admission-control-config-file=${local.rancher_psact_mount_path}"] : []
+  has_psa_template = var.default_psa_template != null && var.default_psa_template != ""
+  rancher_psact_mount_path = local.has_psa_template ? "/etc/rancher/${local.kube_dist}/config/rancher-psact.yaml" : ""
+  kube_apiserver_arg = local.has_psa_template ? ["admission-control-config-file=${local.rancher_psact_mount_path}"] : []
 }
 
 # ----------------------------------------------------------------------
