@@ -67,6 +67,7 @@ variable "kubernetes_version" {
 }
 
 # There are two builtin Pod Security Admission Configuration Template (PSACT): rancher-privileged and rancher-restricted.
+# Leaving this blank will result in no PSA for K3s/RKE1/RKE2 and "rancher-restricted" for RKE2 if k8s_cis_hardening = true
 variable "default_psa_template" {
   type        = string
   description = "RKE2/K3s cluster-wide default Pod Security Admission Configuration Template"
