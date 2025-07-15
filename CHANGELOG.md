@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 - upgraded metallb to 0.14.*
+- define machine labels as map(string), not array of key=value strings
 
 ## 3.4.0 - 2025-05-05
 
