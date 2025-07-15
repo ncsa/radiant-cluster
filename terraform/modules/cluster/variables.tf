@@ -67,7 +67,7 @@ variable "kubernetes_version" {
 }
 
 # There are two builtin Pod Security Admission Configuration Template (PSACT): rancher-privileged and rancher-restricted.
-# Leaving this blank will result in no PSA for K3s/RKE1/RKE2 and "rancher-restricted" for RKE2 if k8s_cis_hardening = true
+# Leaving this blank will result in no PSA for K3s/RKE1/RKE2 and "rancher-restricted" for RKE2 if rke2_cis_hardening = true
 variable "default_psa_template" {
   type        = string
   description = "RKE2/K3s cluster-wide default Pod Security Admission Configuration Template"
@@ -221,9 +221,9 @@ variable "floating_ip" {
 # NODE CREATION OPTIONS
 # ----------------------------------------------------------------------
 
-variable "k8s_cis_hardening" {
+variable "rke2_cis_hardening" {
   type        = bool
-  description = "Install host-level and kubernetes-level security options for CIS Benchmark compliance"
+  description = "Install host-level and kubernetes-level RKE2 security options for CIS Benchmark compliance"
   default     = false
 }
 

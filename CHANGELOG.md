@@ -7,10 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## Unreleased
 
 ### Added
-- added option `k8s_cis_hardening` (default false) to install security options for CIS Benchmark compliance
+- added option `rke2_cis_hardening` (default false) to install RKE2 security options for CIS Benchmark compliance
   - add etcd user/group
   - configure kernel params for CIS benchmark
-  - add option for RKE2 CIS profile if `k8s_cis_hardening` enabled
+  - add option for RKE2 CIS profile if `rke2_cis_hardening` enabled
 - added option to define pod security admission (PSA) template
 
 ### Changed

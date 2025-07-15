@@ -22,7 +22,7 @@ packages:
 
 users:
   - default
-%{ if k8s_cis_hardening }
+%{ if rke2_cis_hardening }
   - name: etcd
     gecos: etcd Service Account
     system: true
@@ -143,7 +143,7 @@ write_files:
   content: |
     fs.inotify.max_user_instances=8192
 %{ endif }
-%{ if k8s_cis_hardening }
+%{ if rke2_cis_hardening }
 - path: /etc/sysctl.d/90-kubelet.conf
   permissions: "0644"
   owner: root:root
