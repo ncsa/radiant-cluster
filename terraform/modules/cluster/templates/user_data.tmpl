@@ -22,6 +22,12 @@ packages:
 
 users:
   - default
+%{ if rke2_cis_hardening }
+  - name: etcd
+    gecos: etcd Service Account
+    system: true
+    shell: /sbin/nologin
+%{ endif }
 %{ if ncsa_security }
   - name: qualys
     gecos: Qualys Service
@@ -136,6 +142,16 @@ write_files:
   owner: root:root
   content: |
     fs.inotify.max_user_instances=8192
+%{ endif }
+%{ if rke2_cis_hardening }
+- path: /etc/sysctl.d/90-kubelet.conf
+  permissions: "0644"
+  owner: root:root
+  content: |
+    vm.panic_on_oom=0
+    vm.overcommit_memory=1
+    kernel.panic=10
+    kernel.panic_on_oops=1
 %{ endif }
 %{ if ncsa_security }
 %{ if username == "ubuntu" }

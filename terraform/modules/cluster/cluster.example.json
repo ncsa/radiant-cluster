@@ -12,7 +12,11 @@
       "flavor": "gp.xlarge",
       "os": "ubuntu",
       "disk": 80,
-      "count": 2
+      "count": 2,
+      "labels": {
+        "hub.jupyter.org/node-purpose": "user",
+        "environment": "production"
+      }
     },
     {
       "name": "worker",

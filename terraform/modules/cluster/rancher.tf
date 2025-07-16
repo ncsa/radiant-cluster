@@ -1,20 +1,40 @@
 locals {
-  rke1    = var.kubernetes_version == ""
-  kube    = local.rke1 ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
-  kube_id = local.rke1 ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
+  kube_version = var.kubernetes_version
+  kube_dist = (
+    local.kube_version == ""                ? "rke1" :
+    strcontains(local.kube_version, "rke2") ? "rke2" :
+    strcontains(local.kube_version, "k3s")  ? "k3s"  :
+    "rke1"
+  )
+
+  kube    = local.kube_dist == "rke1" ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
+  kube_id = local.kube_dist == "rke1" ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
+
+  has_psa_template         = var.default_psa_template != null && var.default_psa_template != ""
+  rancher_psact_mount_path = local.has_psa_template ? "/etc/rancher/${local.kube_dist}/config/rancher-psact.yaml" : ""
+  kube_apiserver_arg       = local.has_psa_template ? ["admission-control-config-file=${local.rancher_psact_mount_path}"] : []
 }
 
 # ----------------------------------------------------------------------
 # cluster definition
 # ----------------------------------------------------------------------
 resource "rancher2_cluster_v2" "kube" {
-  count              = local.rke1 ? 0 : 1
-  name               = var.cluster_name
-  kubernetes_version = var.kubernetes_version
+  count                                                      = local.kube_dist == "rke1" ? 0 : 1
+  name                                                       = var.cluster_name
+  kubernetes_version                                         = local.kube_version
+  default_pod_security_admission_configuration_template_name = var.default_psa_template
   rke_config {
+    machine_selector_config {
+      # Set profile only if it's a RKE2 hardened cluster
+      config = (
+        var.rke2_cis_hardening && local.kube_dist == "rke2" ?
+        yamlencode({ profile = var.cis_benchmark }) : ""
+      )
+    }
     machine_global_config = yamlencode({
-      cni : var.network_plugin
-      disable : [
+      cni                = var.network_plugin
+      kube-apiserver-arg = local.kube_apiserver_arg
+      disable = [
         # K3S
         #- coredns
         "servicelb",
@@ -57,7 +77,7 @@ resource "rancher2_cluster_v2" "kube" {
 }
 
 resource "rancher2_cluster" "kube" {
-  count       = local.rke1 ? 1 : 0
+  count       = local.kube_dist == "rke1" ? 1 : 0
   name        = var.cluster_name
   description = var.cluster_description
   driver      = "rancherKubernetesEngine"
