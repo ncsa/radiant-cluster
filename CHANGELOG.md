@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+## 3.5.0 - 2025-07-15
+
 ### Added
 - added option `rke2_cis_hardening` (default false) to install RKE2 security options for CIS Benchmark compliance
   - add etcd user/group
