@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.6.0 - 2025-10-01
+
+### Added
+- added variable to drain controlplane/worker nodes when changing config (e.g. kubernetes version)
+  - controlplanes will drain by default
+  - worker nodes will cordon, but not drain by default
+
 ## 3.5.0 - 2025-07-15
 
 ### Added

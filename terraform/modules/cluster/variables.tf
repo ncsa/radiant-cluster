@@ -87,6 +87,18 @@ variable "network_plugin" {
   default     = "weave"
 }
 
+variable "drain_controlplane" {
+  type        = bool
+  description = "When upgrading, drain controlplane nodes"
+  default     = true
+}
+
+variable "drain_worker" {
+  type        = bool
+  description = "When upgrading, drain worker nodes"
+  default     = false
+}
+
 # ----------------------------------------------------------------------
 # USERS
 # ----------------------------------------------------------------------

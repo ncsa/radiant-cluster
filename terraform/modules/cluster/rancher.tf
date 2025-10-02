@@ -53,7 +53,7 @@ resource "rancher2_cluster_v2" "kube" {
       control_plane_drain_options {
         delete_empty_dir_data                = true
         disable_eviction                     = false
-        enabled                              = true
+        enabled                              = var.drain_controlplane
         force                                = false
         grace_period                         = 120
         ignore_daemon_sets                   = true
@@ -64,7 +64,7 @@ resource "rancher2_cluster_v2" "kube" {
       worker_drain_options {
         delete_empty_dir_data                = true
         disable_eviction                     = false
-        enabled                              = true
+        enabled                              = var.drain_worker
         force                                = false
         grace_period                         = 120
         ignore_daemon_sets                   = true
