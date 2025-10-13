@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+Cinder will need to be upgraded manually since the images might not be pushed when the helm chart is pushed.
+
+### Changed
+- upgraded cinder to 2.34.0
+
 ## 3.6.0 - 2025-10-01
 
 ### Added
