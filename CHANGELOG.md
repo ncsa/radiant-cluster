@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Cinder will need to be upgraded manually since the images might not be pushed when the helm chart is pushed.
 
+### Added
+- traefik now checks gateway crds
+
 ### Changed
 - upgraded cinder to 2.34.0
 
