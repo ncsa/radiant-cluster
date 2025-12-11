@@ -17,6 +17,7 @@ locals {
         role        = x.role
         floating_ip = x.floating_ip != null ? x.floating_ip : (x.role == "controlplane")
         labels      = merge({ "ncsa.role" = x.name, "ncsa.flavor" = try(x.flavor, "gp.medium") }, try(x.labels, {}))
+        taints      = try(x.taints, {})
       }
     ]
   ])
@@ -64,7 +65,8 @@ resource "openstack_compute_instance_v2" "machine" {
     node_name            = each.value.hostname
     node_command         = local.kube.cluster_registration_token.0.node_command
     node_options         = lookup(local.node_options, each.value.role, "--worker")
-    node_labels          = join(" ", [for k, v in each.value.labels : format("-l %s=%s", replace(k, " ", "_"), replace(v, " ", "_"))])
+    node_labels          = join(" ", [for k, v in each.value.labels : format("--label %s=%s", replace(k, " ", "_"), replace(v, " ", "_"))])
+    node_taints          = join(" ", [for k, v in each.value.taints : format("--taint %s=%s", replace(k, " ", "_"), replace(v, " ", "_"))])
     ncsa_security        = var.ncsa_security
     qualys_url           = var.qualys_url
     qualys_activation_id = var.qualys_activation_id

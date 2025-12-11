@@ -30,6 +30,7 @@ variable "cluster_machines" {
     zone        = optional(string, "nova")
     floating_ip = optional(bool)
     labels      = optional(map(string), {})
+    taints      = optional(map(string), {})
   }))
   description = "machine definition"
 }

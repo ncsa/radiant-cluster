@@ -200,7 +200,7 @@ write_files:
 %{ endif }
 %{ endif }
 %{ if username == "ubuntu" }
-    sysctl fs.inotify.max_user_instances=8192 
+    sysctl fs.inotify.max_user_instances=8192
 %{ endif }
 %{ if install_docker ~}
     echo "install docker"
@@ -211,7 +211,7 @@ write_files:
     usermod -aG docker ${username}
 %{ endif ~}
     echo "connect to rancher"
-    ${node_command} ${node_options} ${node_labels}
+    ${node_command} ${node_options} ${node_labels} ${node_taints}
 %{ if taiga_enabled ~}
     echo "mounting taiga"
     mkdir /taiga

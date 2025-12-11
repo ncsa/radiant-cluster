@@ -10,6 +10,7 @@ Cinder will need to be upgraded manually since the images might not be pushed wh
 
 ### Added
 - traefik now checks gateway crds
+- can now taint a node in cluster.json
 
 ### Changed
 - upgraded cinder to 2.34.0
