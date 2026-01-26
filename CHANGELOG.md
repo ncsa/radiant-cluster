@@ -15,6 +15,7 @@ Cinder will need to be upgraded manually since the images might not be pushed wh
 
 ### Changed
 - upgraded cinder to 2.34.0
+- traefik: use providers.kubernetesGateway required by helm chart v38+
 - traefik: updated ports configuration to use new `http` nesting structure required by helm chart v39+
 
 ## 3.6.0 - 2025-10-01
