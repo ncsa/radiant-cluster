@@ -259,6 +259,12 @@ variable "traefik_ports" {
   default     = {}
 }
 
+variable "traefik_version" {
+  type        = string
+  description = "Traefik helm chart version (e.g. '39.*'). Empty string uses chart default; latest (i.e. '*')."
+  default     = ""
+}
+
 # ----------------------------------------------------------------------
 # LETS ENCRYPT
 # ----------------------------------------------------------------------

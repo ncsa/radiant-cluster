@@ -45,6 +45,7 @@ locals {
     ingress_controller          = var.ingress_controller
     traefik_storageclass        = var.traefik_storageclass
     traefik_ports               = indent(14, yamlencode(var.traefik_ports))
+    traefik_version             = var.traefik_version
     acme_staging                = var.acme_staging
     acme_email                  = var.acme_email
     sealedsecrets_enabled       = var.sealedsecrets_enabled
