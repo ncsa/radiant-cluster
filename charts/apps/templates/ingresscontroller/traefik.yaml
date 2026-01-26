@@ -90,8 +90,11 @@ spec:
         ingressRoute:
           dashboard:
             enabled: false
-        kubernetesGateway:
+        gateway:
           enabled: true
+        providers:
+          kubernetesGateway:
+            enabled: true
         tlsOptions:
           default:
             minVersion: VersionTLS12
