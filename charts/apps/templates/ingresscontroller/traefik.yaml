@@ -39,18 +39,20 @@ spec:
             loadBalancerIP: {{ .Values.ingresscontroller.privateIP | default .Values.ingresscontroller.publicIP }}
         ports:
           web:
-            redirections:
-              entryPoint:
-                to: websecure
-                scheme: https
-                permanent: true
-                priority: 9999
+            http:
+              redirections:
+                entryPoint:
+                  to: websecure
+                  scheme: https
+                  permanent: true
+                  priority: 9999
           websecure:
-            tls:
-              enabled: true
-              {{- if .Values.ingresscontroller.traefik.acme }}
-              certResolver: letsencrypt
-              {{- end }}
+            http:
+              tls:
+                enabled: true
+                {{- if .Values.ingresscontroller.traefik.acme }}
+                certResolver: letsencrypt
+                {{- end }}
             transport:
               respondingTimeouts:
                 idleTimeout: 600
