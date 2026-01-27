@@ -255,7 +255,15 @@ variable "traefik_storageclass" {
 
 variable "traefik_ports" {
   type        = map(any)
-  description = "Additional ports to add to traefik"
+  description = <<-EOT
+    Additional ports to add to traefik. Each port entry supports:
+    - expose: bool - whether to expose the port
+    - exposedPort: number - the port exposed externally
+    - port: number - the internal container port
+    - protocol: string - TCP or UDP (default: TCP)
+    - ipPrefix: string - IP prefix for security group (default: 0.0.0.0/0)
+    - http: object - nested HTTP config for Traefik v39+ (optional)
+  EOT
   default     = {}
 }
 
