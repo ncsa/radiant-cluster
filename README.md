@@ -84,3 +84,33 @@ This is an app that creates new apps to install all the components configured by
 
 This module can check different aspects, but mainly is used to make sure the network is working as expected and the connections to NFS are working correctly.
 
+
+# Traefik Version Configuration
+
+The Traefik ingress controller version can be configured at multiple levels with the following precedence (highest to lowest):
+
+1. **Terraform variable** (`traefik_version`): When set to a non-empty string, this value is passed through to the helm chart
+2. **Helm chart default**: When terraform does not pass a version, `charts/apps/templates/ingresscontroller/traefik.yaml` defaults to `"*"` (latest)
+
+## Configuration Examples
+
+### Pin to a specific version via Terraform
+```hcl
+# In your terraform.tfvars
+traefik_version = "39.*"
+```
+
+### Use latest version (default behavior)
+Do not set `traefik_version` in terraform, or set it to an empty string:
+```hcl
+traefik_version = ""
+```
+
+This allows the helm chart default (`"*"`) to take effect, always pulling the latest Traefik chart version.
+
+## How it works
+
+- `terraform/modules/argocd/variables.tf`: Defines `traefik_version` with default `""`
+- `terraform/modules/argocd/templates/argocd.yaml.tmpl`: Only renders `version:` when `traefik_version != ""`
+- `charts/apps/templates/ingresscontroller/traefik.yaml`: Uses `default "*"` as fallback
+

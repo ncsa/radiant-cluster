@@ -77,6 +77,9 @@ spec:
           %{~ endif ~}
           %{~ if ingress_controller == "traefik" ||  ingress_controller == "traefik2" ~}
           traefik:
+            %{~ if traefik_version != "" ~}
+            version: "${traefik_version}"
+            %{~ endif ~}
             storageClass: "${traefik_storageclass}"
             acme:
               staging: ${acme_staging} 
