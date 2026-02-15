@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.7.1 - 2026-02-15
+
+### Added
+- can now specify traefik version
+
+### Fixed
+- traefik version 39 and up did not work with current version
+
 ## 3.7.0 - 2025-12-12
 
 Cinder will need to be upgraded manually since the images might not be pushed when the helm chart is pushed.
