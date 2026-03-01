@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 3.8.9 - 2026-03-01
+## 3.8.0 - 2026-03-01
 
 ### Added
 - added new [nfs csi chart](https://github.com/kubernetes-csi/csi-driver-nfs/tree/master/charts) this can be selected by using type: csi. Default is subdir, next version we will switch to csi.
