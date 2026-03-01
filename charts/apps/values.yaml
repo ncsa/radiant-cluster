@@ -26,7 +26,7 @@ certmanager:
   version: "1.*"
   email: acme@exmaple.com
   class: ""
-  
+
 ingresscontroller:
   enabled: false
   class: traefik
@@ -74,7 +74,9 @@ healthmonitor:
 
 nfs:
   enabled: false
+  type: subdir # subdir or csi
   version: "4.*"
+  mountPermissions: "0777" # only used with type csi
   servers:
     # special:
     #   server: server1

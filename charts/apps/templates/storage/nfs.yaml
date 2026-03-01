@@ -1,4 +1,70 @@
 {{- if and .Values.nfs .Values.nfs.enabled .Values.nfs.servers }}
+{{- $nfsType := .Values.nfs.type | default "subdir" }}
+{{- if eq $nfsType "csi" }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "{{ $.Values.cluster.name }}-nfs-csi-driver"
+  labels:
+    cluster: {{ $.Values.cluster.name | quote }}
+    app: nfs
+  namespace: {{ $.Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml $.Values.notifications | nindent 4 }}
+spec:
+  project: {{ $.Values.cluster.name }}
+  destination:
+    server: {{ $.Values.cluster.url }}
+    namespace: kube-system
+  syncPolicy:
+    {{- if $.Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
+    chart: csi-driver-nfs
+    targetRevision: {{ $.Values.nfs.version | quote }}
+    helm:
+      version: v3
+      releaseName: csi-driver-nfs
+      values: |
+        driver:
+          mountPermissions: {{ $.Values.nfs.mountPermissions | quote }}
+        storageClasses:
+          {{- range $k, $v := $.Values.nfs.servers }}
+          - name: nfs-{{ $k }}
+            {{- if and $v $v.defaultClass }}
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "true"
+            {{- end }}
+            parameters:
+              {{- if eq $k "taiga" }}
+              server: taiga-nfs.ncsa.illinois.edu
+              share: {{ (printf "/taiga/ncsa/radiant/%s" $.Values.openstack.project) | quote }}
+              {{- else }}
+              server: {{ $v.server | quote }}
+              share: {{ $v.path | quote }}
+              {{- end }}
+              {{- if and $v $v.pathPattern }}
+              subDir: {{ $v.pathPattern | quote }}
+              {{- else if $.Values.nfs.pathPattern }}
+              subDir: {{ $.Values.nfs.pathPattern | quote }}
+              {{- else }}
+              subDir: {{ printf "%s/${pvc.metadata.namespace}-${pvc.metadata.name}-${pv.metadata.name}" $.Values.cluster.name | quote }}
+              {{- end }}
+              onDelete: retain
+            reclaimPolicy: Retain
+            volumeBindingMode: Immediate
+            mountOptions:
+              - nfsvers=4.1
+          {{- end }}
+{{- else }}
 {{- range $k, $v := .Values.nfs.servers }}
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -60,5 +126,6 @@ spec:
           server: {{ $v.server | quote }}
           path: {{ $v.path | quote }}
           {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
