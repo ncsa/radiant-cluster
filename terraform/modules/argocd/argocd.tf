@@ -34,6 +34,7 @@ locals {
     longhorn_enabled            = var.longhorn_enabled
     longhorn_replicas           = var.longhorn_replicas
     nfs_enabled                 = var.nfs_enabled
+    nfs_type                    = var.nfs_type
     cinder_enabled              = var.cinder_enabled
     manila_enabled              = var.manila_nfs_enabled || var.manila_cephfs_enabled
     manila_nfs_enabled          = var.manila_nfs_enabled

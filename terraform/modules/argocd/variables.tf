@@ -153,6 +153,12 @@ variable "nfs_enabled" {
   default     = true
 }
 
+variable "nfs_type" {
+  type        = string
+  description = "Which helm chart to install, default is subdir, will switch to csi soon"
+  default     = "subdir"
+}
+
 variable "healthmonitor_enabled" {
   type        = bool
   description = "Enable healthmonitor"

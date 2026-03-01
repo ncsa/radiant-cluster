@@ -82,7 +82,7 @@ spec:
             %{~ endif ~}
             storageClass: "${traefik_storageclass}"
             acme:
-              staging: ${acme_staging} 
+              staging: ${acme_staging}
               %{~ if (acme_staging) ~}
               server: https://acme-staging-v02.api.letsencrypt.org/directory
               %{~ else ~}
@@ -109,6 +109,7 @@ spec:
 
         nfs:
           enabled: ${nfs_enabled}
+          type: ${nfs_type}
           %{~ if nfs_enabled ~}
           servers:
             taiga:
