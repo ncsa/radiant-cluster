@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 3.8.1 - 2026-04-09
 
 ### Fixed
 - strip `ipPrefix` from `traefik_ports` before passing to Helm chart; Traefik chart v32+ rejects unknown properties
