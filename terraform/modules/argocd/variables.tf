@@ -267,7 +267,7 @@ variable "traefik_ports" {
     - exposedPort: number - the port exposed externally
     - port: number - the internal container port
     - protocol: string - TCP or UDP (default: TCP)
-    - ipPrefix: string - IP prefix for security group (default: 0.0.0.0/0)
+    - ipPrefix: string - IP prefix for security group rules, default: 0.0.0.0/0 (consumed by downstream template, stripped before Helm)
     - http: object - nested HTTP config for Traefik v39+ (optional)
   EOT
   default     = {}
