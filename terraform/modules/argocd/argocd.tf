@@ -45,15 +45,18 @@ locals {
     ingress_controller_enabled  = var.ingress_controller_enabled
     ingress_controller          = var.ingress_controller
     traefik_storageclass        = var.traefik_storageclass
-    traefik_ports               = indent(14, yamlencode(var.traefik_ports))
-    traefik_version             = var.traefik_version
-    acme_staging                = var.acme_staging
-    acme_email                  = var.acme_email
-    sealedsecrets_enabled       = var.sealedsecrets_enabled
-    monitoring_enabled          = var.monitoring_enabled
-    healthmonitor_enabled       = var.healthmonitor_enabled
-    healthmonitor_nfs           = var.healthmonitor_nfs
-    healthmonitor_secrets       = var.healthmonitor_secrets
+    traefik_ports = indent(14, yamlencode({
+      for port_name, port_config in var.traefik_ports :
+      port_name => { for k, v in port_config : k => v if k != "ipPrefix" }
+    }))
+    traefik_version       = var.traefik_version
+    acme_staging          = var.acme_staging
+    acme_email            = var.acme_email
+    sealedsecrets_enabled = var.sealedsecrets_enabled
+    monitoring_enabled    = var.monitoring_enabled
+    healthmonitor_enabled = var.healthmonitor_enabled
+    healthmonitor_nfs     = var.healthmonitor_nfs
+    healthmonitor_secrets = var.healthmonitor_secrets
   })
 }
 
