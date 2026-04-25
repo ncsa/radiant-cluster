@@ -57,7 +57,7 @@ sealedsecrets:
 
 monitoring:
   enabled: false
-  version: "106.*"
+  version: "108.*"
 
 healthmonitor:
   enabled: false
