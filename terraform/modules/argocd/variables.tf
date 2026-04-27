@@ -279,6 +279,23 @@ variable "traefik_version" {
   default     = ""
 }
 
+variable "traefik_node_selector" {
+  type        = map(string)
+  description = "Optional nodeSelector for the traefik pod. Leave null to omit (pod schedules anywhere). Example: { \"node-role.kubernetes.io/system\" = \"true\" }"
+  default     = null
+}
+
+variable "traefik_tolerations" {
+  type = list(object({
+    key      = optional(string)
+    operator = optional(string)
+    value    = optional(string)
+    effect   = optional(string)
+  }))
+  description = "Optional tolerations for the traefik pod. Leave null to omit. Each entry mirrors a standard k8s toleration."
+  default     = null
+}
+
 # ----------------------------------------------------------------------
 # LETS ENCRYPT
 # ----------------------------------------------------------------------

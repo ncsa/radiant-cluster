@@ -81,6 +81,14 @@ spec:
             version: "${traefik_version}"
             %{~ endif ~}
             storageClass: "${traefik_storageclass}"
+            %{~ if traefik_node_selector != null ~}
+            nodeSelector:
+              ${traefik_node_selector}
+            %{~ endif ~}
+            %{~ if traefik_tolerations != null ~}
+            tolerations:
+              ${traefik_tolerations}
+            %{~ endif ~}
             acme:
               staging: ${acme_staging}
               %{~ if (acme_staging) ~}

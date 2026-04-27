@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+### Added
+- optional `traefik_node_selector` and `traefik_tolerations` tfvars to pin the traefik pod to a specific node pool (e.g. system nodes); both default to `null` and are omitted from chart values when unset, so existing deployments are unaffected
+
 ## 3.8.1 - 2026-04-09
 
 ### Fixed
