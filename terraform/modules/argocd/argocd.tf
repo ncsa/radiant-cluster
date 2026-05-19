@@ -50,6 +50,12 @@ locals {
       port_name => { for k, v in port_config : k => v if k != "ipPrefix" }
     }))
     traefik_version       = var.traefik_version
+    traefik_node_selector = var.traefik_node_selector == null ? null : jsonencode(var.traefik_node_selector)
+    traefik_tolerations = var.traefik_tolerations == null ? null : jsonencode([
+      for t in var.traefik_tolerations : {
+        for k, v in t : k => v if v != null
+      }
+    ])
     acme_staging          = var.acme_staging
     acme_email            = var.acme_email
     sealedsecrets_enabled = var.sealedsecrets_enabled

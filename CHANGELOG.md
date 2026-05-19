@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## Unreleased
 
+### Added
+- optional `traefik_node_selector` and `traefik_tolerations` tfvars to pin the traefik pod to a specific node pool (e.g. system nodes); both default to `null` and are omitted from chart values when unset, so existing deployments are unaffected
+
 ### Fixed
 - Empty machine config would prevent terraform from applying correctly
 
