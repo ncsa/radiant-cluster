@@ -31,22 +31,26 @@ resource "rancher2_cluster_v2" "kube" {
         config = yamlencode({ profile = var.cis_benchmark })
       }
     }
-    machine_global_config = yamlencode({
-      cni                = var.network_plugin
-      kube-apiserver-arg = local.kube_apiserver_arg
-      disable = [
-        # K3S
-        #- coredns
-        "servicelb",
-        "traefik",
-        "local-storage",
-        #- metrics-server
-        # RKE2
-        #- rke2-coredns
-        "rke2-ingress-nginx"
-        #- rke2-metrics-server
-      ]
-    })
+    machine_global_config = yamlencode(
+      merge(
+        {
+          cni     = var.network_plugin
+          disable = [
+            # K3S
+            #- coredns
+            "servicelb",
+            "traefik",
+            "local-storage",
+            #- metrics-server
+            # RKE2
+            #- rke2-coredns
+            "rke2-ingress-nginx"
+            #- rke2-metrics-server
+          ]
+        },
+        length(local.kube_apiserver_arg) > 0 ? { kube-apiserver-arg = local.kube_apiserver_arg } : {}
+      )
+    )
     upgrade_strategy {
       control_plane_concurrency = "1"
       worker_concurrency        = "1"

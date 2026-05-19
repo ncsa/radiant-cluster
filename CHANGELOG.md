@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 3.8.3 - 2026-05-19
+
+### Fixed
+- Empty value in kube-apiserver-arg would prevent terraform from applying correctly
+
 ## 3.8.2 - 2026-05-19
 
 ### Added
