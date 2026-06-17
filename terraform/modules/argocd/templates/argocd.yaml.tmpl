@@ -87,6 +87,7 @@ spec:
             %{~ if traefik_tolerations != null ~}
             tolerations: ${traefik_tolerations}
             %{~ endif ~}
+            %{~ if acme_enabled ~}
             acme:
               staging: ${acme_staging}
               %{~ if (acme_staging) ~}
@@ -95,9 +96,18 @@ spec:
               server: https://acme-v02.api.letsencrypt.org/directory
               %{~ endif ~}
               email: ${acme_email}
+            %{~ endif ~}
             ports:
               ${traefik_ports}
           %{~ endif ~}
+          %{~ endif ~}
+
+        certmanager:
+          enabled: ${certmanager_enabled}
+          %{~ if certmanager_enabled ~}
+          version: "${certmanager_version}"
+          email: ${certmanager_email}
+          class: "${certmanager_class}"
           %{~ endif ~}
 
         sealedsecrets:
