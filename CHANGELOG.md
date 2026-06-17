@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - install gateway CRD, needed for traefik
+- wired `certmanager_enabled` (was an unused stub), plus `certmanager_version` and `certmanager_class`
+- `acme_enabled` (default `true`); set `false` with cert-manager to drop traefik's acme.json PVC
 
 ### Removed
 - removed nginx since it is no longer maintained

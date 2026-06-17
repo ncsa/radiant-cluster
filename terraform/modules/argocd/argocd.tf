@@ -58,6 +58,11 @@ locals {
     ])
     acme_staging          = var.acme_staging
     acme_email            = var.acme_email
+    acme_enabled          = var.acme_enabled
+    certmanager_enabled   = var.certmanager_enabled
+    certmanager_version   = var.certmanager_version
+    certmanager_email     = var.acme_email
+    certmanager_class     = var.certmanager_class
     sealedsecrets_enabled = var.sealedsecrets_enabled
     monitoring_enabled    = var.monitoring_enabled
     healthmonitor_enabled = var.healthmonitor_enabled

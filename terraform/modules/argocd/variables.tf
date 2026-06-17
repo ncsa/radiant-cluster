@@ -243,6 +243,18 @@ variable "certmanager_enabled" {
   default     = false
 }
 
+variable "certmanager_version" {
+  type        = string
+  description = "CertManager helm chart version"
+  default     = "1.*"
+}
+
+variable "certmanager_class" {
+  type        = string
+  description = "Ingress class for the cert-manager issuers, defaults to the ingress controller class"
+  default     = ""
+}
+
 # ----------------------------------------------------------------------
 # TRAEFIK
 # ----------------------------------------------------------------------
@@ -299,6 +311,12 @@ variable "traefik_tolerations" {
 # ----------------------------------------------------------------------
 # LETS ENCRYPT
 # ----------------------------------------------------------------------
+
+variable "acme_enabled" {
+  type        = bool
+  description = "Use traefik's built-in ACME resolver, which needs a PVC. Set false to use cert-manager"
+  default     = true
+}
 
 variable "acme_staging" {
   type        = bool
