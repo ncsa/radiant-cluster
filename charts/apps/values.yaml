@@ -32,8 +32,6 @@ ingresscontroller:
   class: traefik
   publicIP: 1.1.1.1
   #privateIP: 1.1.1.2
-  nginx:
-    version: "4.*"
   traefik:
     version: "*"
     storageClass: ""
@@ -46,6 +44,10 @@ ingresscontroller:
       #   expose: true
       #   exposedPort: 5432
       #   protocol: TCP
+
+gateway_crd:
+  enabled: true
+  version: "release-1.5"
 
 sealedsecrets:
   enabled: false

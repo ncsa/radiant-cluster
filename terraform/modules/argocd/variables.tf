@@ -229,10 +229,10 @@ variable "ingress_controller_enabled" {
 
 variable "ingress_controller" {
   type        = string
-  description = "Desired ingress controller (traefik, traefik2 (same as traefik), nginx, none)"
+  description = "Desired ingress controller (traefik, none)"
   default     = "traefik"
   validation {
-    condition     = var.ingress_controller == "nginx" || var.ingress_controller == "traefik" || var.ingress_controller == "traefik2" || var.ingress_controller == "none"
+    condition     = var.ingress_controller == "traefik" || var.ingress_controller == "none"
     error_message = "Invalid ingress controller."
   }
 }

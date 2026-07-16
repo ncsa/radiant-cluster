@@ -1,0 +1,28 @@
+{{- if .Values.gateway_crd.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-gateway-crd
+  labels:
+    cluster: {{ .Values.cluster.name | quote }}
+    app: gateway-crd
+  namespace: {{ .Values.cluster.namespace | default "argocd" | quote }}
+  annotations:
+    {{- toYaml .Values.notifications | nindent 4 }}
+spec:
+  project: {{ .Values.cluster.name }}
+  destination:
+    server: {{ .Values.cluster.url }}
+    namespace: default
+  syncPolicy:
+    {{- if .Values.sync }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    {{- end }}
+  source:
+    repoURL: https://github.com/kubernetes-sigs/gateway-api
+    targetRevision: {{ .Values.gateway_crd.version | quote }}
+    path: config/crd/standard
+{{- end }}
