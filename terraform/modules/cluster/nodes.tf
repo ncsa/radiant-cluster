@@ -74,7 +74,6 @@ resource "openstack_compute_instance_v2" "machine" {
     qualys_server        = var.qualys_server
     taiga_enabled        = var.taiga_enabled
     network_cidr         = var.network_cidr
-    install_docker       = local.kube_dist == "rke1" && var.install_docker
   }))
 
   lifecycle {

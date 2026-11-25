@@ -1,14 +1,9 @@
 locals {
   kube_version = var.kubernetes_version
-  kube_dist = (
-    local.kube_version == ""                ? "rke1" :
-    strcontains(local.kube_version, "rke2") ? "rke2" :
-    strcontains(local.kube_version, "k3s")  ? "k3s"  :
-    "rke1"
-  )
+  kube_dist    = strcontains(local.kube_version, "k3s") ? "k3s" : "rke2"
 
-  kube    = local.kube_dist == "rke1" ? rancher2_cluster.kube[0] : rancher2_cluster_v2.kube[0]
-  kube_id = local.kube_dist == "rke1" ? rancher2_cluster.kube[0].id : rancher2_cluster_v2.kube[0].cluster_v1_id
+  kube    = rancher2_cluster_v2.kube
+  kube_id = rancher2_cluster_v2.kube.cluster_v1_id
 
   has_psa_template         = var.default_psa_template != null && var.default_psa_template != ""
   rancher_psact_mount_path = local.has_psa_template ? "/etc/rancher/${local.kube_dist}/config/rancher-psact.yaml" : ""
@@ -19,7 +14,6 @@ locals {
 # cluster definition
 # ----------------------------------------------------------------------
 resource "rancher2_cluster_v2" "kube" {
-  count                                                      = local.kube_dist == "rke1" ? 0 : 1
   name                                                       = var.cluster_name
   kubernetes_version                                         = local.kube_version
   default_pod_security_admission_configuration_template_name = var.default_psa_template
@@ -34,7 +28,7 @@ resource "rancher2_cluster_v2" "kube" {
     machine_global_config = yamlencode(
       merge(
         {
-          cni     = var.network_plugin
+          cni = var.network_plugin
           disable = [
             # K3S
             #- coredns
@@ -76,38 +70,6 @@ resource "rancher2_cluster_v2" "kube" {
         skip_wait_for_delete_timeout_seconds = 0
         timeout                              = 0
       }
-    }
-  }
-}
-
-resource "rancher2_cluster" "kube" {
-  count       = local.kube_dist == "rke1" ? 1 : 0
-  name        = var.cluster_name
-  description = var.cluster_description
-  driver      = "rancherKubernetesEngine"
-
-  cluster_auth_endpoint {
-    enabled = false
-  }
-
-  rke_config {
-    kubernetes_version = var.rke1_version
-    enable_cri_dockerd = true
-    network {
-      plugin = var.network_plugin
-    }
-    ingress {
-      provider = "none"
-    }
-    upgrade_strategy {
-      drain = true
-      drain_input {
-        delete_local_data  = true
-        ignore_daemon_sets = true
-        timeout            = 120
-      }
-      max_unavailable_controlplane = 1
-      max_unavailable_worker       = 1
     }
   }
 }

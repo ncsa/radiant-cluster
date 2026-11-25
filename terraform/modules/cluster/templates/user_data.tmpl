@@ -88,20 +88,6 @@ write_files:
     taiga-nfs.ncsa.illinois.edu:/taiga/ncsa/radiant/${project_name}/${cluster_name} /taiga nfs defaults 0 0
   append: true
 %{ endif ~}
-%{ if install_docker ~}
-- path: /etc/docker/daemon.json
-  permissions: "0644"
-  owner: root:root
-  content: |
-    {
-      "exec-opts": ["native.cgroupdriver=systemd"],
-      "log-driver": "json-file",
-      "log-opts": {
-        "max-size": "100m"
-      },
-      "storage-driver": "overlay2"
-    }
-%{ endif ~}
 %{ if ncsa_security }
 - path: /etc/rsyslog.d/00-ncsa.conf
   permissions: "0644"
@@ -202,14 +188,6 @@ write_files:
 %{ if username == "ubuntu" }
     sysctl fs.inotify.max_user_instances=8192
 %{ endif }
-%{ if install_docker ~}
-    echo "install docker"
-    curl https://releases.rancher.com/install-docker/26.1.sh | sh
-    apt-get -qq update
-    apt-get -y dist-upgrade
-    systemctl enable --now docker
-    usermod -aG docker ${username}
-%{ endif ~}
     echo "connect to rancher"
     ${node_command} ${node_options} ${node_labels} ${node_taints}
 %{ if taiga_enabled ~}

@@ -58,28 +58,25 @@ variable "cis_benchmark" {
 }
 
 # RKE2
-# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.rke2.releases[].version'
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.15/data.json | jq -r '.rke2.releases[].version'
 # K3S
-# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.9/data.json | jq -r '.k3s.releases[].version'
+# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.15/data.json | jq -r '.k3s.releases[].version'
 variable "kubernetes_version" {
   type        = string
-  description = "Version of rke2/k3s to install (leave blank to install rke1)"
-  default     = ""
+  description = "Version of rke2/k3s to install"
+  default     = "v1.36.6+rke2r1"
+  validation {
+    condition     = strcontains(var.kubernetes_version, "rke2") || strcontains(var.kubernetes_version, "k3s")
+    error_message = "kubernetes_version must be an rke2 or k3s version."
+  }
 }
 
 # There are two builtin Pod Security Admission Configuration Template (PSACT): rancher-privileged and rancher-restricted.
-# Leaving this blank will result in no PSA for K3s/RKE1/RKE2 and "rancher-restricted" for RKE2 if rke2_cis_hardening = true
+# Leaving this blank will result in no PSA for K3s/RKE2 and "rancher-restricted" for RKE2 if rke2_cis_hardening = true
 variable "default_psa_template" {
   type        = string
   description = "RKE2/K3s cluster-wide default Pod Security Admission Configuration Template"
   default     = ""
-}
-
-# curl -s https://releases.rancher.com/kontainer-driver-metadata/release-v2.6/data.json | jq -r '.K8sVersionRKESystemImages | keys'
-variable "rke1_version" {
-  type        = string
-  description = "Version of rke1 to install."
-  default     = "v1.21.14-rancher1-1"
 }
 
 variable "network_plugin" {
@@ -273,11 +270,5 @@ variable "qualys_server" {
 variable "taiga_enabled" {
   type        = bool
   description = "Enable Taiga mount"
-  default     = true
-}
-
-variable "install_docker" {
-  type        = bool
-  description = "Install Docker when provisioning node (only for rke1)"
   default     = true
 }
