@@ -61,15 +61,6 @@ monitoring:
   enabled: false
   version: "108.*"
 
-healthmonitor:
-  enabled: false
-  targetRevision: HEAD
-  nfs: false
-  notifiers:
-    console:
-      report: change
-      threshold: 0
-
 # ----------------------------------------------------------------------
 # STORAGE
 # ----------------------------------------------------------------------

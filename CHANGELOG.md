@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed
 - removed nginx since it is no longer maintained
+- removed healthmonitor, no longer supported
  
 ## 3.8.4 - 2026-06-16
 

@@ -106,13 +106,6 @@ spec:
         monitoring:
           enabled: ${monitoring_enabled}
 
-        healthmonitor:
-          enabled: ${healthmonitor_enabled}
-          %{~ if healthmonitor_enabled ~}
-          nfs: ${healthmonitor_nfs}
-          existingSecret: ${healthmonitor_secrets}
-          %{~ endif ~}
-
         nfs:
           enabled: ${nfs_enabled}
           type: ${nfs_type}

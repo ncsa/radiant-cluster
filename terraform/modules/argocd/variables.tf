@@ -159,24 +159,6 @@ variable "nfs_type" {
   default     = "subdir"
 }
 
-variable "healthmonitor_enabled" {
-  type        = bool
-  description = "Enable healthmonitor"
-  default     = false
-}
-
-variable "healthmonitor_nfs" {
-  type        = bool
-  description = "Enable healthmonitor nfs"
-  default     = true
-}
-
-variable "healthmonitor_secrets" {
-  type        = string
-  description = "Secrets (config/checks/notifications) for healthmonitor"
-  default     = "config"
-}
-
 variable "sealedsecrets_enabled" {
   type        = bool
   description = "Enable sealed secrets"

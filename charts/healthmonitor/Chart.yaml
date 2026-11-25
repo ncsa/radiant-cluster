@@ -1,6 +1,0 @@
-apiVersion: v2
-name: healthmonitor
-description: Healthmonitor, checks ports and machines
-type: application
-version: 1.0.0
-appVersion: 1.3.2

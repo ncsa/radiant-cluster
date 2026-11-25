@@ -60,9 +60,6 @@ locals {
     acme_email            = var.acme_email
     sealedsecrets_enabled = var.sealedsecrets_enabled
     monitoring_enabled    = var.monitoring_enabled
-    healthmonitor_enabled = var.healthmonitor_enabled
-    healthmonitor_nfs     = var.healthmonitor_nfs
-    healthmonitor_secrets = var.healthmonitor_secrets
   })
 }
 

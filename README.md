@@ -24,7 +24,6 @@ The following modules are enabled by default:
 - raw kubernetes
 The following modules are enabled by default:
 - longhorn 
-- healthmonitor (expects a secret, so sealed secrets should be enabled)
 
 ## Cluster (terraform/modules/cluster)
 
@@ -74,15 +73,11 @@ This is the scripts used to bootstrap argocd in one cluster. This installation i
 
 # Charts (charts)
 
-This contains helm charts leveraged by ArgoCD to install the modules mentioned earlier as well as a helmchart to install the healthmonitor.
+This contains helm charts leveraged by ArgoCD to install the modules mentioned earlier.
 
 ## apps (charts/apps)
 
 This is an app that creates new apps to install all the components configured by the argocd terraform module
-
-## healthmonitor (charts/healthmonitor)
-
-This module can check different aspects, but mainly is used to make sure the network is working as expected and the connections to NFS are working correctly.
 
 
 # Traefik Version Configuration
