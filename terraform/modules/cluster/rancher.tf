@@ -15,6 +15,7 @@ locals {
 # ----------------------------------------------------------------------
 resource "rancher2_cluster_v2" "kube" {
   name                                                       = var.cluster_name
+  annotations                                                = var.cluster_description != "" ? { "field.cattle.io/description" = var.cluster_description } : {}
   kubernetes_version                                         = local.kube_version
   default_pod_security_admission_configuration_template_name = var.default_psa_template
   rke_config {
@@ -28,7 +29,6 @@ resource "rancher2_cluster_v2" "kube" {
     machine_global_config = yamlencode(
       merge(
         {
-          cni = var.network_plugin
           disable = [
             # K3S
             #- coredns
@@ -42,6 +42,7 @@ resource "rancher2_cluster_v2" "kube" {
             #- rke2-metrics-server
           ]
         },
+        var.network_plugin != "" ? { cni = var.network_plugin } : {},
         length(local.kube_apiserver_arg) > 0 ? { kube-apiserver-arg = local.kube_apiserver_arg } : {}
       )
     )
@@ -77,66 +78,74 @@ resource "rancher2_cluster_v2" "kube" {
 # ----------------------------------------------------------------------
 # cluster access
 # ----------------------------------------------------------------------
+# users are looked up by name (the uid claim from CILogon), the user must
+# have logged into rancher at least once before they can be added.
+data "rancher2_user" "users" {
+  for_each    = setunion(var.admin_users, var.member_users)
+  name        = each.value
+  is_external = true
+}
+
 resource "rancher2_cluster_role_template_binding" "admin_users" {
-  for_each          = var.admin_users
-  name              = "${local.kube_id}-user-${replace(each.value, "_", "-")}"
-  cluster_id        = local.kube_id
-  role_template_id  = "cluster-owner"
-  user_principal_id = "openldap_user://uid=${each.value},ou=People,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [openstack_compute_instance_v2.machine]
+  for_each         = var.admin_users
+  name             = "${local.kube_id}-user-${replace(each.value, "_", "-")}"
+  cluster_id       = local.kube_id
+  role_template_id = "cluster-owner"
+  user_id          = data.rancher2_user.users[each.value].id
+  depends_on       = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
       labels,
-      user_id
+      user_principal_id
     ]
   }
 }
 
 resource "rancher2_cluster_role_template_binding" "admin_groups" {
-  for_each          = var.admin_groups
-  name              = "${local.kube_id}-group-${replace(each.value, "_", "-")}"
-  cluster_id        = local.kube_id
-  role_template_id  = "cluster-owner"
-  user_principal_id = "openldap_group://cn=${each.value},ou=Groups,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [openstack_compute_instance_v2.machine]
+  for_each           = var.admin_groups
+  name               = "${local.kube_id}-group-${replace(each.value, "_", "-")}"
+  cluster_id         = local.kube_id
+  role_template_id   = "cluster-owner"
+  group_principal_id = format(var.rancher_group_principal, each.value)
+  depends_on         = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
       labels,
-      user_id
+      group_id
     ]
   }
 }
 
 resource "rancher2_cluster_role_template_binding" "member_users" {
-  for_each          = var.member_users
-  name              = "${local.kube_id}-user-${replace(each.value, "_", "-")}"
-  cluster_id        = local.kube_id
-  role_template_id  = "cluster-member"
-  user_principal_id = "openldap_user://uid=${each.value},ou=People,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [openstack_compute_instance_v2.machine]
+  for_each         = var.member_users
+  name             = "${local.kube_id}-user-${replace(each.value, "_", "-")}"
+  cluster_id       = local.kube_id
+  role_template_id = "cluster-member"
+  user_id          = data.rancher2_user.users[each.value].id
+  depends_on       = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
       labels,
-      user_id
+      user_principal_id
     ]
   }
 }
 
 resource "rancher2_cluster_role_template_binding" "member_groups" {
-  for_each          = var.member_groups
-  name              = "${local.kube_id}-group-${replace(each.value, "_", "-")}"
-  cluster_id        = local.kube_id
-  role_template_id  = "cluster-member"
-  user_principal_id = "openldap_group://cn=${each.value},ou=Groups,dc=ncsa,dc=illinois,dc=edu"
-  depends_on        = [openstack_compute_instance_v2.machine]
+  for_each           = var.member_groups
+  name               = "${local.kube_id}-group-${replace(each.value, "_", "-")}"
+  cluster_id         = local.kube_id
+  role_template_id   = "cluster-member"
+  group_principal_id = format(var.rancher_group_principal, each.value)
+  depends_on         = [openstack_compute_instance_v2.machine]
   lifecycle {
     ignore_changes = [
       annotations,
       labels,
-      user_id
+      group_id
     ]
   }
 }

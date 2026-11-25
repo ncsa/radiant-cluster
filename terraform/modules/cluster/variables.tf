@@ -81,8 +81,8 @@ variable "default_psa_template" {
 
 variable "network_plugin" {
   type        = string
-  description = "Network plugin to be used (canal, cilium, calico, flannel, ...)"
-  default     = "weave"
+  description = "Network plugin to be used (canal, cilium, calico, flannel, ...), blank uses rke2/k3s default (canal/flannel)"
+  default     = ""
 }
 
 variable "drain_controlplane" {
@@ -103,26 +103,32 @@ variable "drain_worker" {
 
 variable "admin_users" {
   type        = set(string)
-  description = "List of LDAP users with admin access to cluster."
+  description = "List of users (rancher name, CILogon uid claim) with admin access to cluster, user must have logged into rancher once."
   default     = []
 }
 
 variable "admin_groups" {
   type        = set(string)
-  description = "List of LDAP groups with admin access to cluster."
+  description = "List of groups (CILogon isMemberOf claim) with admin access to cluster."
   default     = []
 }
 
 variable "member_users" {
   type        = set(string)
-  description = "List of LDAP users with access to cluster."
+  description = "List of users (rancher name, CILogon uid claim) with access to cluster, user must have logged into rancher once."
   default     = []
 }
 
 variable "member_groups" {
   type        = set(string)
-  description = "List of LDAP groups with access to cluster."
+  description = "List of groups (CILogon isMemberOf claim) with access to cluster."
   default     = []
+}
+
+variable "rancher_group_principal" {
+  type        = string
+  description = "Format string used to create the rancher group principal id from a group name"
+  default     = "genericoidc_group://%s"
 }
 
 # ----------------------------------------------------------------------
